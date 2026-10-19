@@ -8,7 +8,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogTrigger } from "@/components/ui/dialog";
-import { Bot, Briefcase, Brain, ListTodo, Zap, RefreshCw, Plus, Send, BookOpen, MessageSquare, Wand2, Layers } from "lucide-react";
+import { Bot, Briefcase, Brain, ListTodo, Zap, RefreshCw, Plus, Send, BookOpen, MessageSquare, Wand2, Layers, Activity, Code } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const CONNECTOR_ID = "69db201897e4e8f9ae073be7";
@@ -197,6 +197,8 @@ export default function Dashboard() {
           <div className="flex items-center gap-2">
             <Link to="/job-board"><Button variant="ghost" size="sm"><Briefcase className="w-4 h-4 mr-1.5" /> Job Board</Button></Link>
             <Link to="/prompt-studio"><Button variant="ghost" size="sm"><Wand2 className="w-4 h-4 mr-1.5" /> Prompt Studio</Button></Link>
+            <Link to="/visual-editor"><Button variant="ghost" size="sm"><Code className="w-4 h-4 mr-1.5" /> Visual Editor</Button></Link>
+            <Link to="/agent-activity"><Button variant="ghost" size="sm"><Activity className="w-4 h-4 mr-1.5" /> Activity</Button></Link>
             <Button variant="outline" size="sm" onClick={handleConnectGoogle}>
               <Zap className="w-4 h-4 mr-1.5" /> Connect Google Tasks
             </Button>

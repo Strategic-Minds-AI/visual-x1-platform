@@ -19,26 +19,22 @@ export default async function(req) {
     );
 
     const assignments = [];
-    const updates = [];
-    const logs = [];
     let idx = 0;
     for (const job of sortedJobs) {
       if (idx >= agents.length) break;
       const agent = agents[idx++];
-      updates.push(base44.entities.Job.update(job.id, { status: 'assigned', assigned_agent_id: agent.id }));
-      updates.push(base44.entities.Agent.update(agent.id, { status: 'busy', current_job_id: job.id }));
-      logs.push(base44.entities.ReasoningLog.create({
+      await base44.entities.Job.update(job.id, { status: 'assigned', assigned_agent_id: agent.id, assigned_at: new Date().toISOString() });
+      await base44.entities.Agent.update(agent.id, { status: 'busy', current_job_id: job.id });
+      await base44.entities.ReasoningLog.create({
         agent_id: agent.id,
         job_id: job.id,
-        thought: `Job "${job.title}" (priority ${job.priority}) matched to agent ${agent.name} (${agent.role}).`,
+        thought: `Job "${job.title}" (priority ${job.priority}) matched to agent ${agent.name} (${agent.role}). Processed in deterministic priority order (sequence ${idx}).`,
         decision: `Assigned to ${agent.name}`,
-        evidence: `Agent was idle and available; job was open and highest priority among remaining.`,
-        confidence: 0.9
-      }));
-      assignments.push({ job_id: job.id, job_title: job.title, agent_id: agent.id, agent_name: agent.name });
+        evidence: `Agent was idle and available; job was open and highest priority among remaining. Processed sequentially in strict priority order.`,
+        confidence: 0.95
+      });
+      assignments.push({ job_id: job.id, job_title: job.title, agent_id: agent.id, agent_name: agent.name, sequence: idx });
     }
-
-    await Promise.allSettled([...updates, ...logs]);
 
     return Response.json({ assigned: assignments.length, assignments, open_jobs_remaining: sortedJobs.length - assignments.length });
   } catch (error) {
