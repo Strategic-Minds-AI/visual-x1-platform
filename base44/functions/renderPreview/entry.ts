@@ -14,30 +14,49 @@ export default async function(req) {
 
     const contextBlock = context ? `\n\nPrevious chain output to build upon:\n"""\n${context.slice(0, 4000)}\n"""` : '';
 
-    const metaPrompt = `You are a senior web developer and designer. Generate a complete, self-contained HTML page that visually renders the result of this prompt.
+    const metaPrompt = `You are a world-class senior frontend engineer and award-winning UI/UX designer. Generate a COMPLETE, PRODUCTION-QUALITY website as a single self-contained HTML file. This must look like a real launched product — NOT a minimal stub.
 
-PROMPT:
+PROMPT TO IMPLEMENT:
 """
 ${prompt}
 """
 ${contextBlock}
 
-REQUIREMENTS:
-- Return a SINGLE complete HTML document (<!DOCTYPE html>...</html>).
-- ALL CSS must be inline in a <style> tag — no external stylesheets, no CDN links.
-- ALL JavaScript must be inline in <script> tags — no external scripts.
-- Use modern, clean, professional design with excellent typography and spacing.
-- Use a cohesive color palette (grays + one accent color).
-- Responsive layout that works on mobile and desktop.
-- Use realistic placeholder content — no "lorem ipsum".
-- Include visual elements: buttons, cards, sections, navigation, hero, etc.
-- Add subtle hover states and transitions.
-- If the prompt asks for a specific type of page (landing, dashboard, form, etc.), build that.
-- If the prompt is abstract, build a polished landing page that represents the concept.
+MANDATORY REQUIREMENTS:
 
-Return ONLY the raw HTML code. No markdown fences, no explanation, no commentary.`;
+1. SECTIONS — include ALL of these (do not skip any):
+   - Sticky nav bar: logo, 4-5 nav links, primary CTA button, hamburger on mobile
+   - Hero: bold headline, subheadline, two CTAs, visual element (gradient/SVG)
+   - Features grid: 3-6 cards with icon (emoji or SVG), title, description
+   - How it works: 3-step process with numbered steps
+   - Testimonials: 3 cards with quote, name, title, avatar (CSS circle)
+   - FAQ: 5 items as an accordion (clickable expand/collapse)
+   - Final CTA: full-width gradient section with button
+   - Footer: 3-4 link columns, newsletter input, social icons, copyright
 
-    const llmRes = await base44.asServiceRole.integrations.Core.InvokeLLM({ prompt: metaPrompt });
+2. DESIGN — modern and polished:
+   - CSS custom properties for colors (accent + neutrals)
+   - Gradients on hero and CTA sections
+   - Box shadows, rounded corners (8-16px), hover lift effects
+   - Smooth transitions (0.3s) on all interactive elements
+   - Scroll-triggered fade-in animations via IntersectionObserver
+   - Strong typography hierarchy (clamp-based font sizes)
+
+3. CONTENT — realistic and specific. Real product names, real-sounding testimonials with full names and job titles, specific feature descriptions. No "lorem ipsum".
+
+4. JAVASCRIPT — working interactivity:
+   - Mobile hamburger menu toggle
+   - Smooth scroll for nav links
+   - FAQ accordion click handlers
+   - IntersectionObserver fade-in animations
+
+5. RESPONSIVE — mobile-first. Nav collapses to hamburger below 768px. Grids stack to single column. Font sizes scale with clamp().
+
+6. TECHNICAL — single HTML file. ALL CSS in <style>. ALL JS in <script>. No external dependencies, no CDN, no external fonts (system font stack). No external images — use CSS gradients, SVG, and emoji for visuals.
+
+Return ONLY raw HTML starting with <!DOCTYPE html>. No markdown fences, no explanation.`;
+
+    const llmRes = await base44.asServiceRole.integrations.Core.InvokeLLM({ prompt: metaPrompt, model: "gemini_3_flash" });
     let html = typeof llmRes === 'string' ? llmRes : (llmRes && llmRes.response) || String(llmRes || '');
 
     // Strip markdown code fences if present
