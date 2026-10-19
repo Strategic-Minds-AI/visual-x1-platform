@@ -8,6 +8,8 @@ import UserNotRegisteredError from '@/components/UserNotRegisteredError';
 import ScrollToTop from './components/ScrollToTop';
 // Add page imports here
 import Dashboard from './pages/Dashboard';
+import JobBoard from './pages/JobBoard';
+import PromptStudio from './pages/PromptStudio';
 import Login from '@/pages/Login';
 import Register from '@/pages/Register';
 import ForgotPassword from '@/pages/ForgotPassword';
@@ -49,6 +51,8 @@ const AuthenticatedApp = () => {
       <Route path="/oauth/consent" element={<OAuthConsent />} />
       <Route element={<ProtectedRoute unauthenticatedElement={<Navigate to="/login" replace />} />}>
         <Route path="/" element={<Dashboard />} />
+        <Route path="/job-board" element={<JobBoard />} />
+        <Route path="/prompt-studio" element={<PromptStudio />} />
       </Route>
       <Route path="*" element={<PageNotFound />} />
     </Routes>

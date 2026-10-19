@@ -12,7 +12,14 @@ export default async function(req) {
     const body = await req.json().catch(() => ({}));
     const direction = body.direction || 'both';
 
-    const { accessToken } = await base44.asServiceRole.connectors.getCurrentAppUserConnection(CONNECTOR_ID);
+    let accessToken;
+    try {
+      const conn = await base44.asServiceRole.connectors.getCurrentAppUserConnection(CONNECTOR_ID);
+      accessToken = conn.accessToken;
+    } catch (e) {
+      return Response.json({ error: 'Google Tasks not connected. Click "Connect Google Tasks" in the dashboard to link your account.', not_connected: true }, { status: 400 });
+    }
+
     const headers = { 'Authorization': `Bearer ${accessToken}`, 'Content-Type': 'application/json' };
 
     const listsRes = await fetch(`${TASKS_API}/users/@me/lists`, { headers, signal: AbortSignal.timeout(10000) });
@@ -21,14 +28,19 @@ export default async function(req) {
       return Response.json({ error: `Google Tasks error: ${err}` }, { status: 502 });
     }
     const listsData = await listsRes.json();
-    const tasklist = listsData.items && listsData.items[0] ? listsData.items[0].id : null;
-    if (!tasklist) return Response.json({ error: 'No Google Tasks list found' }, { status: 400 });
+    const lists = (listsData.items || []).map(l => ({ id: l.id, title: l.title }));
+    if (lists.length === 0) return Response.json({ error: 'No Google Tasks lists found' }, { status: 400 });
 
+    if (direction === 'lists') {
+      return Response.json({ lists, direction });
+    }
+
+    const tasklist = body.list_id || lists[0].id;
     let pushed = 0, pulled = 0;
 
     if (direction === 'push' || direction === 'both') {
       const { items: todos } = await base44.entities.Todo.filter({ status: 'pending' }, { limit: 100 });
-      const unsynced = todos.filter(t => !t.google_task_id);
+      const unsynced = (todos || []).filter(t => !t.google_task_id);
       const results = await Promise.allSettled(unsynced.map(todo =>
         fetch(`${TASKS_API}/lists/${tasklist}/tasks`, {
           method: 'POST', headers,
@@ -67,7 +79,7 @@ export default async function(req) {
       await Promise.allSettled(creates);
     }
 
-    return Response.json({ pushed, pulled, direction });
+    return Response.json({ pushed, pulled, direction, lists });
   } catch (error) {
     return Response.json({ error: error.message }, { status: 500 });
   }
