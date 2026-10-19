@@ -7,6 +7,7 @@ import { ChevronLeft, Wand2, Play, Eye, Link2, Send, Sparkles, Shield, Loader2 }
 import { Link } from "react-router-dom";
 import SimulatorResults from "@/components/editor/SimulatorResults";
 import PromptChainBuilder from "@/components/editor/PromptChainBuilder";
+import SystemTypeMenu from "@/components/editor/SystemTypeMenu";
 
 const TABS = [
   { id: "preview", label: "Preview", icon: Eye },
@@ -155,6 +156,10 @@ export default function VisualEditor() {
 
           {/* Input Bar */}
           <div className="border-t border-border p-4 space-y-2">
+            <div className="flex items-center gap-2">
+              <SystemTypeMenu onSelect={(p) => setInput(p)} />
+              <span className="text-xs text-muted-foreground">Pick a system type to load into the input</span>
+            </div>
             <Textarea
               value={input}
               onChange={e => setInput(e.target.value)}
