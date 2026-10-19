@@ -1,0 +1,50 @@
+{
+  "auth": "oauth",
+  "tools": {
+    "functions": [
+      {
+        "name": "sync_google_tasks",
+        "title": "Sync Google Tasks",
+        "description": "Syncs the app's todos with the connected Google Tasks account. Call when the user wants to push todos to Google Tasks, pull tasks from Google Tasks, or run a two-way sync.",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "direction": { "type": "string", "enum": ["push", "pull", "both"], "description": "push sends pending todos to Google Tasks, pull fetches tasks from Google Tasks, both runs a two-way sync" }
+          },
+          "required": ["direction"]
+        },
+        "handler": "syncGoogleTasks",
+        "annotations": { "read_only_hint": false, "destructive_hint": false, "idempotent_hint": true }
+      },
+      {
+        "name": "orchestrate_agents",
+        "title": "Orchestrate Agents",
+        "description": "Assigns open jobs on the live job board to available idle agents. Call when the user wants agents to pick up and start working on pending jobs.",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "job_id": { "type": "string", "description": "Optional specific job id to assign. If omitted, all open jobs are considered in priority order." }
+          }
+        },
+        "handler": "orchestrateAgents",
+        "annotations": { "read_only_hint": false, "destructive_hint": false, "idempotent_hint": false }
+      },
+      {
+        "name": "chat_with_agent",
+        "title": "Chat With Agent",
+        "description": "Sends a message to a specific agent and returns the agent's response, drawing on its memories and the knowledge base. Call when the user wants to talk to a specific agent in the multi-agent system.",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "agent_id": { "type": "string", "description": "The id of the agent to message" },
+            "message": { "type": "string", "description": "The message to send to the agent" },
+            "job_id": { "type": "string", "description": "Optional job context for the conversation" }
+          },
+          "required": ["agent_id", "message"]
+        },
+        "handler": "agentChat",
+        "annotations": { "read_only_hint": false, "destructive_hint": false, "idempotent_hint": false }
+      }
+    ]
+  }
+}

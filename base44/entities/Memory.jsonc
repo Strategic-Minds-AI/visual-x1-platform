@@ -1,0 +1,43 @@
+{
+  "name": "Memory",
+  "type": "object",
+  "properties": {
+    "agent_id": {
+      "type": "string",
+      "description": "Id of the agent that owns this memory"
+    },
+    "content": {
+      "type": "string",
+      "description": "The memory content itself"
+    },
+    "memory_type": {
+      "type": "string",
+      "enum": [
+        "observation",
+        "reflection",
+        "fact",
+        "preference",
+        "event"
+      ],
+      "default": "observation",
+      "description": "Category of memory"
+    },
+    "tags": {
+      "type": "string",
+      "description": "Comma-separated tags for retrieval"
+    },
+    "importance": {
+      "type": "number",
+      "default": 5,
+      "description": "Importance score from 1 to 10 used for recall ranking"
+    },
+    "context": {
+      "type": "string",
+      "description": "Optional surrounding context for the memory"
+    }
+  },
+  "required": [
+    "content",
+    "memory_type"
+  ]
+}

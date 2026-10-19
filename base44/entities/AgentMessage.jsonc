@@ -1,0 +1,37 @@
+{
+  "name": "AgentMessage",
+  "type": "object",
+  "properties": {
+    "from_agent_id": {
+      "type": "string",
+      "description": "Id of the agent or 'user' for the human user sending the message"
+    },
+    "to_agent_id": {
+      "type": "string",
+      "description": "Id of the agent or 'user' for the human user receiving the message"
+    },
+    "content": {
+      "type": "string",
+      "description": "The message content"
+    },
+    "job_id": {
+      "type": "string",
+      "description": "Optional job context for the message"
+    },
+    "message_type": {
+      "type": "string",
+      "enum": [
+        "request",
+        "response",
+        "broadcast",
+        "status"
+      ],
+      "default": "request",
+      "description": "Type of message in the conversation"
+    }
+  },
+  "required": [
+    "content",
+    "message_type"
+  ]
+}

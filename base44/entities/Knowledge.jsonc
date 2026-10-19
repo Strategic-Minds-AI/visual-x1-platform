@@ -1,0 +1,30 @@
+{
+  "name": "Knowledge",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "description": "Short title for the knowledge entry"
+    },
+    "content": {
+      "type": "string",
+      "description": "The knowledge or insight content"
+    },
+    "category": {
+      "type": "string",
+      "description": "Category used to group knowledge entries"
+    },
+    "source": {
+      "type": "string",
+      "description": "Where the knowledge came from (agent name, user, external)"
+    },
+    "tags": {
+      "type": "string",
+      "description": "Comma-separated tags for search and filtering"
+    }
+  },
+  "required": [
+    "title",
+    "content"
+  ]
+}

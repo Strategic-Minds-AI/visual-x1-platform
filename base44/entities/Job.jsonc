@@ -1,0 +1,72 @@
+{
+  "name": "Job",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "description": "Short title of the job"
+    },
+    "description": {
+      "type": "string",
+      "description": "Detailed description of what the job requires"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "open",
+        "assigned",
+        "in_progress",
+        "completed",
+        "failed",
+        "cancelled"
+      ],
+      "default": "open",
+      "description": "Current state of the job on the board"
+    },
+    "priority": {
+      "type": "string",
+      "enum": [
+        "low",
+        "medium",
+        "high",
+        "urgent"
+      ],
+      "default": "medium",
+      "description": "Priority level used for assignment ordering"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "research",
+        "analysis",
+        "task",
+        "review",
+        "creative",
+        "sync"
+      ],
+      "default": "task",
+      "description": "Kind of work the job represents"
+    },
+    "assigned_agent_id": {
+      "type": "string",
+      "description": "Id of the agent assigned to the job"
+    },
+    "result": {
+      "type": "string",
+      "description": "Outcome or output produced when the job is completed"
+    },
+    "due_date": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Optional deadline for the job"
+    },
+    "tags": {
+      "type": "string",
+      "description": "Comma-separated tags for filtering and grouping"
+    }
+  },
+  "required": [
+    "title",
+    "status"
+  ]
+}

@@ -1,0 +1,54 @@
+{
+  "name": "Agent",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Display name of the agent"
+    },
+    "role": {
+      "type": "string",
+      "enum": [
+        "researcher",
+        "planner",
+        "executor",
+        "reviewer",
+        "coordinator",
+        "memory_keeper",
+        "specialist"
+      ],
+      "description": "Functional role of the agent in the workforce"
+    },
+    "specialization": {
+      "type": "string",
+      "description": "Domain or skill the agent specializes in"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "idle",
+        "busy",
+        "offline"
+      ],
+      "default": "idle",
+      "description": "Current availability of the agent"
+    },
+    "system_prompt": {
+      "type": "string",
+      "description": "Base instructions that define the agent's behavior and personality"
+    },
+    "avatar_color": {
+      "type": "string",
+      "default": "#6366f1",
+      "description": "Hex color used for the agent's avatar and accents"
+    },
+    "current_job_id": {
+      "type": "string",
+      "description": "Id of the job the agent is currently working on"
+    }
+  },
+  "required": [
+    "name",
+    "role"
+  ]
+}

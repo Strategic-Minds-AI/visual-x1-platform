@@ -1,0 +1,35 @@
+{
+  "name": "ReasoningLog",
+  "type": "object",
+  "properties": {
+    "agent_id": {
+      "type": "string",
+      "description": "Id of the agent that produced this reasoning"
+    },
+    "job_id": {
+      "type": "string",
+      "description": "Id of the job this reasoning relates to"
+    },
+    "thought": {
+      "type": "string",
+      "description": "The agent's reasoning or chain of thought"
+    },
+    "decision": {
+      "type": "string",
+      "description": "The decision or conclusion reached"
+    },
+    "evidence": {
+      "type": "string",
+      "description": "Supporting evidence or data for the decision"
+    },
+    "confidence": {
+      "type": "number",
+      "default": 0.8,
+      "description": "Confidence score from 0 to 1"
+    }
+  },
+  "required": [
+    "thought",
+    "decision"
+  ]
+}

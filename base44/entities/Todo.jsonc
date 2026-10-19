@@ -1,0 +1,55 @@
+{
+  "name": "Todo",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "description": "Short title of the todo item"
+    },
+    "description": {
+      "type": "string",
+      "description": "Optional details about the todo"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "in_progress",
+        "completed"
+      ],
+      "default": "pending",
+      "description": "Current state of the todo"
+    },
+    "priority": {
+      "type": "string",
+      "enum": [
+        "low",
+        "medium",
+        "high"
+      ],
+      "default": "medium",
+      "description": "Priority of the todo"
+    },
+    "assigned_agent_id": {
+      "type": "string",
+      "description": "Id of the agent responsible for the todo"
+    },
+    "due_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Optional due date for the todo"
+    },
+    "google_task_id": {
+      "type": "string",
+      "description": "Id of the linked Google Tasks task, if synced"
+    },
+    "job_id": {
+      "type": "string",
+      "description": "Id of the job this todo belongs to, if any"
+    }
+  },
+  "required": [
+    "title",
+    "status"
+  ]
+}
