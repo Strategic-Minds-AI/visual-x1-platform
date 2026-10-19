@@ -16,6 +16,7 @@
         "open",
         "assigned",
         "in_progress",
+        "review",
         "completed",
         "failed",
         "cancelled"
@@ -42,7 +43,10 @@
         "task",
         "review",
         "creative",
-        "sync"
+        "sync",
+        "build",
+        "funnel",
+        "deploy"
       ],
       "default": "task",
       "description": "Kind of work the job represents"
@@ -63,10 +67,49 @@
     "tags": {
       "type": "string",
       "description": "Comma-separated tags for filtering and grouping"
+    },
+    "progress": {
+      "type": "number",
+      "default": 0,
+      "description": "Completion percentage from 0 to 100"
+    },
+    "progress_notes": {
+      "type": "string",
+      "description": "Running log of status updates and progress notes from agents"
+    },
+    "assigned_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the job was assigned to an agent"
+    },
+    "started_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the agent started working on the job"
+    },
+    "completed_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the job was marked completed"
+    },
+    "applicant_count": {
+      "type": "number",
+      "default": 0,
+      "description": "Number of agents that have shown interest or been considered"
     }
   },
   "required": [
     "title",
     "status"
-  ]
+  ],
+  "rls": {
+    "read": {},
+    "create": {},
+    "update": {},
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
 }

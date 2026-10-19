@@ -1,0 +1,58 @@
+{
+  "name": "SystemRole",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Name of the system role (e.g., Intelligence Layer, Task Manager)"
+    },
+    "description": {
+      "type": "string",
+      "description": "Short summary of what this role does"
+    },
+    "responsibilities": {
+      "type": "string",
+      "description": "Detailed list of responsibilities this role handles"
+    },
+    "handles": {
+      "type": "string",
+      "description": "What this role owns and manages"
+    },
+    "scope": {
+      "type": "string",
+      "description": "Boundaries of what is in and out of scope"
+    },
+    "dependencies": {
+      "type": "string",
+      "description": "Entities, integrations, or roles this one depends on"
+    },
+    "priority_order": {
+      "type": "number",
+      "default": 1,
+      "description": "Display and evaluation order"
+    }
+  },
+  "required": [
+    "name",
+    "description",
+    "responsibilities"
+  ],
+  "rls": {
+    "read": {},
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}
