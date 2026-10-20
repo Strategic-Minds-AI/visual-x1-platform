@@ -3,7 +3,7 @@ import { Link, NavLink, Outlet, useLocation } from "react-router-dom";
 import {
   Home, LayoutDashboard, Copy, Code2, Briefcase, Users, Boxes, Gauge,
   Sprout, Cpu, ChevronDown, LogOut, Wand2, Sparkles, Search, ListChecks, Layers, ShieldCheck,
-  Moon, Sun, CalendarClock, Rocket, Map as MapIcon, Radar
+  Moon, Sun, CalendarClock, Rocket, Map as MapIcon, Radar, Globe
 } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { base44 } from "@/api/base44Client";
@@ -16,7 +16,7 @@ const X1_EMBLEM = "https://www.strategicmindsai.com/v2-assets/silver-emblem.png"
 const RAIL = [
   { to: "/", label: "Workspace", Icon: Home, end: true },
   { to: "/x1", label: "X1 Operating System", Icon: Radar },
-  { to: "/academy-templates", label: "Template Designer", Icon: Layers },
+  { to: "/x1-experience", label: "X1 Live App", Icon: Globe },
   { to: "/clone-ingest", label: "Clone & Ingest", Icon: Copy },
   { to: "/delivery", label: "Delivery", Icon: Rocket },
   { to: "/visual-editor", label: "Visual Editor", Icon: Code2 },
@@ -32,7 +32,7 @@ const RAIL = [
 const TOP_LINKS = [
   { to: "/", label: "Workspace", end: true },
   { to: "/x1", label: "X1 OS" },
-  { to: "/academy-templates", label: "Templates" },
+  { to: "/x1-experience", label: "X1 Live App" },
   { to: "/clone-ingest", label: "Clone & Ingest" },
   { to: "/visual-editor", label: "Visual Editor" },
   { to: "/delivery", label: "Delivery" },
@@ -52,6 +52,7 @@ const TOP_GROUPS = [
     label: "System",
     items: [
       { to: "/x1", label: "X1 Operating System", Icon: Radar },
+      { to: "/x1-experience", label: "X1 Live App", Icon: Globe },
       { to: "/system-capabilities", label: "Capabilities", Icon: Layers },
       { to: "/builder-map", label: "Builder Map", Icon: MapIcon },
       { to: "/system-benchmarks", label: "System Benchmarks", Icon: Gauge },
@@ -77,7 +78,6 @@ const TOP_GROUPS = [
       { to: "/seo-simulator", label: "Growth Simulator", Icon: Sprout },
       { to: "/opportunities", label: "Opportunities", Icon: Sparkles },
       { to: "/template-engine", label: "Template Engine", Icon: Layers },
-      { to: "/academy-templates", label: "Universal Academy Designer", Icon: Layers },
       { to: "/variations", label: "Variations", Icon: Gauge },
       { to: "/backlink-health", label: "Backlink Health", Icon: ShieldCheck },
       { to: "/social-studio", label: "Social Studio", Icon: CalendarClock },
