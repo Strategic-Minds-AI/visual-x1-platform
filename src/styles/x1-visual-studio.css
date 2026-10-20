@@ -131,7 +131,7 @@
 .x1-code-note{color:#93aec1;font-size:12px;line-height:1.7;margin:15px 0}.x1-export-dark{border-radius:11px;display:flex;align-items:center;gap:9px;padding:13px 17px;color:#e5fdff;font-size:11px;font-weight:820;letter-spacing:.08em;border:1px solid var(--smai-cyan);background:#083754}
 .x1-diff{padding:18px;border:1px solid rgba(74,173,218,.24);background:#071625;border-radius:12px;margin-bottom:12px}
 .x1-diff strong{font-size:12px;color:#c8edff;text-transform:uppercase}.x1-diff>div{display:flex;flex-direction:column;gap:9px;margin:12px 0}
-.x1-diff span{font:11px/1.6 Consolas,monospace;white-space:pre-wrap;overflow-wrap:anywhere}.x1-diff span:first-child{color:#e09baf}.x1-diff span:last-child{color:#80ffc5}
+.x1-diff span{font:11px/1.6 Consolas,monospace;white-space:pre-wrap;overflow-wrap:anywhere}.x1-diff span:first-child{color:#ff9d9d}.x1-diff span:last-child{color:#80ffc5}
 .x1-checks>div:not(.x1-code-head){display:flex;align-items:center;justify-content:space-between;gap:15px;padding:16px 0;border-bottom:1px solid rgba(62,158,211,.17)}
 .x1-checks>div>span:first-child{display:flex;align-items:center;gap:11px;font-size:12px}.x1-checks>p{font-size:12px;color:#91b1bf;line-height:1.7;margin-top:25px}
 .x1-editor-bottom{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;min-height:45px;border-top:1px solid rgba(82,163,207,.19);padding:9px 20px;color:#7ca2b8;font-size:9px;letter-spacing:.08em;background:#071728}

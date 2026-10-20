@@ -1,1 +1,0 @@
-html{scroll-behavior:smooth} body{margin:0;min-width:320px;background:var(--smai-canvas);color:var(--smai-white)}#root{min-height:100vh} @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
