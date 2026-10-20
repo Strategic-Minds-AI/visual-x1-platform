@@ -3,12 +3,11 @@ import { Link, NavLink, Outlet, useLocation } from "react-router-dom";
 import {
   Home, LayoutDashboard, Copy, Code2, Briefcase, Users, Boxes, Gauge,
   Sprout, Cpu, ChevronDown, LogOut, Wand2, Sparkles, Search, ListChecks, Layers, ShieldCheck,
-  Moon, Sun, CalendarClock, Rocket, Map as MapIcon, Radar, Globe, Star
+  CalendarClock, Rocket, Map as MapIcon, Radar, Globe, Star
 } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { base44 } from "@/api/base44Client";
 import { cn } from "@/lib/utils";
-import useTheme from "@/hooks/useTheme";
 
 // X1's own brand assets, taken from the live X1 front end.
 const X1_EMBLEM = "https://www.strategicmindsai.com/v2-assets/silver-emblem.png";
@@ -94,11 +93,10 @@ const TOP_GROUPS = [
 
 export default function AppShell() {
   const { pathname } = useLocation();
-  const { isDark, toggle } = useTheme();
 
   return (
     <div className="h-screen flex flex-col bg-background">
-      <header className="shrink-0 border-b border-border bg-card">
+      <header className="shrink-0 bg-card/60 backdrop-blur-xl">
         <div className="h-16 px-3 sm:px-4 flex items-center gap-3">
           <Link to="/" className="flex items-center gap-2.5 shrink-0">
             <img src={X1_EMBLEM} alt="Strategic Minds AI" className="h-8 w-8 object-contain x1-emblem-glow" />
@@ -149,14 +147,6 @@ export default function AppShell() {
 
           <div className="ml-auto flex items-center gap-2 shrink-0">
             <button
-              onClick={toggle}
-              className="x1-glass x1-pill p-2 text-muted-foreground hover:text-foreground electric-hover"
-              title={isDark ? "Switch to light mode" : "Switch to dark mode"}
-              aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
-            >
-              {isDark ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
-            </button>
-            <button
               onClick={() => base44.auth.logout(window.location.origin)}
               className="x1-glass x1-pill p-2 text-muted-foreground hover:text-foreground electric-hover"
               title="Sign out"
@@ -168,7 +158,7 @@ export default function AppShell() {
       </header>
 
       <div className="flex flex-1 overflow-hidden">
-        <nav className="w-14 shrink-0 border-r border-border bg-card flex flex-col items-center py-2 gap-1 overflow-y-auto">
+        <nav className="w-14 shrink-0 bg-card/40 backdrop-blur-xl flex flex-col items-center py-2 gap-1 overflow-y-auto">
           {RAIL.map(({ to, label, Icon, end }) => {
             const active = end ? pathname === to : pathname.startsWith(to);
             return (
