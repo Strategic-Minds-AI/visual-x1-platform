@@ -23,6 +23,7 @@ import VisualApproval from './pages/VisualApproval';
 import TemplateEngine from './pages/TemplateEngine';
 import BacklinkHealth from './pages/BacklinkHealth';
 import VariationTracker from './pages/VariationTracker';
+import SeoSimulator from './pages/SeoSimulator';
 import Login from '@/pages/Login';
 import Register from '@/pages/Register';
 import ForgotPassword from '@/pages/ForgotPassword';
@@ -79,6 +80,7 @@ const AuthenticatedApp = () => {
         <Route path="/template-engine" element={<TemplateEngine />} />
         <Route path="/backlink-health" element={<BacklinkHealth />} />
         <Route path="/variations" element={<VariationTracker />} />
+        <Route path="/seo-simulator" element={<SeoSimulator />} />
       </Route>
       <Route path="*" element={<PageNotFound />} />
     </Routes>

@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { ChevronLeft, Factory, PanelLeft, PanelRight, History, ShieldCheck } from "lucide-react";
+import { ChevronLeft, Factory, PanelLeft, PanelRight, History, ShieldCheck, Layers3, RefreshCw } from "lucide-react";
 import FactoryLauncher from "@/components/factory/FactoryLauncher";
+import BulkQueuePanel from "@/components/factory/BulkQueuePanel";
 import LivePreview from "@/components/factory/LivePreview";
 import ValidationInspector from "@/components/factory/ValidationInspector";
 import BatchHistory from "@/components/factory/BatchHistory";
@@ -17,6 +18,7 @@ export default function WebsiteFactory() {
   const [showHistory, setShowHistory] = useState(false);
   const [leftPanelOpen, setLeftPanelOpen] = useState(true);
   const [rightPanelOpen, setRightPanelOpen] = useState(true);
+  const [bulkMode, setBulkMode] = useState(false);
 
   const handleLaunch = async (payload) => {
     setIsRunning(true);
@@ -49,36 +51,35 @@ export default function WebsiteFactory() {
     }
   };
 
-  const handleRepair = async () => {
-    if (!result?.validation?.findings || !html) return;
+  // Automated repair loop: validate → repair → re-validate, up to 3 cycles.
+  // Anything still under 95 after that is flagged for manual review.
+  const handleAutoRepair = async () => {
+    if (!result?.batch_id || !html) return;
     setIsRunning(true);
     setCurrentStep("refining");
     try {
-      const repairRes = await base44.functions.invoke('repairDefects', {
+      const res = await base44.functions.invoke('autoRepairLoop', {
+        batch_id: result.batch_id,
         html,
-        findings: result.validation.findings,
         brief: result.prompt?.prompt || "",
         industry: result.prompt?.site_type || "",
-        batch_id: result.batch_id,
-        repair_round: (result.repair_round || 0) + 1,
+        max_rounds: 3,
       });
-      setHtml(repairRes.data.html);
-      // Re-validate the repaired HTML
-      const valRes = await base44.functions.invoke('independentValidation', {
-        html: repairRes.data.html,
-        batch_id: result.batch_id,
-        brief: result.prompt?.prompt || "",
-      });
+      const data = res.data || {};
+      if (data.html) setHtml(data.html);
       setResult(prev => ({
         ...prev,
-        validation: valRes.data.validation,
-        quality_score: valRes.data.validation.total_score,
-        decision: valRes.data.validation.decision,
-        repair_round: (prev?.repair_round || 0) + 1,
+        validation: data.validation || prev?.validation,
+        quality_score: data.quality_score ?? prev?.quality_score,
+        decision: data.passed ? "pass" : (data.validation?.decision || "repair"),
+        repair_rounds: data.rounds || [],
+        repair_round: (data.rounds || []).length,
+        flagged: data.flagged,
+        flag_reason: data.reason || "",
       }));
       setRefreshKey(k => k + 1);
     } catch (err) {
-      setError(err.response?.data?.error || err.message || "Repair failed");
+      setError(err.response?.data?.error || err.message || "Auto-repair failed");
     } finally {
       setIsRunning(false);
       setCurrentStep("");
@@ -104,6 +105,13 @@ export default function WebsiteFactory() {
           >
             <ShieldCheck className="w-3.5 h-3.5" /> Visual Approval
           </Link>
+          <button
+            onClick={() => { setBulkMode(!bulkMode); setLeftPanelOpen(true); }}
+            className={`flex items-center gap-1 text-xs font-medium transition px-2 py-1 rounded-md ${bulkMode ? "bg-primary/10 text-primary" : "text-muted-foreground hover:bg-muted"}`}
+            title="Bulk queue mode"
+          >
+            <Layers3 className="w-3.5 h-3.5" /> Bulk Queue
+          </button>
           <button
             onClick={() => setLeftPanelOpen(!leftPanelOpen)}
             className={`p-1.5 rounded-md transition ${leftPanelOpen ? "bg-primary/10 text-primary" : "text-muted-foreground hover:bg-muted"}`}
@@ -140,7 +148,11 @@ export default function WebsiteFactory() {
         {/* Left Panel — Launcher & Controls */}
         {leftPanelOpen && (
           <div className="w-72 border-r border-border bg-card shrink-0 overflow-hidden">
-            <FactoryLauncher onLaunch={handleLaunch} isRunning={isRunning} currentStep={currentStep} />
+            {bulkMode ? (
+              <BulkQueuePanel />
+            ) : (
+              <FactoryLauncher onLaunch={handleLaunch} isRunning={isRunning} currentStep={currentStep} />
+            )}
           </div>
         )}
 
@@ -148,22 +160,39 @@ export default function WebsiteFactory() {
         <div className="flex-1 flex flex-col overflow-hidden">
           <LivePreview html={html} isRendering={isRunning && currentStep === "rendering"} />
 
-          {/* Repair Bar */}
+          {/* Automated Repair Loop */}
           {result && result.quality_score < 95 && !isRunning && (
-            <div className="border-t border-border bg-card px-4 py-2 flex items-center justify-between shrink-0">
-              <div className="flex items-center gap-2 text-sm">
-                <span className="text-yellow-600 font-medium">Repair Required</span>
-                <span className="text-muted-foreground text-xs">
-                  Score {result.quality_score}/100 — {(result.repair_round || 0)} repair round(s) used (max 3)
-                </span>
+            <div className="border-t border-border bg-card px-4 py-2 shrink-0">
+              <div className="flex items-center justify-between gap-3">
+                <div className="min-w-0">
+                  <div className="flex items-center gap-2 text-sm flex-wrap">
+                    <span className="text-yellow-600 font-medium">
+                      {result.flagged ? "Flagged for Manual Review" : "Automated Repair Loop"}
+                    </span>
+                    <span className="text-muted-foreground text-xs">
+                      Score {result.quality_score}/100 — {(result.repair_round || 0)} of 3 cycles used
+                    </span>
+                  </div>
+                  {result.flagged && (
+                    <p className="text-[11px] text-muted-foreground mt-0.5">
+                      {result.flag_reason || "Auto-repair could not reach 95/100."}{" "}
+                      <Link to="/visual-approval" className="text-primary hover:underline">Open the approval queue</Link>
+                    </p>
+                  )}
+                  {(result.repair_rounds || []).length > 0 && (
+                    <p className="text-[11px] text-muted-foreground mt-0.5">
+                      {result.repair_rounds.map((r) => `R${r.round}: ${r.score}/100 (${r.decision}, ${r.findings} findings)`).join("  ·  ")}
+                    </p>
+                  )}
+                </div>
+                <button
+                  onClick={handleAutoRepair}
+                  disabled={(result.repair_round || 0) >= 3}
+                  className="px-3 py-1.5 text-sm font-medium bg-primary text-primary-foreground rounded-md hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1.5 shrink-0"
+                >
+                  <RefreshCw className="w-3.5 h-3.5" /> Run Auto-Repair
+                </button>
               </div>
-              <button
-                onClick={handleRepair}
-                disabled={(result.repair_round || 0) >= 3}
-                className="px-3 py-1.5 text-sm font-medium bg-primary text-primary-foreground rounded-md hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                Apply Repair & Re-validate
-              </button>
             </div>
           )}
 

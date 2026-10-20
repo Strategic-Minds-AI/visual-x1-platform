@@ -5,6 +5,7 @@ import { ChevronLeft, BarChart3, Activity, CheckCircle2, TrendingUp, Users } fro
 import { Link } from "react-router-dom";
 import { BarChart, Bar, PieChart, Pie, Cell, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
 import AgentPerformanceCharts from "@/components/analytics/AgentPerformanceCharts";
+import BacklinkTrafficTrends from "@/components/analytics/BacklinkTrafficTrends";
 
 const STATUS_COLORS = {
   open: "#0ea5e9", assigned: "#8b5cf6", in_progress: "#f59e0b",
@@ -188,6 +189,12 @@ export default function AnalyticsDashboard() {
             </CardContent>
           </Card>
         )}
+
+        {/* Backlink Site Traffic Comparison (Google Analytics) */}
+        <div>
+          <h2 className="font-heading font-semibold mb-3 flex items-center gap-2"><Activity className="w-4 h-4" /> Backlink Site Traffic Comparison</h2>
+          <BacklinkTrafficTrends />
+        </div>
 
         {/* Agent Performance Over Time */}
         <div>

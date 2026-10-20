@@ -31,6 +31,14 @@
       "type": "string",
       "description": "Geographic location targeted"
     },
+    "seo_template_id": {
+      "type": "string",
+      "description": "SEOTemplate this site was mapped from"
+    },
+    "target_domain": {
+      "type": "string",
+      "description": "Domain the SEO template was mapped onto (e.g. emergencyplumbernearme.com)"
+    },
     "content": {
       "type": "string",
       "description": "Generated content for the backlink page"
@@ -41,7 +49,11 @@
     },
     "site_url": {
       "type": "string",
-      "description": "Public URL of the backlink site itself, used for health checks"
+      "description": "Public URL of the backlink site itself, used for health checks and traffic tracking"
+    },
+    "ga_property_id": {
+      "type": "string",
+      "description": "Google Analytics 4 property id used to pull this site's traffic trends"
     },
     "status": {
       "type": "string",
@@ -109,7 +121,20 @@
         }
       ]
     },
-    "create": {},
+    "create": {
+      "$or": [
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "user"
+          }
+        }
+      ]
+    },
     "update": {
       "$or": [
         {

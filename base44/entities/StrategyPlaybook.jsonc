@@ -1,0 +1,155 @@
+{
+  "name": "StrategyPlaybook",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Strategy name shown as a toggle on the simulator"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "technical",
+        "content",
+        "aeo",
+        "geo",
+        "local",
+        "programmatic",
+        "authority",
+        "paid",
+        "social",
+        "engagement",
+        "offline",
+        "measurement",
+        "ai_native"
+      ],
+      "description": "Strategy family used to group toggles and score coverage"
+    },
+    "tier": {
+      "type": "string",
+      "enum": [
+        "proven",
+        "advanced",
+        "ai_native"
+      ],
+      "default": "proven",
+      "description": "Historically proven, newer advanced method, or AI-native method"
+    },
+    "description": {
+      "type": "string",
+      "description": "What the strategy actually does"
+    },
+    "evidence": {
+      "type": "string",
+      "description": "Why it is believed to work and what class of evidence backs it"
+    },
+    "impact": {
+      "type": "number",
+      "default": 5,
+      "description": "Overall strength 0-10 used for coverage scoring"
+    },
+    "velocity": {
+      "type": "number",
+      "default": 4,
+      "description": "Days of ranking acceleration contributed at full weight"
+    },
+    "engagement_lift": {
+      "type": "number",
+      "default": 4,
+      "description": "Percent engagement uplift contributed"
+    },
+    "authority_lift": {
+      "type": "number",
+      "default": 3,
+      "description": "Percent authority uplift contributed"
+    },
+    "effort": {
+      "type": "number",
+      "default": 3,
+      "description": "Implementation effort 1-10"
+    },
+    "cost_tier": {
+      "type": "string",
+      "enum": [
+        "free",
+        "low",
+        "medium",
+        "high"
+      ],
+      "default": "low",
+      "description": "Recurring cost band used for the monthly cost estimate"
+    },
+    "default_on": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether the toggle starts enabled"
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true
+    },
+    "display_order": {
+      "type": "number",
+      "default": 0
+    }
+  },
+  "required": [
+    "name",
+    "category",
+    "description"
+  ],
+  "rls": {
+    "read": {
+      "$or": [
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "user"
+          }
+        }
+      ]
+    },
+    "create": {
+      "$or": [
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "user"
+          }
+        }
+      ]
+    },
+    "update": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "delete": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    }
+  }
+}

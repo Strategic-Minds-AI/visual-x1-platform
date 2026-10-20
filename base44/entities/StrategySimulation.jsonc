@@ -1,0 +1,110 @@
+{
+  "name": "StrategySimulation",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Version label, e.g. Version A"
+    },
+    "industry": {
+      "type": "string"
+    },
+    "target_keyword": {
+      "type": "string"
+    },
+    "profile_json": {
+      "type": "string",
+      "description": "JSON of the site profile inputs used for this version"
+    },
+    "strategies_json": {
+      "type": "string",
+      "description": "JSON array of the strategies enabled in this version"
+    },
+    "results_json": {
+      "type": "string",
+      "description": "JSON of the simulated result ranges for this version"
+    },
+    "days_to_page1_p50": {
+      "type": "number",
+      "default": 0,
+      "description": "Expected days to reach Google page 1"
+    },
+    "expected_sessions_12m": {
+      "type": "number",
+      "default": 0
+    },
+    "expected_leads_12m": {
+      "type": "number",
+      "default": 0
+    },
+    "overall_score": {
+      "type": "number",
+      "default": 0,
+      "description": "Composite readiness score 0-100"
+    },
+    "confidence": {
+      "type": "number",
+      "default": 0,
+      "description": "Model confidence 0-1 based on how much input data is real"
+    },
+    "notes": {
+      "type": "string",
+      "description": "What this version changes versus the others"
+    }
+  },
+  "required": [
+    "name"
+  ],
+  "rls": {
+    "read": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "create": {
+      "$or": [
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "user"
+          }
+        }
+      ]
+    },
+    "update": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "delete": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    }
+  }
+}
