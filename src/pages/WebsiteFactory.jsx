@@ -1,130 +1,196 @@
 import React, { useState, useEffect } from "react";
-import { Card, CardContent } from "@/components/ui/card";
-import { Factory, Zap, Globe, Link2, TrendingUp } from "lucide-react";
+import { Link } from "react-router-dom";
+import { ChevronLeft, Factory, PanelLeft, PanelRight, History } from "lucide-react";
 import FactoryLauncher from "@/components/factory/FactoryLauncher";
-import PipelineResults from "@/components/factory/PipelineResults";
+import LivePreview from "@/components/factory/LivePreview";
+import ValidationInspector from "@/components/factory/ValidationInspector";
 import BatchHistory from "@/components/factory/BatchHistory";
 import { base44 } from "@/api/base44Client";
 
-const pipelineSteps = [
-  { icon: "search", label: "Fetch Benchmarks", desc: "Top 5 UX references" },
-  { icon: "file", label: "Convert Prompt", desc: "Sentence → production prompt" },
-  { icon: "settings", label: "Compile Spec", desc: "Full product specification" },
-  { icon: "shield", label: "QA Audit", desc: "8-dimension scoring" },
-  { icon: "lightbulb", label: "Refinement", desc: "Auto-improve to 95+" },
-];
-
 export default function WebsiteFactory() {
   const [isRunning, setIsRunning] = useState(false);
+  const [currentStep, setCurrentStep] = useState("");
   const [result, setResult] = useState(null);
+  const [html, setHtml] = useState("");
   const [error, setError] = useState(null);
   const [refreshKey, setRefreshKey] = useState(0);
-  const [stats, setStats] = useState({ totalBatches: 0, passedBatches: 0, avgScore: 0 });
-
-  useEffect(() => {
-    (async () => {
-      try {
-        const total = await base44.entities.FactoryBatch.count({});
-        const passed = await base44.entities.FactoryBatch.count({ status: 'ready' });
-        const { rows } = await base44.entities.FactoryBatch.aggregate({ groupBy: 'status', sort: '-count' });
-        setStats({ totalBatches: total, passedBatches: passed, avgScore: 0 });
-      } catch {
-        // ignore
-      }
-    })();
-  }, [refreshKey]);
+  const [showHistory, setShowHistory] = useState(false);
+  const [leftPanelOpen, setLeftPanelOpen] = useState(true);
+  const [rightPanelOpen, setRightPanelOpen] = useState(true);
 
   const handleLaunch = async (payload) => {
     setIsRunning(true);
     setError(null);
     setResult(null);
+    setHtml("");
+    setCurrentStep("fetching_benchmarks");
+
+    // Simulate step progression for UI feedback
+    const steps = ["fetching_benchmarks", "converting_prompt", "compiling_spec", "running_qa", "rendering", "validating"];
+    let stepIdx = 0;
+    const stepInterval = setInterval(() => {
+      stepIdx++;
+      if (stepIdx < steps.length) setCurrentStep(steps[stepIdx]);
+    }, 3000);
+
     try {
       const response = await base44.functions.invoke('orchestrateFactory', payload);
+      clearInterval(stepInterval);
       setResult(response.data);
+      setHtml(response.data.html || "");
+      setCurrentStep(response.data.decision === "pass" ? "complete" : "refining");
       setRefreshKey(k => k + 1);
     } catch (err) {
+      clearInterval(stepInterval);
       setError(err.response?.data?.error || err.message || "Pipeline failed");
+      setCurrentStep("");
     } finally {
       setIsRunning(false);
     }
   };
 
+  const handleRepair = async () => {
+    if (!result?.validation?.findings || !html) return;
+    setIsRunning(true);
+    setCurrentStep("refining");
+    try {
+      const repairRes = await base44.functions.invoke('repairDefects', {
+        html,
+        findings: result.validation.findings,
+        brief: result.prompt?.prompt || "",
+        industry: result.prompt?.site_type || "",
+        batch_id: result.batch_id,
+        repair_round: (result.repair_round || 0) + 1,
+      });
+      setHtml(repairRes.data.html);
+      // Re-validate the repaired HTML
+      const valRes = await base44.functions.invoke('independentValidation', {
+        html: repairRes.data.html,
+        batch_id: result.batch_id,
+        brief: result.prompt?.prompt || "",
+      });
+      setResult(prev => ({
+        ...prev,
+        validation: valRes.data.validation,
+        quality_score: valRes.data.validation.total_score,
+        decision: valRes.data.validation.decision,
+        repair_round: (prev?.repair_round || 0) + 1,
+      }));
+      setRefreshKey(k => k + 1);
+    } catch (err) {
+      setError(err.response?.data?.error || err.message || "Repair failed");
+    } finally {
+      setIsRunning(false);
+      setCurrentStep("");
+    }
+  };
+
   return (
-    <div className="min-h-screen bg-background p-4 md:p-6 max-w-5xl mx-auto space-y-6">
-      {/* Header */}
-      <div className="text-center space-y-2 py-4">
-        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 text-primary text-sm font-medium">
-          <Factory className="w-4 h-4" /> Visual X Autonomous Factory
+    <div className="h-screen flex flex-col bg-background overflow-hidden">
+      {/* Compact Header */}
+      <header className="border-b border-border bg-card shrink-0 px-4 py-2 flex items-center gap-3">
+        <Link to="/" className="flex items-center gap-1 text-muted-foreground hover:text-foreground transition text-sm">
+          <ChevronLeft className="w-4 h-4" /> Dashboard
+        </Link>
+        <span className="text-muted-foreground text-sm">/</span>
+        <div className="flex items-center gap-2">
+          <Factory className="w-4 h-4 text-primary" />
+          <h1 className="font-semibold text-sm">Visual X Autonomous Factory</h1>
         </div>
-        <h1 className="text-3xl md:text-4xl font-bold tracking-tight">Website & System Factory</h1>
-        <p className="text-muted-foreground max-w-2xl mx-auto">
-          One sentence in. A benchmark-validated, QA-gated, SEO-optimized website out.
-          Then mass-generate hundreds of variants and thousands of backlinks across every service industry.
-        </p>
-      </div>
+        <div className="ml-auto flex items-center gap-2">
+          <button
+            onClick={() => setLeftPanelOpen(!leftPanelOpen)}
+            className={`p-1.5 rounded-md transition ${leftPanelOpen ? "bg-primary/10 text-primary" : "text-muted-foreground hover:bg-muted"}`}
+            title="Toggle launcher panel"
+          >
+            <PanelLeft className="w-4 h-4" />
+          </button>
+          <button
+            onClick={() => setShowHistory(!showHistory)}
+            className={`p-1.5 rounded-md transition ${showHistory ? "bg-primary/10 text-primary" : "text-muted-foreground hover:bg-muted"}`}
+            title="Toggle history"
+          >
+            <History className="w-4 h-4" />
+          </button>
+          <button
+            onClick={() => setRightPanelOpen(!rightPanelOpen)}
+            className={`p-1.5 rounded-md transition ${rightPanelOpen ? "bg-primary/10 text-primary" : "text-muted-foreground hover:bg-muted"}`}
+            title="Toggle inspector panel"
+          >
+            <PanelRight className="w-4 h-4" />
+          </button>
+        </div>
+      </header>
 
-      {/* Stats Row */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-        <Card><CardContent className="pt-5 text-center">
-          <Factory className="w-6 h-6 mx-auto mb-1 text-primary" />
-          <div className="text-2xl font-bold">{stats.totalBatches}</div>
-          <div className="text-xs text-muted-foreground">Total Runs</div>
-        </CardContent></Card>
-        <Card><CardContent className="pt-5 text-center">
-          <Zap className="w-6 h-6 mx-auto mb-1 text-green-600" />
-          <div className="text-2xl font-bold">{stats.passedBatches}</div>
-          <div className="text-xs text-muted-foreground">QA Passed</div>
-        </CardContent></Card>
-        <Card><CardContent className="pt-5 text-center">
-          <Globe className="w-6 h-6 mx-auto mb-1 text-blue-600" />
-          <div className="text-2xl font-bold">75+</div>
-          <div className="text-xs text-muted-foreground">Benchmarks</div>
-        </CardContent></Card>
-        <Card><CardContent className="pt-5 text-center">
-          <Link2 className="w-6 h-6 mx-auto mb-1 text-purple-600" />
-          <div className="text-2xl font-bold">25+</div>
-          <div className="text-xs text-muted-foreground">Industries</div>
-        </CardContent></Card>
-      </div>
-
-      {/* Launcher */}
-      <FactoryLauncher onLaunch={handleLaunch} isRunning={isRunning} />
-
-      {/* Pipeline Visualization (shown while running) */}
-      {isRunning && (
-        <Card className="border-2 border-primary/30">
-          <CardContent className="pt-6">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="font-semibold flex items-center gap-2"><TrendingUp className="w-5 h-5 text-primary" /> Autonomous Pipeline Running</h3>
-            </div>
-            <div className="flex flex-wrap gap-2">
-              {pipelineSteps.map((step, i) => (
-                <div key={i} className="flex items-center gap-2">
-                  <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-primary/5 border animate-pulse">
-                    <span className="text-xs font-medium">{step.label}</span>
-                  </div>
-                  {i < pipelineSteps.length - 1 && <span className="text-muted-foreground">→</span>}
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-      )}
-
-      {/* Error */}
+      {/* Error Banner */}
       {error && (
-        <Card className="border-2 border-destructive/40 bg-destructive/5">
-          <CardContent className="pt-6">
-            <p className="text-sm text-destructive font-medium">{error}</p>
-          </CardContent>
-        </Card>
+        <div className="px-4 py-2 bg-destructive/10 border-b border-destructive/20 text-sm text-destructive">
+          {error}
+        </div>
       )}
 
-      {/* Results */}
-      {result && <PipelineResults result={result} />}
+      {/* 3-Panel Workspace */}
+      <div className="flex-1 flex overflow-hidden">
+        {/* Left Panel — Launcher & Controls */}
+        {leftPanelOpen && (
+          <div className="w-72 border-r border-border bg-card shrink-0 overflow-hidden">
+            <FactoryLauncher onLaunch={handleLaunch} isRunning={isRunning} currentStep={currentStep} />
+          </div>
+        )}
 
-      {/* History */}
-      <BatchHistory refreshKey={refreshKey} />
+        {/* Center Panel — Live Preview */}
+        <div className="flex-1 flex flex-col overflow-hidden">
+          <LivePreview html={html} isRendering={isRunning && currentStep === "rendering"} />
+
+          {/* Repair Bar */}
+          {result && result.quality_score < 95 && !isRunning && (
+            <div className="border-t border-border bg-card px-4 py-2 flex items-center justify-between shrink-0">
+              <div className="flex items-center gap-2 text-sm">
+                <span className="text-yellow-600 font-medium">Repair Required</span>
+                <span className="text-muted-foreground text-xs">
+                  Score {result.quality_score}/100 — {(result.repair_round || 0)} repair round(s) used (max 3)
+                </span>
+              </div>
+              <button
+                onClick={handleRepair}
+                disabled={(result.repair_round || 0) >= 3}
+                className="px-3 py-1.5 text-sm font-medium bg-primary text-primary-foreground rounded-md hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                Apply Repair & Re-validate
+              </button>
+            </div>
+          )}
+
+          {/* Release Approved Banner */}
+          {result && result.quality_score >= 95 && !isRunning && (
+            <div className="border-t border-green-500/30 bg-green-50/50 px-4 py-2 flex items-center gap-2 shrink-0">
+              <span className="text-green-700 font-medium text-sm">Release Gate Passed</span>
+              <span className="text-green-600 text-xs">Score {result.quality_score}/100 — independently validated, ready for deployment</span>
+            </div>
+          )}
+        </div>
+
+        {/* Right Panel — Validation Inspector */}
+        {rightPanelOpen && (
+          <div className="w-80 border-l border-border bg-card shrink-0 overflow-hidden">
+            {result ? (
+              <ValidationInspector result={result} />
+            ) : (
+              <div className="flex flex-col items-center justify-center h-full text-muted-foreground gap-2 p-4">
+                <PanelRight className="w-8 h-8 opacity-20" />
+                <p className="text-xs text-center">Validation results, QA scores, and repair suggestions will appear here after the pipeline runs.</p>
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+
+      {/* History Drawer */}
+      {showHistory && (
+        <div className="border-t border-border bg-card max-h-64 overflow-y-auto shrink-0">
+          <BatchHistory refreshKey={refreshKey} />
+        </div>
+      )}
     </div>
   );
 }
