@@ -1,0 +1,166 @@
+/* Strategic Minds AI V2 | Motion Pack 1
+   Progressive enhancement only: no canvas, video, WebGL, scripts or tracking.
+   Motion is intentionally slow. Operating-system reduced-motion requests win.
+   Earth movement is a cinematic parallax illusion, not a geographic 3D globe rotation. */
+
+.v2-page .v2-earth { overflow:hidden; }
+.v2-page .v2-earth > img {
+  animation: v2-earth-drift 52s ease-in-out infinite alternate;
+  transform-origin: 50% 65%;
+  will-change: transform;
+}
+@keyframes v2-earth-drift {
+  0%   { transform: translate3d(-1.7%, 0, 0) scale(1.038); }
+  50%  { transform: translate3d(.4%, -.45%, 0) scale(1.042); }
+  100% { transform: translate3d(1.7%, 0, 0) scale(1.038); }
+}
+/* The city connectors animate along the surface of the existing approved Earth art. */
+.v2-page .v2-network {
+  position:absolute; inset:0; width:100%; height:100%;
+  z-index:2; overflow:visible; pointer-events:none;
+  opacity:.65; mix-blend-mode:screen;
+}
+.v2-page .v2-network .v2-network-track {
+  fill:none; stroke:rgba(58,179,255,.27); stroke-width:1.7;
+  vector-effect:non-scaling-stroke;
+}
+.v2-page .v2-network .v2-network-flow {
+  fill:none; stroke:#5feaff; stroke-width:2.4;
+  stroke-linecap:round; stroke-dasharray:5 135;
+  vector-effect:non-scaling-stroke;
+  filter: drop-shadow(0 0 3px rgba(52,195,255,.85));
+  animation:v2-link-data 12s linear infinite;
+}
+.v2-page .v2-network .v2-network-flow:nth-of-type(2n) { animation-delay:-5.5s; }
+.v2-page .v2-network .v2-network-flow:nth-of-type(3n) { animation-delay:-8.8s; }
+.v2-page .v2-network .v2-network-beacon {
+  fill:#79dbff; opacity:.4;
+  animation:v2-beacon 8.8s ease-in-out infinite;
+  filter:drop-shadow(0 0 4px #42cfff);
+}
+.v2-page .v2-network .v2-network-beacon:nth-of-type(2n) { animation-delay:-3s; }
+@keyframes v2-link-data { from {stroke-dashoffset:140;} to {stroke-dashoffset:0;} }
+@keyframes v2-beacon {0%,65%,100% {opacity:.28;}70%,78%{opacity:.85;}}
+
+/* Quiet drifting stardust, on a separate noninteractive layer. */
+.v2-page .v2-nebula { overflow:hidden; }
+.v2-page .v2-nebula::before {
+  content:""; position:absolute; inset:-4%; pointer-events:none;
+  background-image:
+    radial-gradient(circle at 13% 17%,rgba(155,231,255,.68) 0 1px,transparent 1.8px),
+    radial-gradient(circle at 66% 11%,rgba(255,255,255,.45) 0 .8px,transparent 2px),
+    radial-gradient(circle at 84% 57%,rgba(45,171,255,.55) 0 1px,transparent 2px),
+    radial-gradient(circle at 42% 72%,rgba(159,222,255,.36) 0 .8px,transparent 1.5px);
+  background-size:337px 313px,451px 397px,257px 443px,521px 379px;
+  opacity:.42;
+  animation:v2-stardust 56s ease-in-out infinite alternate;
+}
+@keyframes v2-stardust {
+  from {transform:translate3d(-10px,7px,0) scale(1.01);opacity:.36;}
+  to {transform:translate3d(13px,-9px,0) scale(1.018);opacity:.48;}
+}
+
+/* Chrome S glint: masked by the exact original emblem alpha so it never paints a rectangular box. */
+.v2-page .v2-emblem-stage {
+  width:clamp(195px,24vw,315px); position:relative; flex:none;
+  isolation:isolate; pointer-events:none;
+}
+.v2-page .v2-emblem-stage .v2-emblem {
+  width:100%; height:auto; margin:0; display:block;
+}
+.v2-page .v2-emblem-glint {
+  position:absolute; inset:0; pointer-events:none; z-index:1; opacity:.9;
+  background:linear-gradient(108deg,transparent 27%,rgba(142,224,255,.05) 37%,rgba(240,253,255,.65) 49%,rgba(138,226,255,.12) 56%,transparent 68%);
+  background-size:315% 100%; background-position:100% 50%;
+  -webkit-mask-image:url("../assets/x1/silver-emblem.png");
+  mask-image:url("../assets/x1/silver-emblem.png");
+  -webkit-mask-size:contain; mask-size:contain;
+  -webkit-mask-position:center; mask-position:center;
+  -webkit-mask-repeat:no-repeat; mask-repeat:no-repeat;
+  mix-blend-mode:screen;
+  animation:v2-metallic-glint 11s ease-in-out infinite;
+}
+@keyframes v2-metallic-glint {
+  0%,62%,100%{background-position:100% 50%;opacity:0;}
+  64%{opacity:.45;}
+  69%{background-position:0% 50%;opacity:.78;}
+  75%{background-position:0% 50%;opacity:0;}
+}
+/* Retain exact logo sizing across existing desktop, expanded, Eden and phone layout. */
+.v2-page .v2-earth-hero-expanded .v2-emblem-stage{width:clamp(190px,22vw,275px)}
+.v2-page .v2-brand-small .v2-emblem-stage{width:160px;margin-left:19%}
+
+/* A light travels only around the rounded nav frame on hover/focus. */
+.v2-page .v2-nav-shell {position:relative;isolation:isolate;}
+.v2-page .v2-nav-shell::before {
+  content:"";position:absolute;inset:-1px;padding:2px;border-radius:inherit;
+  pointer-events:none;z-index:0;
+  background:linear-gradient(102deg,transparent 17%,rgba(116,240,255,.05) 34%,#a2f5ff 49%,rgba(4,197,255,.26) 57%,transparent 73%);
+  background-size:245% 100%;background-position:100% center;
+  -webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);
+  -webkit-mask-composite:xor;
+  mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);
+  mask-composite:exclude;
+  opacity:0;transition:opacity .3s ease;
+}
+.v2-page .v2-nav-shell:is(:hover,:focus-within)::before{
+  opacity:1;
+  animation:v2-nav-tracer 1.45s linear infinite;
+}
+.v2-page .v2-nav-shell > * {position:relative;z-index:1;}
+@keyframes v2-nav-tracer {
+  from{background-position:100% center;}
+  to{background-position:0% center;}
+}
+
+/* Eden's subtle double-heartbeat uses glow only, no attention-grabbing scaling. */
+.v2-page .v2-call-eden {
+  animation:v2-eden-heartbeat 8s ease-in-out infinite;
+}
+@keyframes v2-eden-heartbeat {
+  0%,68%,100%{
+    box-shadow:0 0 12px rgba(70,255,140,.32),0 0 1px #82ffb1,inset 0 0 11px rgba(106,255,158,.1);
+  }
+  73%,80%{
+    box-shadow:0 0 27px rgba(70,255,140,.54),0 0 3px #9bffbf,inset 0 0 17px rgba(106,255,158,.19);
+  }
+  76%,84%{
+    box-shadow:0 0 15px rgba(70,255,140,.35),0 0 1px #82ffb1,inset 0 0 12px rgba(106,255,158,.11);
+  }
+}
+.v2-page .v2-call-eden:hover,.v2-page .v2-call-eden:focus-visible{
+  animation-play-state:paused;
+  box-shadow:0 0 30px rgba(70,255,140,.6),inset 0 0 17px rgba(106,255,158,.2);
+}
+
+/* Performance-first on phones: no expensive GPU drop shadow on path animation.
+   Emblem, Earth and starfield continue with half-strength visual movement. */
+@media(max-width:820px){
+ .v2-page .v2-emblem-stage{width:270px}
+ .v2-page .v2-network {opacity:.38}
+ .v2-page .v2-network .v2-network-flow,
+ .v2-page .v2-network .v2-network-beacon {filter:none}
+ .v2-page .v2-brand-small .v2-emblem-stage{width:160px}
+}
+@media(max-width:520px){
+ .v2-page .v2-emblem-stage{width:clamp(180px,53vw,245px)}
+ .v2-page .v2-earth-hero-expanded .v2-emblem-stage{width:clamp(170px,44vw,230px)}
+ .v2-page .v2-brand-small .v2-emblem-stage{width:140px}
+}
+
+/* Accessibility and battery-saving: stop *every* new motion effect. */
+@media(prefers-reduced-motion:reduce){
+ .v2-page .v2-earth > img,
+ .v2-page .v2-nebula::before,
+ .v2-page .v2-emblem-glint,
+ .v2-page .v2-network .v2-network-flow,
+ .v2-page .v2-network .v2-network-beacon,
+ .v2-page .v2-call-eden,
+ .v2-page .v2-nav-shell::before{
+   animation:none!important;transition:none!important;will-change:auto!important;
+ }
+ .v2-page .v2-earth > img{transform:none!important;}
+ .v2-page .v2-emblem-glint,.v2-page .v2-nav-shell::before{opacity:0!important;}
+ .v2-page .v2-network .v2-network-flow{stroke-dasharray:none;opacity:.25;filter:none;}
+ .v2-page .v2-network .v2-network-beacon{opacity:.35;filter:none;}
+}

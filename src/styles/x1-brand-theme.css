@@ -2,8 +2,11 @@
  * Source of truth: approved /v2/a homepage, V2Experience.css.
  * Other pages must inherit these exact hexadecimal values and original assets.
  * Theme updates require visual acceptance against /v2/a desktop + mobile.
- * Bundled from X1's src/BrandTheme.css; the two asset url() values point at the
- * same live artwork because this app's own public/ files are not served.
+ *
+ * Byte-exact port of X1's apps/strategic-minds-v2/src/BrandTheme.css at commit
+ * 0994f0393619777cb701b9a6193c3d340bc706ba. Only the two asset url() values are
+ * rewritten: this host does not serve public/, so the identical artwork is
+ * bundled through Vite instead of requested from /v2-assets/.
  */
 :root{
   --smai-canvas:#02050d;
@@ -18,8 +21,8 @@
   --smai-white:#f6fbff;
   --smai-muted:#9bbdd0;
   --smai-focus:#83ffb4;
-  --smai-brand-emblem:url("https://www.strategicmindsai.com/v2-assets/silver-emblem.png");
-  --smai-connected-earth:url("https://www.strategicmindsai.com/v2-assets/connected-earth.jpg");
+  --smai-brand-emblem:url("../assets/x1/silver-emblem.png");
+  --smai-connected-earth:url("../assets/x1/connected-earth.jpg");
   --smai-star-field:radial-gradient(circle at 12% 18%,rgba(167,220,255,.7) 0 1px,transparent 1.5px),radial-gradient(circle at 80% 47%,rgba(55,177,250,.65) 0 .8px,transparent 1.5px);
   --smai-canvas-glow:radial-gradient(ellipse at 70% 28%,rgba(18,140,255,.14),transparent 55%);
   color-scheme:dark;
