@@ -1,0 +1,34 @@
+name: Visual Sandbox Safety
+on:
+  pull_request:
+    paths:
+      - "src/components/visualeditor/**"
+      - "tests/visual-sandbox.test.mjs"
+      - ".github/workflows/visual-sandbox-safety.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: visual-sandbox-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+      - run: npm ci --no-audit --no-fund
+      - run: node --test tests/visual-sandbox.test.mjs
+      - name: Lint modified sandbox component
+        run: npx eslint src/components/visualeditor/EditorCanvas.jsx --quiet
+      - run: npm run build
+      - name: Repository lint baseline (existing debt; separately tracked)
+        continue-on-error: true
+        run: npm run lint
+      - name: Repository typecheck baseline (existing debt; separately tracked)
+        continue-on-error: true
+        run: npm run typecheck
