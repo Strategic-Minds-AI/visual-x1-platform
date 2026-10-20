@@ -3,6 +3,7 @@ import { Radar } from "lucide-react";
 import X1BrandHeader from "@/components/x1/X1BrandHeader";
 import X1StatusStrip from "@/components/x1/X1StatusStrip";
 import X1ParityLedger from "@/components/x1/X1ParityLedger";
+import X1EmbedPanel from "@/components/x1/X1EmbedPanel";
 
 export default function X1OperatingSystem() {
   return (
@@ -19,13 +20,11 @@ export default function X1OperatingSystem() {
 
         <X1BrandHeader />
         <X1StatusStrip />
+        <X1EmbedPanel />
         <X1ParityLedger />
 
         <p className="text-xs text-muted-foreground pb-2">
-          Parity is recorded as it is, not as it should be: the nine experiences are inventoried and not yet ported, seven of the twelve
-          routes are bridged here, and the five constraints above are what a full merge has to resolve. X1's own doctrine forbids a
-          Base44 runtime dependency and a second orchestration queue, so Visual X is built as the cockpit over X1's plane rather than a
-          replacement for it.
+          X1 remains the runtime authority. These read-only surfaces are conditional on production deployment, token provisioning and audit verification. Screenshots and live embed parity are not claimed until browser-tested.
         </p>
       </div>
     </div>
