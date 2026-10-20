@@ -9,6 +9,8 @@ import SimulatorResults from "@/components/editor/SimulatorResults";
 import PromptChainBuilder from "@/components/editor/PromptChainBuilder";
 import { MOBILE_TABS } from "@/components/visualeditor/editorNav";
 import "@/styles/x1-visual-editor.css";
+import SandboxOpsDrawer from "@/components/visualeditor/SandboxOpsDrawer";
+import { Activity } from "lucide-react";
 
 const STATUS = (engine, sending) => {
   if (sending) return "THINKING";
@@ -38,6 +40,7 @@ export default function VisualEditorWorkspace() {
   const [refreshTick, setRefreshTick] = useState(0);
   const [sending, setSending] = useState(false);
   const [projectName, setProjectName] = useState("Untitled build");
+  const [opsOpen, setOpsOpen] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -120,6 +123,9 @@ export default function VisualEditorWorkspace() {
           onRefresh={() => setRefreshTick((t) => t + 1)}
           onTogglePanel={() => setPanelCollapsed((v) => !v)}
         />
+
+        <button type="button" className="x1-ops-launch" onClick={() => setOpsOpen(true)} aria-label="Open X1 autonomous coding sandbox"><Activity size={14} /> AGENT SANDBOX</button>
+        <SandboxOpsDrawer open={opsOpen} onClose={() => setOpsOpen(false)} />
 
         <div className="ve-split" data-pane={mobilePane}>
           {!panelCollapsed && (
