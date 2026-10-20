@@ -186,6 +186,29 @@ export default async function (req) {
       return Response.json({ ok: true, deployment: deploymentSummary(d) });
     }
 
+    if (action === 'rollback') {
+      if (!projectRef) return Response.json({ ok: false, error: 'Which project should be rolled back?' }, { status: 400 });
+      const p = await call(`/v9/projects/${encodeURIComponent(projectRef)}`, { team });
+      const d = await call('/v6/deployments', { team, query: { projectId: p.id, limit: 10 } });
+      const list = d.deployments || [];
+      const requested = String(body.deployment_id || '').trim();
+      const targetId = requested || (list[1] ? list[1].id : '');
+      if (!targetId) {
+        return Response.json({
+          ok: false,
+          error: 'This project has no earlier deployment to roll back to. Vercel only lists deployments it still holds.'
+        }, { status: 200 });
+      }
+      const answer = await call(`/v9/projects/${encodeURIComponent(p.id)}/rollback/${encodeURIComponent(targetId)}`, { method: 'POST', team });
+      const target = list.find((x) => x.id === targetId) || { id: targetId };
+      return Response.json({
+        ok: true,
+        project: projectSummary(p),
+        rolled_back_to: deploymentSummary(target),
+        answer: answer && answer.job ? 'Vercel accepted the rollback and is applying it.' : 'Vercel answered the rollback request.'
+      });
+    }
+
     return Response.json({ ok: false, error: `Unknown action: ${action}` }, { status: 400 });
   } catch (error) {
     return Response.json({

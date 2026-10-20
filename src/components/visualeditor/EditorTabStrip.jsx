@@ -1,12 +1,13 @@
 import React from "react";
-import { Plus, X } from "lucide-react";
+import { X } from "lucide-react";
 
 /**
- * The browser strip above the editor: one tab per visual project, the way a
- * browser holds one tab per page. Selecting a tab pulls up the page it was left
- * on; the cross closes it and the plus opens another project beside it.
+ * The browser strip above the editor: one tab per visual project, the way a browser
+ * holds one tab per page. Selecting a tab pulls up the page it was left on, and the
+ * cross closes it. Opening another project lives at the top right of the editor
+ * screen itself, in the editor's own toolbar.
  */
-export default function EditorTabStrip({ tabs, activeId, onSelect, onClose, onOpen }) {
+export default function EditorTabStrip({ tabs, activeId, onSelect, onClose }) {
   return (
     <div className="ve-tabbar">
       <div className="ve-tabs" aria-label="Visual projects">
@@ -37,10 +38,6 @@ export default function EditorTabStrip({ tabs, activeId, onSelect, onClose, onOp
           );
         })}
       </div>
-
-      <button type="button" className="ve-tab-new" onClick={onOpen} title="New visual project tab" aria-label="New tab">
-        <Plus size={14} />
-      </button>
     </div>
   );
 }

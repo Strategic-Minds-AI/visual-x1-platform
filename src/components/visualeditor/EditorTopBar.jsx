@@ -1,14 +1,12 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import { Boxes, LayoutDashboard, PanelLeftClose, PanelLeftOpen } from "lucide-react";
+import { Boxes, PanelLeftClose, PanelLeftOpen } from "lucide-react";
 import ModuleHub from "@/components/admin/ModuleHub";
 
-// The package's builder header: the Dashboard button, the project and the composer
+// The package's builder header: the project's own mark and name and the composer
 // panel toggle on the left, the module launcher on the right — in console pill
-// styling. Every control here does something: Dashboard returns to the console's
-// command deck and MODULES opens every Visual X module. The canvas tools — the view
-// switch, the device frames, refresh — sit in the editor's own bottom bar, which is
-// where the Windows-style taskbar of the workspace belongs.
+// styling. The way back to the console's command deck sits at the top right of the
+// chat panel, with the rest of the chat's own controls; the editor's tools sit in
+// the toolbar directly over the editor screen, and the canvas views in the bottom bar.
 export default function EditorTopBar({ projectName, panelCollapsed, onTogglePanel }) {
   const [hubOpen, setHubOpen] = useState(false);
 
@@ -16,10 +14,6 @@ export default function EditorTopBar({ projectName, panelCollapsed, onTogglePane
     <>
       <header className="ve-topbar">
         <div className="ve-topbar-left">
-          <Link className="ve-pill ve-dash" to="/admin?section=overview" title="Dashboard — the console command deck">
-            <LayoutDashboard size={13} />
-            <span className="ve-pill-label">DASHBOARD</span>
-          </Link>
           <span className="ve-mark" aria-hidden="true">V</span>
           <span className="ve-project" title={projectName}>{projectName}</span>
           <button

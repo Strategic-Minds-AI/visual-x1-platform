@@ -1,10 +1,13 @@
 import React, { useEffect, useRef } from "react";
-import { Loader2, Sparkles } from "lucide-react";
+import { Link } from "react-router-dom";
+import { LayoutDashboard, Loader2, Sparkles } from "lucide-react";
 import ChatBubble from "@/components/visualeditor/ChatBubble";
 import EditorComposer from "@/components/visualeditor/EditorComposer";
 
-// The package's chat panel: a navigation bar carrying the agent, the message
-// stream, then the composer. Wired to this app's own agent and pipelines.
+// The package's chat panel: a navigation bar carrying the agent and, at its top
+// right, the way back to the console's command deck — then the message stream, then
+// the composer, where every chat-side control lives. Wired to this app's own agent
+// and pipelines.
 export default function EditorChat({ engine, busy, status, leftMode, onComposer, onSend, onRender, onConvert, onSimulate, onAddToChain }) {
   const endRef = useRef(null);
 
@@ -26,6 +29,13 @@ export default function EditorChat({ engine, busy, status, leftMode, onComposer,
               {status}
             </span>
           </div>
+        </div>
+
+        <div className="ve-head-actions">
+          <Link className="ve-pill ve-dash" to="/admin?section=overview" title="Dashboard — the console command deck">
+            <LayoutDashboard size={13} />
+            <span className="ve-pill-label">DASHBOARD</span>
+          </Link>
         </div>
       </div>
 

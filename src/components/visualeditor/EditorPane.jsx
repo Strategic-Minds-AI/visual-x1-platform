@@ -8,6 +8,14 @@ import PromptSystemPanel from "@/components/visualeditor/PromptSystemPanel";
 import SimulatorResults from "@/components/editor/SimulatorResults";
 import PromptChainBuilder from "@/components/editor/PromptChainBuilder";
 import EditorTaskbar from "@/components/visualeditor/EditorTaskbar";
+import EditorToolbar from "@/components/visualeditor/EditorToolbar";
+import EditorAgentResults from "@/components/visualeditor/EditorAgentResults";
+import EditorTemplateMenu from "@/components/visualeditor/EditorTemplateMenu";
+import EditorGithubMenu from "@/components/visualeditor/EditorGithubMenu";
+import EditorVercelMenu from "@/components/visualeditor/EditorVercelMenu";
+import useEditorTools from "@/hooks/useEditorTools";
+import useVercelEditor from "@/hooks/useVercelEditor";
+import useGithubEditor from "@/hooks/useGithubEditor";
 import { MOBILE_TABS } from "@/components/visualeditor/editorNav";
 
 const STATUS = (engine, sending) => {
@@ -40,8 +48,12 @@ export default function EditorPane({
   projectName,
   tabs = [],
   onSelectTab,
+  onNewProject,
 }) {
   const engine = useEditorEngine(initial);
+  const tools = useEditorTools({ engine, projectName });
+  const vercel = useVercelEditor({ say: tools.say, openSource: tools.openSource });
+  const github = useGithubEditor({ say: tools.say, openSource: tools.openSource });
   const [leftMode, setLeftMode] = useState(initial?.leftMode || "chat");
   const [canvasView, setCanvasView] = useState(initial?.canvasView || "preview");
   const [device, setDevice] = useState(initial?.device || "desktop");
@@ -133,7 +145,7 @@ export default function EditorPane({
     pickCanvas("preview");
     onName?.(overridePrompt || engine.input);
     if (overridePrompt) engine.setInput(overridePrompt);
-    engine.handleRender(overridePrompt);
+    tools.generate(overridePrompt);
   };
 
   // The bottom bar's search hands its request to the same pipelines the composer
@@ -141,6 +153,50 @@ export default function EditorPane({
   const askAgent = (text) => {
     pickComposer("chat");
     engine.setInput(text);
+  };
+
+  // A template's own fields become the request in the composer, because the composer
+  // is where every build starts.
+  const useTemplate = (text) => {
+    pickComposer("chat");
+    engine.setInput(text);
+  };
+
+  // The toolbar's controls, grouped as the workflow runs left to right: point and
+  // template the work, generate it, put it through QA, the validator and the test
+  // agent, take its source from GitHub or Vercel, then roll back, publish or deploy.
+  const toolbar = {
+    pointer: {
+      active: tools.pointerActive,
+      target: tools.pointerTarget,
+      onToggle: tools.togglePointer,
+      onClear: tools.clearPointer,
+    },
+    build: {
+      onGenerate: () => render(),
+      onRegenerate: tools.regenerate,
+      canGenerate: Boolean(engine.input.trim()),
+      canRegenerate: tools.canRegenerate,
+      running: engine.loading.render || engine.loading.chain,
+    },
+    verify: { onQA: tools.runQA, onValidator: tools.runValidator, onTest: tools.runTest, running: tools.busy, ready: tools.hasArtifact },
+    source: {
+      templates: <EditorTemplateMenu onUse={useTemplate} />,
+      github: <EditorGithubMenu github={github} />,
+      vercel: <EditorVercelMenu vercel={vercel} />,
+    },
+    release: {
+      onRollback: tools.rollback,
+      canRollback: tools.canRollback,
+      onPublish: tools.publish,
+      publishing: tools.busy === "publish",
+      canPublish: tools.hasArtifact,
+      onDeploy: () => vercel.deploy(),
+      deploying: vercel.busy === "deploy",
+      canDeploy: Boolean(vercel.selected),
+      deployTarget: vercel.selected?.name || "",
+    },
+    screen: { onOpen: tools.openArtifact, canOpen: tools.hasArtifact, onNewProject },
   };
 
   return (
@@ -185,13 +241,16 @@ export default function EditorPane({
         )}
 
         <div className="ve-canvascol">
+          {/* Every editor tool sits directly over the editor screen, in one bar. */}
+          <EditorToolbar {...toolbar} />
+
           {canvasView === "preview" && (
             <EditorCanvas
               device={device}
               previewHtml={engine.previewHtml}
-              projectName={projectName}
-              isRunning={engine.loading.render || engine.loading.chain}
               refreshTick={refreshTick}
+              pickMode={tools.pointerActive}
+              onPick={tools.handlePicked}
             />
           )}
           {canvasView === "simulator" && (
@@ -243,6 +302,13 @@ export default function EditorPane({
         onSelectTab={onSelectTab}
         onBuild={render}
         onAsk={askAgent}
+      />
+
+      <EditorAgentResults
+        open={tools.reportOpen}
+        onOpenChange={tools.setReportOpen}
+        report={tools.report}
+        onRegenerate={tools.regenerate}
       />
     </>
   );

@@ -50,7 +50,6 @@ export default function VisualEditorWorkspace({ rail, railOpen = false }) {
           activeId={tabs.active.id}
           onSelect={tabs.selectTab}
           onClose={tabs.closeTab}
-          onOpen={tabs.openTab}
         />
 
         <EditorPane
@@ -61,6 +60,7 @@ export default function VisualEditorWorkspace({ rail, railOpen = false }) {
           projectName={projectName}
           tabs={tabs.tabs}
           onSelectTab={tabs.selectTab}
+          onNewProject={tabs.openTab}
           rail={rail}
           railOpen={railOpen}
         />

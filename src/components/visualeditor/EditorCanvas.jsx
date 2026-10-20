@@ -1,5 +1,6 @@
-import React, { useState } from "react";
-import { ExternalLink, Eye } from "lucide-react";
+import React, { useEffect, useRef } from "react";
+import { Eye } from "lucide-react";
+import { withPicker } from "@/components/visualeditor/editorPicker";
 
 const FRAME_CLASS = {
   desktop: "ve-frame",
@@ -7,40 +8,36 @@ const FRAME_CLASS = {
   mobile: "ve-frame ve-frame-mobile",
 };
 
-// The package's preview frame: a state strip (project, PREVIEW/BUILDING, open) over
-// the rendered artifact, sized to the chosen device. Keyed on refresh so a rebuild
-// re-mounts the document.
-export default function EditorCanvas({ device, previewHtml, projectName, isRunning, refreshTick = 0 }) {
-  const [shotKey, setShotKey] = useState(0);
+/**
+ * The editor screen: the artifact, rendered in the device frame the bar chose. The
+ * canvas tools live in the toolbar directly above this, so what is left here is the
+ * document itself — plus, when the point tool is armed, the picker's report of
+ * whichever element was clicked, which turns into a targeted edit.
+ */
+export default function EditorCanvas({ device, previewHtml, refreshTick = 0, pickMode = false, onPick }) {
+  const frameRef = useRef(null);
 
-  const open = () => {
-    const url = URL.createObjectURL(new Blob([previewHtml], { type: "text/html" }));
-    window.open(url, "_blank", "noopener");
-    setTimeout(() => URL.revokeObjectURL(url), 60000);
-  };
-
-  const state = !previewHtml ? "NO ARTIFACT" : isRunning ? "BUILDING" : "PREVIEW";
+  useEffect(() => {
+    const report = (event) => {
+      const frame = frameRef.current;
+      if (!frame || event.source !== frame.contentWindow) return;
+      const data = event.data;
+      if (!data || data.source !== "visual-x-picker" || !data.element) return;
+      onPick?.(data.element);
+    };
+    window.addEventListener("message", report);
+    return () => window.removeEventListener("message", report);
+  }, [onPick]);
 
   return (
     <div className="ve-frame-area">
-      <div className="ve-frame-bar">
-        <span className="ve-frame-project">{projectName}</span>
-        <span className={`ve-status${isRunning && previewHtml ? " is-busy" : ""}`}>
-          <i />
-          {state}
-        </span>
-        <button className="cp-outline" type="button" onClick={open} disabled={!previewHtml}>
-          <ExternalLink size={12} />
-          OPEN
-        </button>
-      </div>
-
       <div className="ve-frame-body">
         {previewHtml ? (
           <div className={FRAME_CLASS[device] || "ve-frame"}>
             <iframe
-              key={`${refreshTick}-${shotKey}`}
-              srcDoc={previewHtml}
+              ref={frameRef}
+              key={`${refreshTick}-${pickMode ? "pick" : "preview"}`}
+              srcDoc={pickMode ? withPicker(previewHtml) : previewHtml}
               title="Rendered artifact"
               sandbox="allow-scripts"
             />
@@ -48,7 +45,10 @@ export default function EditorCanvas({ device, previewHtml, projectName, isRunni
         ) : (
           <div className="ve-empty">
             <Eye size={26} />
-            <p>Describe what to build and press Build in the chat panel, or tap a suggestion. The rendered artifact appears here in the device frame you choose.</p>
+            <p>
+              Describe what to build and press Generate, or open a live project from the Vercel or GitHub menu. The artifact appears here in the device
+              frame you choose, and the point tool turns it into something you can edit.
+            </p>
           </div>
         )}
       </div>
