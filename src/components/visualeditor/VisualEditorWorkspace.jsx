@@ -3,6 +3,7 @@ import { base44 } from "@/api/base44Client";
 import useEditorTabs from "@/hooks/useEditorTabs";
 import EditorTabStrip from "@/components/visualeditor/EditorTabStrip";
 import EditorPane from "@/components/visualeditor/EditorPane";
+import NewProjectDialog from "@/components/visualeditor/NewProjectDialog";
 import { DEFAULT_TITLE } from "@/lib/editorTabs";
 import "@/styles/x1-visual-editor.css";
 
@@ -27,6 +28,9 @@ export default function VisualEditorWorkspace({ rail, railOpen = false }) {
   // The live project names a tab the operator has not named by working in it yet;
   // every tab after that carries its own name, so two projects never share one.
   const [liveProject, setLiveProject] = useState(DEFAULT_TITLE);
+  // Opening a project asks for its name first, so a new tab is named by its operator
+  // rather than by the first request it happens to receive.
+  const [nameOpen, setNameOpen] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -60,11 +64,13 @@ export default function VisualEditorWorkspace({ rail, railOpen = false }) {
           projectName={projectName}
           tabs={tabs.tabs}
           onSelectTab={tabs.selectTab}
-          onNewProject={tabs.openTab}
+          onNewProject={() => setNameOpen(true)}
           rail={rail}
           railOpen={railOpen}
         />
       </section>
+
+      <NewProjectDialog open={nameOpen} onOpenChange={setNameOpen} onCreate={tabs.openTab} />
     </div>
   );
 }

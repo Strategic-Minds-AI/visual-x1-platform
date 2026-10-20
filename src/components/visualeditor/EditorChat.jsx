@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
-import { LayoutDashboard, Loader2, Sparkles } from "lucide-react";
+import { LayoutDashboard, Loader2 } from "lucide-react";
 import ChatBubble from "@/components/visualeditor/ChatBubble";
 import EditorComposer from "@/components/visualeditor/EditorComposer";
 import "@/styles/x1-editor-chat.css";
@@ -20,16 +20,11 @@ export default function EditorChat({ engine, busy, status, leftMode, onComposer,
     <>
       <div className="ve-panel-head">
         <div className="ve-agent">
-          <span className="ve-avatar" aria-hidden="true">
-            <Sparkles size={14} />
+          <p className="ve-name">EDITOR AGENT</p>
+          <span className={`ve-status${busy ? " is-busy" : ""}`}>
+            <i />
+            {status}
           </span>
-          <div>
-            <p className="ve-name">EDITOR AGENT</p>
-            <span className={`ve-status${busy ? " is-busy" : ""}`}>
-              <i />
-              {status}
-            </span>
-          </div>
         </div>
 
         <div className="ve-head-actions">
@@ -41,14 +36,7 @@ export default function EditorChat({ engine, busy, status, leftMode, onComposer,
       </div>
 
       <div className="ve-scroll">
-        {engine.messages.length === 0 ? (
-          <div className="ve-empty">
-            <Sparkles size={26} />
-            <p>I can build, render, convert and check anything here. Describe what you want, or tap a suggestion.</p>
-          </div>
-        ) : (
-          engine.messages.map((message, i) => <ChatBubble key={i} {...message} />)
-        )}
+        {engine.messages.map((message, i) => <ChatBubble key={i} {...message} />)}
         {busy && (
           <p className="ve-name" style={{ display: "flex", alignItems: "center", gap: 7 }}>
             <Loader2 size={12} className="animate-spin" /> working

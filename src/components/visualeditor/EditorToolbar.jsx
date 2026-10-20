@@ -16,12 +16,13 @@ import {
 } from "lucide-react";
 import { DEVICES } from "@/components/visualeditor/editorNav";
 
-function Pill({ Icon, label, title, onClick, disabled, busy, active, className = "" }) {
+function Pill({ Icon, label, title, onClick, onDoubleClick, disabled, busy, active, className = "" }) {
   return (
     <button
       type="button"
       className={`ve-pill${active ? " selected" : ""}${className ? ` ${className}` : ""}`}
       onClick={onClick}
+      onDoubleClick={onDoubleClick}
       disabled={disabled || Boolean(busy)}
       title={title || label}
       aria-pressed={active || undefined}
@@ -137,12 +138,14 @@ export default function EditorToolbar({ pointer, build, verify, source, release,
           </span>
         )}
         <Pill Icon={ExternalLink} label="OPEN" onClick={screen.onOpen} disabled={!screen.canOpen} title="Open the artifact in a new tab" />
+        {/* Press or double-click to name a new project; it opens as its own tab. */}
         <Pill
           Icon={Plus}
           label="NEW PROJECT"
           onClick={screen.onNewProject}
+          onDoubleClick={screen.onNewProject}
           className="ve-new-project"
-          title="Open another visual project in its own tab"
+          title="Name a new project and open it in its own tab"
         />
       </div>
     </div>

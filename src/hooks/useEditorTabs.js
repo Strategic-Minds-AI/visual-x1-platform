@@ -41,9 +41,11 @@ export default function useEditorTabs() {
     }));
   }, []);
 
-  const openTab = useCallback(() => {
+  // A new project is named as it is created, so its tab carries the operator's own
+  // name from the start rather than taking the first request it is given.
+  const openTab = useCallback((title) => {
     setState((s) => {
-      const tab = makeTab();
+      const tab = makeTab(title ? String(title).replace(/\s+/g, " ").trim().slice(0, 34) : undefined);
       return { tabs: [...s.tabs, tab], activeId: tab.id };
     });
   }, []);

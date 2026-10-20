@@ -1,13 +1,6 @@
 import { useState } from "react";
 import { base44 } from "@/api/base44Client";
 
-const WELCOME = {
-  role: "assistant",
-  name: "Visual Editor",
-  type: "text",
-  content: "Describe what you want to build. Render gives you the artifact on the right; Chain runs the steps in order; Browser reads live pages; Multi-Agent puts several agents on one problem."
-};
-
 /**
  * One engine, shared by the standalone Visual Editor page and the workspace.
  * Keeps the editor's actions in a single place so both surfaces behave identically.
@@ -17,7 +10,8 @@ const WELCOME = {
  * the work it produced rather than a half-typed request.
  */
 export default function useEditorEngine(initial) {
-  const [messages, setMessages] = useState(() => (initial?.messages?.length ? initial.messages : [WELCOME]));
+  // The thread starts empty: nothing is put in front of the operator's first request.
+  const [messages, setMessages] = useState(() => (initial?.messages?.length ? initial.messages : []));
   const [input, setInput] = useState("");
   const [previewHtml, setPreviewHtml] = useState(initial?.previewHtml || "");
   const [simulatorResult, setSimulatorResult] = useState(initial?.simulatorResult || null);
