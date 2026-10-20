@@ -1,6 +1,6 @@
 import React, {useEffect,useMemo,useRef,useState} from 'react';
 import {Link} from 'react-router-dom';
-import {Activity,ArrowLeft,ArrowRight,ArrowUpRight,BookOpen,Box,Check,Columns3,CheckCircle2,ChevronDown,ChevronRight,Clipboard,Code2,Command,FileCode2,FileDiff,Globe2,History,Layers3,LayoutDashboard,LockKeyhole,Maximize2,MessageCircle,Mic,MicOff,Monitor,MoreHorizontal,MousePointer2,PanelLeftClose,Pause,Play,Plus,RefreshCw,RotateCcw,Send,Settings2,ShieldCheck,Smartphone,Sparkles,Square,Terminal,TestTube2,Undo2,Workflow,X,Zap} from 'lucide-react';
+import {Activity,ArrowRight,ArrowUpRight,BookOpen,Box,Columns3,CheckCircle2,ChevronDown,Code2,FileCode2,FileDiff,Globe2,Layers3,LayoutDashboard,LockKeyhole,MessageCircle,Mic,MicOff,Monitor,MoreHorizontal,MousePointer2,RefreshCw,Settings2,ShieldCheck,Smartphone,Sparkles,Terminal,TestTube2,Undo2,Workflow,X} from 'lucide-react';
 import '@/styles/x1-visual-studio.css';
 // Byte-exact port of X1's apps/strategic-minds-v2/src/VisualStudio.jsx at commit
 // 0994f0393619777cb701b9a6193c3d340bc706ba. Adaptations: the stylesheet resolves
