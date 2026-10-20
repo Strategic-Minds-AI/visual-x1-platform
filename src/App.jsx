@@ -97,6 +97,7 @@ const AuthenticatedApp = () => {
         <Route path="/job-board" element={<JobBoard />} />
         <Route path="/prompt-studio" element={<PromptStudio />} />
         <Route path="/social-studio" element={<SocialStudio />} />
+        <Route path="/visual-editor" element={<VisualEditor />} />
         <Route path="/agent-activity" element={<AgentActivity />} />
         <Route path="/prompt-lab" element={<PromptLab />} />
         <Route path="/system-control" element={<SystemControl />} />
@@ -120,22 +121,18 @@ const AuthenticatedApp = () => {
         <Route path="/prompt-system" element={<PromptSystem />} />
         {/* X1 administrative workspaces, at X1's own route paths. */}
         <Route path="/admin" element={<Navigate to="/v2/b" replace />} />
-
+        <Route path="/admin/studio" element={<VisualEditor />} />
+        <Route path="/admin/visual-editor" element={<VisualEditor />} />
         <Route path="/admin/coding-kanban" element={<KanbanBoard />} />
         <Route path="/admin/prompt-lab" element={<PromptLab />} />
         <Route path="/admin/intelligence" element={<AnalyticsDashboard />} />
         <Route path="/admin/agent" element={<AgentActivity />} />
         <Route path="/admin/launch-studio" element={<WebsiteFactory />} />
         <Route path="/admin/parity" element={<X1CloneLedger />} />
-        </Route>
-      </Route>
-      {/* The Visual Editor runs as a full-bleed workspace: its own top bar, tool rail, chat and canvas. */}
-      <Route element={<ProtectedRoute unauthenticatedElement={<Navigate to="/login?returnTo=/visual-editor" replace />} />}>
-        <Route path="/visual-editor" element={<VisualEditor />} />
+        {/* Visual X installed as one native X1 module. */}
         <Route path="/visual-x" element={<VisualEditor />} />
-        <Route path="/admin/studio" element={<VisualEditor />} />
-        <Route path="/admin/visual-editor" element={<VisualEditor />} />
-      </Route>
+        </Route>
+        </Route>
       {/* The X1 site is the front door; the Visual X console sits behind /workspace. */}
       <Route element={<ProtectedRoute unauthenticatedElement={<Navigate to="/login?returnTo=/" replace />} />}>
         <Route path="/" element={<V2Experience forceVariant="b" />} />

@@ -1,7 +1,7 @@
 import {
   Home, LayoutDashboard, Copy, Code2, Briefcase, Users, Boxes, Gauge,
   Sprout, Cpu, Wand2, Sparkles, Search, ListChecks, Layers, ShieldCheck,
-  CalendarClock, Rocket, Map as MapIcon, Radar, Globe, Star, Eye, Link2, Clapperboard
+  CalendarClock, Rocket, Map as MapIcon, Radar, Globe, Star
 } from "lucide-react";
 
 // One place for the workspace's navigation and brand assets, so the shell and the
@@ -89,15 +89,4 @@ export const WORKSPACE_TOP_GROUPS = [
       { to: "/prompt-lab", label: "Prompt Lab", Icon: Sparkles },
     ],
   },
-];
-
-// The Visual Editor's tool rail. Ids mirror the tabs of the canvas panel on the
-// right, so a rail button and a canvas tab drive the exact same view.
-export const EDITOR_TOOLS = [
-  { id: "preview", label: "Artifact preview", Icon: Eye },
-  { id: "video", label: "Video generator", Icon: Clapperboard },
-  { id: "browser", label: "Live browser", Icon: Globe },
-  { id: "agents", label: "Multi-agent round", Icon: Users },
-  { id: "simulator", label: "Prompt simulator", Icon: ShieldCheck },
-  { id: "chain", label: "Prompt chain", Icon: Link2 },
 ];
