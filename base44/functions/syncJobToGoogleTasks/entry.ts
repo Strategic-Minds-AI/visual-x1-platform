@@ -1,6 +1,5 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.54';
 
-const CONNECTOR_ID = "69db201897e4e8f9ae073be7";
 const TASKS_API = "https://tasks.googleapis.com/tasks/v1";
 
 export default async function(req) {
@@ -19,10 +18,10 @@ export default async function(req) {
 
     let accessToken;
     try {
-      const conn = await base44.asServiceRole.connectors.getWorkspaceConnection(CONNECTOR_ID);
+      const conn = await base44.asServiceRole.connectors.getConnection("googletasks");
       accessToken = conn.accessToken;
     } catch (e) {
-      return Response.json({ error: 'Google Tasks connector not authorized. Authorize it via the dashboard.', not_connected: true }, { status: 400 });
+      return Response.json({ error: 'Google Tasks connector not authorized.', not_connected: true }, { status: 400 });
     }
 
     const headers = { 'Authorization': `Bearer ${accessToken}`, 'Content-Type': 'application/json' };
