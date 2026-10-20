@@ -121,8 +121,8 @@ const AuthenticatedApp = () => {
         <Route path="/system-benchmarks" element={<SystemBenchmarks />} />
         <Route path="/system-audit" element={<SystemAudit />} />
         <Route path="/prompt-system" element={<PromptSystem />} />
-        {/* X1 administrative workspaces, at X1's own route paths. */}
-        <Route path="/admin" element={<Navigate to="/v2/b" replace />} />
+        {/* X1 administrative workspaces, at X1's own route paths. The operator
+            console itself lives at /admin, outside this workspace chrome. */}
         {/* X1 source route contract: /admin/studio and /admin/visual-editor both render X1's Visual Studio. */}
         <Route path="/admin/studio" element={<VisualStudio />} />
         <Route path="/admin/visual-editor" element={<VisualStudio />} />
@@ -143,10 +143,12 @@ const AuthenticatedApp = () => {
         <Route path="/v2/:variant" element={<V2Experience />} />
         <Route path="/pricing" element={<PricingExperience />} />
         <Route path="/portal" element={<ClientPortalExperience />} />
-        {/* The operator admin. /portal/demo is the live console now, not a sandbox:
-            it reads real records and its buttons call the Visual X pipelines. */}
-        <Route path="/portal/demo" element={<PortalAdmin />} />
-        <Route path="/portal/workspace" element={<PortalAdmin />} />
+        {/* The operator admin, at the standard path. It reads live records and its
+            buttons call the Visual X pipelines. */}
+        <Route path="/admin" element={<PortalAdmin />} />
+        {/* The console's earlier paths stay valid so existing links keep working. */}
+        <Route path="/portal/demo" element={<Navigate to="/admin" replace />} />
+        <Route path="/portal/workspace" element={<Navigate to="/portal" replace />} />
       </Route>
       <Route element={<ProtectedRoute unauthenticatedElement={<Navigate to="/login?returnTo=/x1-module" replace />} />}>
         <Route path="/x1-module" element={<X1Module />} />

@@ -107,7 +107,7 @@ export default function VisualStudio(){
   <aside className="x1-rail" aria-label="Admin sections">
     <SMark/>
     <div className="x1-rail-divider"/>
-    <Link to="/portal/demo" title="Client dashboard"><LayoutDashboard size={19}/></Link>
+    <Link to="/admin" title="Operator console"><LayoutDashboard size={19}/></Link>
     <button className="active" title="Visual Studio" aria-label="Visual Studio"><Layers3 size={21}/></button>
     <Link to="/admin/visual-editor" title="Visual Editor" aria-label="Visual Editor"><MousePointer2 size={20}/></Link>
      <Link to="/admin/prompt-lab" title="Prompt Lab" aria-label="Prompt Lab"><Terminal size={20}/></Link>
