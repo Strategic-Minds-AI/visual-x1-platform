@@ -36,6 +36,7 @@ import CloneIngest from './pages/CloneIngest';
 import SocialStudio from './pages/SocialStudio';
 import DeliveryConsole from './pages/DeliveryConsole';
 import X1OperatingSystem from './pages/X1OperatingSystem';
+import X1Module from './pages/X1Module';
 import BuilderMap from './pages/BuilderMap';
 import AppShell from '@/components/workspace/AppShell';
 import Login from '@/pages/Login';
@@ -110,6 +111,9 @@ const AuthenticatedApp = () => {
         <Route path="/system-audit" element={<SystemAudit />} />
         <Route path="/prompt-system" element={<PromptSystem />} />
         </Route>
+      </Route>
+      <Route element={<ProtectedRoute unauthenticatedElement={<Navigate to="/login?returnTo=/x1-module" replace />} />}>
+        <Route path="/x1-module" element={<X1Module />} />
       </Route>
       <Route path="*" element={<PageNotFound />} />
     </Routes>
