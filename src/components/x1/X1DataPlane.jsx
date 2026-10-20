@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Database, Loader2, RefreshCw, ShieldCheck } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { errorText } from "@/lib/errorText";
 
 const PLANES = [
   { key: "stage", label: "X1 AI Hub Staging" },
@@ -23,10 +24,10 @@ export default function X1DataPlane() {
     try {
       const res = await base44.functions.invoke("x1DataPlane", { scope: "inventory" });
       const d = res.data || {};
-      if (d.error) setError(d.error);
+      if (d.error) setError(errorText(d.error, "X1's data plane answered with an error."));
       else setData(d);
     } catch (e) {
-      setError(e?.response?.data?.error || "Could not read X1's Supabase projects.");
+      setError(errorText(e?.response?.data?.error || e?.message, "Could not read X1's Supabase projects."));
     } finally {
       setReading(false);
     }
@@ -67,7 +68,7 @@ export default function X1DataPlane() {
 
         {error && <p className="text-xs text-rose-600">{error}</p>}
 
-        {current && current.error && <p className="text-xs text-rose-600">{current.error}</p>}
+        {errorText(current?.error) && <p className="text-xs text-rose-600">{errorText(current.error)}</p>}
 
         {current && !current.error && (
           <>

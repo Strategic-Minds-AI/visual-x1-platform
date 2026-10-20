@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Loader2, RefreshCw, Activity } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { errorText } from "@/lib/errorText";
 
 const REASONS = {
   NON_PREVIEW_RUNTIME: "X1 refuses to serve this outside its own Vercel preview runtime",
@@ -17,10 +18,10 @@ const detail = (body) => {
   try {
     const p = JSON.parse(body || "{}");
     if (REASONS[p.reason]) return REASONS[p.reason];
-    if (p.error) return p.error;
+    if (p.error) return errorText(p.error, "answered without a status body");
     const bits = Object.entries(p)
       .filter(([k]) => k !== "service")
-      .map(([k, v]) => `${k}: ${v}`);
+      .map(([k, v]) => `${k}: ${typeof v === "object" ? JSON.stringify(v) : v}`);
     return bits.join(" · ") || "answered without a status body";
   } catch {
     return (body || "").slice(0, 120) || "answered without a status body";
@@ -40,10 +41,10 @@ export default function X1StatusStrip() {
     try {
       const res = await base44.functions.invoke("x1Bridge", {});
       const data = res.data || {};
-      if (data.error) setError(data.error);
+      if (data.error) setError(errorText(data.error, "X1 answered with an error."));
       else setState(data);
     } catch (e) {
-      setError(e?.response?.data?.error || "Could not reach X1.");
+      setError(errorText(e?.response?.data?.error || e?.message, "Could not reach X1."));
     } finally {
       setReading(false);
     }
@@ -79,7 +80,7 @@ export default function X1StatusStrip() {
                   </Badge>
                   <span className="text-xs font-medium">{e.name}</span>
                   <span className="text-[10px] font-mono text-muted-foreground">{e.path}</span>
-                  <span className="text-xs text-muted-foreground w-full sm:w-auto sm:ml-2">{e.error || detail(e.body)}</span>
+                  <span className="text-xs text-muted-foreground w-full sm:w-auto sm:ml-2">{errorText(e.error) || detail(e.body)}</span>
                 </div>
               ))}
             </div>

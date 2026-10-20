@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { base44 } from "@/api/base44Client";
-import { Bot, Shield, ClipboardCheck, Cpu, Plus, Loader2 } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Bot, Shield, ClipboardCheck, Cpu, Loader2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 
 const ROLE_ICONS = {

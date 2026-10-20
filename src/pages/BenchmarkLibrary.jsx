@@ -1,12 +1,11 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { base44 } from "@/api/base44Client";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Image } from "@/components/ui/image";
-import { ChevronLeft, Library, Globe, Award, Loader2, Search, Sparkles, BarChart3, ExternalLink } from "lucide-react";
+import { ChevronLeft, Library, Globe, Award, Search, Sparkles, BarChart3, ExternalLink } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const SITE_TYPE_LABELS = {
