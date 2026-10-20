@@ -10,8 +10,8 @@ import { base44 } from "@/api/base44Client";
 import { cn } from "@/lib/utils";
 
 // X1's own brand assets, taken from the live X1 front end.
-const X1_EMBLEM = "/v2-assets/silver-emblem.png";
-const X1_WORDMARK = "/v2-assets/chrome-wordmark.png";
+const X1_EMBLEM = "https://www.strategicmindsai.com/v2-assets/silver-emblem.png";
+const X1_WORDMARK = "https://www.strategicmindsai.com/v2-assets/chrome-wordmark.png";
 
 // Thin vertical rail: the always-visible spine of the system.
 const RAIL = [

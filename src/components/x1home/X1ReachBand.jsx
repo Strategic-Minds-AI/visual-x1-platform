@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 import { Image } from "@/components/ui/image";
 
-const ASSETS = "/v2-assets/";
+const ASSETS = "https://www.strategicmindsai.com/v2-assets/";
 
 export default function X1ReachBand() {
   return (

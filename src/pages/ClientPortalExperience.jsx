@@ -10,11 +10,12 @@ import {
 } from "@/components/x1portal/PortalSections";
 
 // Ported from X1: apps/strategic-minds-v2/src/ClientPortalExperience.jsx
-// X1's CommercePortal.css and BrandTheme.css are self-hosted byte-exact under
-// public/x1 and linked in index.html.
+// X1's own CommercePortal.css and brand tokens, bundled through Vite.
+import "../../vendor/x1/CommercePortal.css";
+import "@/styles/x1-brand-theme.css";
 
 function Logo() {
-  return <Link to="/v2/a" className="cp-portal-logo"><span className="cp-brand-mark"><img src="/v2-assets/silver-emblem.png" alt="Metallic S emblem" /></span><span>STRATEGIC MINDS <b>AI</b><small>YOUR INTELLIGENCE WORKSPACE</small></span></Link>;
+  return <Link to="/v2/a" className="cp-portal-logo"><span className="cp-brand-mark"><img src="https://www.strategicmindsai.com/v2-assets/silver-emblem.png" alt="Metallic S emblem" /></span><span>STRATEGIC MINDS <b>AI</b><small>YOUR INTELLIGENCE WORKSPACE</small></span></Link>;
 }
 
 function DemoPill() {

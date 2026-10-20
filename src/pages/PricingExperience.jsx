@@ -4,8 +4,10 @@ import {
   ArrowRight, ArrowUpRight, Check, ChevronDown, Compass, Layers3,
   Lightbulb, Rocket, ShieldCheck, Sparkles,
 } from "lucide-react";
-// X1's styling for this workspace (CommercePortal.css + BrandTheme.css) is
-// self-hosted byte-exact from the X1 repository under public/x1 and linked in index.html.
+// X1's own styling for this workspace, bundled from the byte-exact copies taken
+// from the X1 repository (vendor/x1/CommercePortal.css) plus its brand tokens.
+import "../../vendor/x1/CommercePortal.css";
+import "@/styles/x1-brand-theme.css";
 
 // Ported from X1: apps/strategic-minds-v2/src/PricingExperience.jsx.
 
@@ -54,7 +56,7 @@ export default function PricingExperience() {
   return <div className="cp-site cp-pricing">
     <a className="cp-skip" href="#pricing-content">Skip to content</a>
     <header className="cp-public-nav">
-      <Link className="cp-brand" to="/v2/a"><span className="cp-brand-mark"><img src="/v2-assets/silver-emblem.png" alt="Metallic S emblem" /></span><span>STRATEGIC MINDS <b>AI</b><small>INTELLIGENCE IN MOTION</small></span></Link>
+      <Link className="cp-brand" to="/v2/a"><span className="cp-brand-mark"><img src="https://www.strategicmindsai.com/v2-assets/silver-emblem.png" alt="Metallic S emblem" /></span><span>STRATEGIC MINDS <b>AI</b><small>INTELLIGENCE IN MOTION</small></span></Link>
       <nav aria-label="Pricing navigation"><Link to="/v2/a">HOME</Link><Link to="/v2/b#services">SERVICES</Link><Link to="/pricing" aria-current="page">PRICING</Link><Link to="/portal">CLIENT PORTAL</Link></nav>
       <a className="cp-header-call" href="tel:+18665711174"><Sparkles size={15} /> CALL EDEN</a>
     </header>
@@ -66,7 +68,7 @@ export default function PricingExperience() {
           <p>From your first automation to an entire intelligence ecosystem. Find the right level of partnership without being buried in technical jargon.</p>
           <div className="cp-hero-actions"><a href="#packages" className="cp-primary">EXPLORE ENGAGEMENTS <ArrowRight size={17} /></a><Link to="/portal/demo" className="cp-subtle">Preview the client experience <ArrowUpRight size={16} /></Link></div>
         </div>
-        <div className="cp-hero-visual" aria-hidden="true"><div className="cp-ring cp-ring-1" /><div className="cp-ring cp-ring-2" /><img src="/v2-assets/silver-emblem.png" alt="" /><span>INTELLIGENCE IN MOTION</span></div>
+        <div className="cp-hero-visual" aria-hidden="true"><div className="cp-ring cp-ring-1" /><div className="cp-ring cp-ring-2" /><img src="https://www.strategicmindsai.com/v2-assets/silver-emblem.png" alt="" /><span>INTELLIGENCE IN MOTION</span></div>
       </section>
       <section id="packages" className="cp-package-section"><div className="cp-container">
         <div className="cp-section-heading"><p className="cp-kicker">THREE WAYS TO BEGIN</p><h2>The right partnership.<br /><em>Not a one-size-fits-all price.</em></h2><p>Project pricing is finalized after discovery, documented scope, delivery milestones and support requirements. No prices or inclusions are contracts until a proposal is accepted.</p></div>

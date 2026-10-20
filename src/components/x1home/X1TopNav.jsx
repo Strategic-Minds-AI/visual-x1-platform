@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { Menu, X } from "lucide-react";
 import X1Call from "./X1Call";
 
-const ASSETS = "/v2-assets/";
+const ASSETS = "https://www.strategicmindsai.com/v2-assets/";
 
 // Same labels and order as X1's own navigation. Internal destinations map onto
 // this application's equivalent modules so every link stays reachable.
