@@ -1,0 +1,179 @@
+{
+  "name": "ClientInfrastructure",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "What this system is called, as the operator named it"
+    },
+    "client_id": {
+      "type": "string",
+      "description": "ClientIntake this system belongs to, when it belongs to a client"
+    },
+    "description": {
+      "type": "string",
+      "maxLength": 1000,
+      "description": "What this system is and what runs on it"
+    },
+    "stack_type": {
+      "type": "string",
+      "enum": [
+        "static_site",
+        "vite_app",
+        "fullstack",
+        "backend_api",
+        "mobile_app"
+      ],
+      "default": "static_site",
+      "description": "What kind of system is being provisioned"
+    },
+    "capabilities": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "code",
+          "data"
+        ]
+      },
+      "description": "Which planes this system uses: code delivery, data storage, or both"
+    },
+    "github_repo": {
+      "type": "string",
+      "description": "Source repository as owner/repo, matched against the connected GitHub account"
+    },
+    "github_url": {
+      "type": "string",
+      "description": "Address of the repository"
+    },
+    "vercel_id": {
+      "type": "string",
+      "description": "Vercel project id, when it is known"
+    },
+    "vercel_url": {
+      "type": "string",
+      "description": "Vercel project name or address the deployment is read by"
+    },
+    "deployment_url": {
+      "type": "string",
+      "description": "The address the live system answers on"
+    },
+    "railway_id": {
+      "type": "string",
+      "description": "Railway project id"
+    },
+    "railway_url": {
+      "type": "string",
+      "description": "Railway project address, when there is one"
+    },
+    "railway_service_id": {
+      "type": "string",
+      "description": "Railway service id for the worker or API on this system"
+    },
+    "supabase_ref": {
+      "type": "string",
+      "description": "Supabase project the data plane is read through, when only one exists"
+    },
+    "supabase_staging_ref": {
+      "type": "string",
+      "description": "Supabase project acting as the staging environment"
+    },
+    "supabase_production_ref": {
+      "type": "string",
+      "description": "Supabase project acting as the production environment"
+    },
+    "supabase_url": {
+      "type": "string",
+      "description": "Address of the Supabase project"
+    },
+    "drive_folder_url": {
+      "type": "string",
+      "description": "Folder in Google Drive holding this system's documents and assets"
+    },
+    "domain": {
+      "type": "string",
+      "description": "Custom domain configured for this system"
+    },
+    "domain_status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "available",
+        "configured",
+        "purchased",
+        "failed"
+      ],
+      "default": "pending"
+    },
+    "provision_status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "github_ready",
+        "vercel_ready",
+        "railway_ready",
+        "supabase_ready",
+        "domain_ready",
+        "complete",
+        "failed"
+      ],
+      "default": "pending",
+      "description": "How far provisioning has actually got"
+    },
+    "env_vars": {
+      "type": "string",
+      "maxLength": 5000,
+      "description": "JSON array of environment variable names set for this system - names only, never values"
+    }
+  },
+  "required": [
+    "name"
+  ],
+  "rls": {
+    "read": {
+      "$or": [
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "user"
+          }
+        }
+      ]
+    },
+    "create": {
+      "$or": [
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "user"
+          }
+        }
+      ]
+    },
+    "update": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

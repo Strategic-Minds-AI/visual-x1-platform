@@ -23,6 +23,8 @@ const SECRETS = [
   { name: 'VERCEL_TOKEN', present: Boolean(process.env.VERCEL_TOKEN), used_by: 'vercelConsole — reading and deploying Vercel projects' },
   { name: 'OLLAMA_MODEL', present: Boolean(process.env.OLLAMA_MODEL), used_by: 'local model runs' },
   { name: 'OLLAMA_BASE_URL', present: Boolean(process.env.OLLAMA_BASE_URL), used_by: 'local model runs' },
+  { name: 'RAILWAY_TOKEN', present: Boolean(process.env.RAILWAY_TOKEN), used_by: 'reading Railway projects, services and worker health' },
+  { name: 'SUPABASE_ACCESS_TOKEN', present: Boolean(process.env.SUPABASE_ACCESS_TOKEN), used_by: 'optional direct Supabase reads when no connector is authorized' },
 ];
 
 export default async function (req) {

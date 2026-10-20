@@ -19,6 +19,7 @@ export const WORKSPACE_RAIL = [
   { to: "/visual-x", label: "Visual X Module", Icon: Wand2 },
   { to: "/clone-ingest", label: "Clone & Ingest", Icon: Copy },
   { to: "/delivery", label: "Delivery", Icon: Rocket },
+  { to: "/projects", label: "Projects", Icon: Layers },
   { to: "/visual-editor", label: "Visual Editor", Icon: Code2 },
   { to: "/dashboard", label: "Dashboard", Icon: LayoutDashboard },
   { to: "/job-board", label: "Job Board", Icon: Briefcase },
@@ -37,6 +38,7 @@ export const WORKSPACE_TOP_LINKS = [
   { to: "/clone-ingest", label: "Clone & Ingest" },
   { to: "/visual-editor", label: "Visual Editor" },
   { to: "/delivery", label: "Delivery" },
+  { to: "/projects", label: "Projects" },
   { to: "/prompt-system", label: "Prompt System" },
 ];
 
