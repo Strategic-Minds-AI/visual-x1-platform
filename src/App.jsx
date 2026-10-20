@@ -39,6 +39,7 @@ import DeliveryConsole from './pages/DeliveryConsole';
 import X1OperatingSystem from './pages/X1OperatingSystem';
 import X1Module from './pages/X1Module';
 import X1Experience from './pages/X1Experience';
+import X1Home from './pages/X1Home';
 import BuilderMap from './pages/BuilderMap';
 import AppShell from '@/components/workspace/AppShell';
 import Login from '@/pages/Login';
@@ -88,6 +89,7 @@ const AuthenticatedApp = () => {
         <Route path="/delivery" element={<DeliveryConsole />} />
         <Route path="/x1" element={<X1OperatingSystem />} />
         <Route path="/x1-experience" element={<X1Experience />} />
+        <Route path="/x1-home" element={<X1Home />} />
         <Route path="/builder-map" element={<BuilderMap />} />
         <Route path="/job-board" element={<JobBoard />} />
         <Route path="/prompt-studio" element={<PromptStudio />} />

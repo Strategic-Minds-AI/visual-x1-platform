@@ -3,18 +3,21 @@ import { Link, NavLink, Outlet, useLocation } from "react-router-dom";
 import {
   Home, LayoutDashboard, Copy, Code2, Briefcase, Users, Boxes, Gauge,
   Sprout, Cpu, ChevronDown, LogOut, Wand2, Sparkles, Search, ListChecks, Layers, ShieldCheck,
-  Moon, Sun, CalendarClock, Rocket, Map as MapIcon, Radar, Globe
+  Moon, Sun, CalendarClock, Rocket, Map as MapIcon, Radar, Globe, Star
 } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { base44 } from "@/api/base44Client";
 import { cn } from "@/lib/utils";
 import useTheme from "@/hooks/useTheme";
 
+// X1's own brand assets, taken from the live X1 front end.
 const X1_EMBLEM = "https://www.strategicmindsai.com/v2-assets/silver-emblem.png";
+const X1_WORDMARK = "https://www.strategicmindsai.com/v2-assets/chrome-wordmark.png";
 
 // Thin vertical rail: the always-visible spine of the system.
 const RAIL = [
   { to: "/", label: "Workspace", Icon: Home, end: true },
+  { to: "/x1-home", label: "X1 Home", Icon: Star },
   { to: "/x1", label: "X1 Operating System", Icon: Radar },
   { to: "/x1-experience", label: "X1 Live App", Icon: Globe },
   { to: "/clone-ingest", label: "Clone & Ingest", Icon: Copy },
@@ -31,6 +34,7 @@ const RAIL = [
 
 const TOP_LINKS = [
   { to: "/", label: "Workspace", end: true },
+  { to: "/x1-home", label: "X1 Home" },
   { to: "/x1", label: "X1 OS" },
   { to: "/x1-experience", label: "X1 Live App" },
   { to: "/clone-ingest", label: "Clone & Ingest" },
@@ -51,6 +55,7 @@ const TOP_GROUPS = [
   {
     label: "System",
     items: [
+      { to: "/x1-home", label: "X1 Home", Icon: Star },
       { to: "/x1", label: "X1 Operating System", Icon: Radar },
       { to: "/x1-experience", label: "X1 Live App", Icon: Globe },
       { to: "/system-capabilities", label: "Capabilities", Icon: Layers },
@@ -94,16 +99,19 @@ export default function AppShell() {
   return (
     <div className="h-screen flex flex-col bg-background">
       <header className="shrink-0 border-b border-border bg-card">
-        <div className="h-14 px-4 flex items-center gap-4">
+        <div className="h-16 px-3 sm:px-4 flex items-center gap-3">
           <Link to="/" className="flex items-center gap-2.5 shrink-0">
-            <img src={X1_EMBLEM} alt="Strategic Minds AI" className="h-7 w-7 object-contain" />
-            <span className="hidden sm:flex flex-col leading-none">
-              <span className="font-heading font-semibold tracking-[0.16em] text-[11px]">STRATEGIC MINDS AI</span>
-              <span className="text-[9px] tracking-[0.3em] text-muted-foreground mt-0.5">X1 OPERATING SYSTEM</span>
+            <img src={X1_EMBLEM} alt="Strategic Minds AI" className="h-8 w-8 object-contain x1-emblem-glow" />
+            <span className="hidden xl:flex flex-col leading-none gap-1.5">
+              <img src={X1_WORDMARK} alt="Strategic Minds AI" className="h-3.5 w-auto object-contain self-start" />
+              <span className="flex items-center gap-2">
+                <span className="x1-rule w-5" />
+                <span className="x1-track text-[8px] text-muted-foreground whitespace-nowrap">Intelligence in motion</span>
+              </span>
             </span>
           </Link>
 
-          <nav className="flex items-center gap-0.5 overflow-x-auto">
+          <nav className="x1-glass x1-pill flex items-center gap-0.5 px-1.5 py-1 overflow-x-auto">
             {TOP_LINKS.map((l) => (
               <NavLink
                 key={l.to}
@@ -111,8 +119,10 @@ export default function AppShell() {
                 end={l.end}
                 className={({ isActive }) =>
                   cn(
-                    "px-2.5 py-1.5 rounded-md border border-transparent text-sm whitespace-nowrap electric-hover",
-                    isActive ? "bg-muted font-medium text-foreground" : "text-muted-foreground hover:text-foreground hover:bg-muted"
+                    "x1-pill x1-track px-3 py-1.5 text-[10px] font-medium whitespace-nowrap transition-colors",
+                    isActive
+                      ? "x1-nav-active text-foreground"
+                      : "text-muted-foreground hover:text-foreground hover:bg-muted"
                   )
                 }
               >
@@ -121,10 +131,10 @@ export default function AppShell() {
             ))}
             {TOP_GROUPS.map((g) => (
               <DropdownMenu key={g.label}>
-                <DropdownMenuTrigger className="px-2.5 py-1.5 rounded-md text-sm text-muted-foreground hover:text-foreground hover:bg-muted transition flex items-center gap-1 whitespace-nowrap">
-                  {g.label} <ChevronDown className="w-3.5 h-3.5" />
+                <DropdownMenuTrigger className="x1-pill x1-track px-3 py-1.5 text-[10px] font-medium text-muted-foreground hover:text-foreground hover:bg-muted transition flex items-center gap-1 whitespace-nowrap">
+                  {g.label} <ChevronDown className="w-3 h-3" />
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="start" className="w-56">
+                <DropdownMenuContent align="start" className="w-60">
                   {g.items.map((it) => (
                     <DropdownMenuItem key={it.to} asChild>
                       <Link to={it.to} className={cn("flex items-center gap-2 cursor-pointer", pathname === it.to && "font-medium")}>
@@ -138,10 +148,9 @@ export default function AppShell() {
           </nav>
 
           <div className="ml-auto flex items-center gap-2 shrink-0">
-            <span className="text-xs text-muted-foreground hidden md:inline">Autonomy console</span>
             <button
               onClick={toggle}
-              className="p-2 rounded-md border border-transparent text-muted-foreground hover:text-foreground hover:bg-muted electric-hover"
+              className="x1-glass x1-pill p-2 text-muted-foreground hover:text-foreground electric-hover"
               title={isDark ? "Switch to light mode" : "Switch to dark mode"}
               aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
             >
@@ -149,7 +158,7 @@ export default function AppShell() {
             </button>
             <button
               onClick={() => base44.auth.logout(window.location.origin)}
-              className="p-2 rounded-md text-muted-foreground hover:text-foreground hover:bg-muted transition"
+              className="x1-glass x1-pill p-2 text-muted-foreground hover:text-foreground electric-hover"
               title="Sign out"
             >
               <LogOut className="w-4 h-4" />
@@ -169,8 +178,8 @@ export default function AppShell() {
                 title={label}
                 aria-label={label}
                 className={cn(
-                  "w-10 h-10 rounded-lg flex items-center justify-center border border-transparent electric-hover",
-                  active ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-foreground hover:bg-muted"
+                  "w-10 h-10 rounded-xl flex items-center justify-center border border-transparent transition-colors electric-hover",
+                  active ? "x1-active-glow" : "text-muted-foreground hover:text-foreground hover:bg-muted"
                 )}
               >
                 <Icon className="w-[18px] h-[18px]" />

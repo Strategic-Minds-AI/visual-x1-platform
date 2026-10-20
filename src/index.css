@@ -1,87 +1,96 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
-  /* X1 OPERATING SYSTEM identity, taken from BrandTheme.css.
-     Dark is the X1 canvas exactly; light is the same palette made legible on white
-     so the theme toggle keeps working. */
+  /* X1 OPERATING SYSTEM identity — measured 2026-10-20 from X1's own BrandTheme.css
+     and its live front end: canvas #02050d, header #02060f, surface #030914,
+     panel #061726, cyan #02cfff, blue #128cff, green #66ff9c, white #f6fbff,
+     muted #9bbdd0, focus #83ffb4, Inter, uppercase tracked labels, glass surfaces.
+     Dark carries X1's canvas exactly. Light is the same family made legible on
+     white so the theme toggle keeps working. */
   :root {
-    --background: 200 40% 99%;
-    --foreground: 224 73% 6%;
+    --background: 200 33% 98%;
+    --foreground: 223 73% 6%;
     --card: 0 0% 100%;
-    --card-foreground: 224 73% 6%;
+    --card-foreground: 223 73% 6%;
     --popover: 0 0% 100%;
-    --popover-foreground: 224 73% 6%;
-    --primary: 199 100% 33%;
+    --popover-foreground: 223 73% 6%;
+    --primary: 191 100% 32%;
     --primary-foreground: 0 0% 100%;
-    --secondary: 199 60% 95%;
-    --secondary-foreground: 224 73% 10%;
-    --muted: 199 45% 96%;
-    --muted-foreground: 203 25% 38%;
-    --accent: 197 62% 92%;
-    --accent-foreground: 224 73% 10%;
+    --secondary: 194 55% 94%;
+    --secondary-foreground: 223 73% 10%;
+    --muted: 200 40% 95%;
+    --muted-foreground: 201 28% 34%;
+    --accent: 197 55% 92%;
+    --accent-foreground: 223 73% 10%;
     --destructive: 0 72% 45%;
     --destructive-foreground: 0 0% 100%;
-    --border: 199 34% 85%;
-    --input: 199 34% 85%;
-    --ring: 199 100% 40%;
-    --electric: 199 100% 40%;
-    --chart-1: 199 100% 33%;
-    --chart-2: 209 100% 45%;
-    --chart-3: 99 60% 34%;
+    --border: 200 30% 84%;
+    --input: 200 30% 84%;
+    --ring: 191 100% 38%;
+    --electric: 191 100% 38%;
+    --action: 141 60% 32%;
+    --x1-blue: 209 100% 40%;
+    --focus: 141 60% 32%;
+    --chart-1: 191 100% 32%;
+    --chart-2: 209 100% 40%;
+    --chart-3: 141 60% 34%;
     --chart-4: 199 56% 44%;
-    --chart-5: 96 70% 38%;
-    --radius: 0.5rem;
+    --chart-5: 209 60% 50%;
+    --radius: 0.75rem;
     --font-heading: 'Inter', ui-sans-serif, system-ui, sans-serif;
     --font-body: 'Inter', ui-sans-serif, system-ui, sans-serif;
     --font-display: 'Inter', ui-sans-serif, system-ui, sans-serif;
     --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-    --sidebar-background: 199 40% 98%;
-    --sidebar-foreground: 224 73% 6%;
-    --sidebar-primary: 199 100% 33%;
+    --sidebar-background: 200 40% 97%;
+    --sidebar-foreground: 223 73% 6%;
+    --sidebar-primary: 191 100% 32%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 197 62% 92%;
-    --sidebar-accent-foreground: 224 73% 10%;
-    --sidebar-border: 199 34% 85%;
-    --sidebar-ring: 199 100% 40%;
+    --sidebar-accent: 197 55% 92%;
+    --sidebar-accent-foreground: 223 73% 10%;
+    --sidebar-border: 200 30% 84%;
+    --sidebar-ring: 191 100% 38%;
   }
 
   .dark {
-    --background: 224 73% 3%;
-    --foreground: 207 98% 98%;
-    --card: 222 76% 3%;
-    --card-foreground: 207 98% 98%;
+    --background: 223 73% 3%;
+    --foreground: 207 100% 98%;
+    --card: 221 76% 3%;
+    --card-foreground: 207 100% 98%;
     --popover: 208 73% 9%;
-    --popover-foreground: 207 98% 98%;
+    --popover-foreground: 207 100% 98%;
     --primary: 191 100% 50%;
-    --primary-foreground: 224 73% 5%;
-    --secondary: 219 74% 6%;
-    --secondary-foreground: 207 98% 98%;
+    --primary-foreground: 223 73% 5%;
+    --secondary: 219 74% 5%;
+    --secondary-foreground: 207 100% 98%;
     --muted: 208 73% 9%;
-    --muted-foreground: 200 36% 71%;
-    --accent: 205 60% 14%;
-    --accent-foreground: 207 98% 98%;
+    --muted-foreground: 201 36% 71%;
+    --accent: 206 55% 15%;
+    --accent-foreground: 207 100% 98%;
     --destructive: 0 72% 48%;
     --destructive-foreground: 0 0% 100%;
-    --border: 203 27% 16%;
+    --border: 203 34% 18%;
     --input: 204 32% 19%;
     --ring: 191 100% 50%;
     --electric: 191 100% 50%;
+    --action: 141 100% 70%;
+    --x1-blue: 209 100% 54%;
+    --focus: 144 100% 76%;
     --chart-1: 191 100% 50%;
     --chart-2: 209 100% 54%;
-    --chart-3: 99 100% 70%;
-    --chart-4: 199 56% 34%;
-    --chart-5: 96 100% 76%;
-    --sidebar-background: 223 76% 3%;
-    --sidebar-foreground: 207 98% 98%;
+    --chart-3: 141 100% 70%;
+    --chart-4: 191 60% 40%;
+    --chart-5: 144 100% 76%;
+    --sidebar-background: 222 76% 3%;
+    --sidebar-foreground: 207 100% 98%;
     --sidebar-primary: 191 100% 50%;
-    --sidebar-primary-foreground: 224 73% 5%;
-    --sidebar-accent: 205 60% 14%;
-    --sidebar-accent-foreground: 207 98% 98%;
-    --sidebar-border: 203 27% 16%;
+    --sidebar-primary-foreground: 223 73% 5%;
+    --sidebar-accent: 206 55% 15%;
+    --sidebar-accent-foreground: 207 100% 98%;
+    --sidebar-border: 203 34% 18%;
     --sidebar-ring: 191 100% 50%;
   }
 
@@ -96,15 +105,86 @@
   /* X1 canvas: the star field and the cyan canvasing glow behind everything. */
   .dark body {
     background-image:
-      radial-gradient(circle at 70% 28%, rgba(18, 140, 255, 0.14), transparent 55%),
+      radial-gradient(circle at 70% 28%, rgba(18, 140, 255, 0.16), transparent 55%),
       radial-gradient(circle at 12% 18%, rgba(167, 220, 255, 0.7) 0 1px, transparent 1.5px),
-      radial-gradient(circle at 80% 47%, rgba(55, 177, 250, 0.65) 0 0.8px, transparent 1.5px);
+      radial-gradient(circle at 80% 47%, rgba(55, 177, 250, 0.65) 0 0.8px, transparent 1.5px),
+      radial-gradient(circle at 34% 76%, rgba(255, 255, 255, 0.55) 0 0.8px, transparent 1.4px);
     background-attachment: fixed;
   }
 }
 
-/* Electric cyan hairline that appears on hover across interactive surfaces. */
+/* X1's surface language: glass panels, pill controls, wide-tracked uppercase
+   labels, cyan glow on the primary action, green on the trailing arrow. */
 @layer components {
+  .x1-glass {
+    background-color: hsl(var(--popover) / 0.5);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 1px solid hsl(0 0% 100% / 0.1);
+  }
+  .dark .x1-glass {
+    background-color: hsl(var(--popover) / 0.42);
+  }
+
+  .x1-pill {
+    border-radius: 9999px;
+  }
+
+  .x1-track {
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+  }
+
+  .x1-rule {
+    height: 1px;
+    background-image: linear-gradient(90deg, transparent, hsl(var(--primary) / 0.6), transparent);
+  }
+
+  .x1-nav-active {
+    box-shadow: inset 0 -1px 0 0 hsl(var(--foreground) / 0.9);
+  }
+
+  .x1-active-glow {
+    border-color: hsl(var(--primary) / 0.7);
+    background-color: hsl(var(--primary) / 0.1);
+    color: hsl(var(--primary));
+    box-shadow: 0 0 18px hsl(var(--primary) / 0.24);
+  }
+
+  .x1-emblem-glow {
+    filter: drop-shadow(0 0 26px hsl(var(--primary) / 0.35));
+  }
+
+  .x1-pill-primary {
+    background-image: linear-gradient(115deg, hsl(var(--primary)), hsl(var(--x1-blue)));
+    color: hsl(var(--primary-foreground));
+    border: 1px solid hsl(var(--primary) / 0.5);
+    box-shadow: 0 0 22px hsl(var(--primary) / 0.3), inset 0 1px 0 hsl(0 0% 100% / 0.25);
+    transition: box-shadow 180ms ease, filter 180ms ease;
+  }
+  .x1-pill-primary:hover {
+    box-shadow: 0 0 32px hsl(var(--primary) / 0.5), inset 0 1px 0 hsl(0 0% 100% / 0.3);
+    filter: brightness(1.06);
+  }
+
+  .x1-pill-outline {
+    border: 1px solid hsl(0 0% 100% / 0.2);
+    color: hsl(var(--foreground));
+    transition: border-color 180ms ease, background-color 180ms ease;
+  }
+  .x1-pill-outline:hover {
+    border-color: hsl(var(--primary) / 0.75);
+    background-color: hsl(var(--primary) / 0.08);
+  }
+
+  .x1-glass:focus-visible,
+  .x1-pill-primary:focus-visible,
+  .x1-pill-outline:focus-visible {
+    outline: 2px solid hsl(var(--focus));
+    outline-offset: 2px;
+  }
+
+  /* Electric cyan hairline that appears on hover across interactive surfaces. */
   .electric-hover {
     transition: border-color 180ms ease, box-shadow 180ms ease;
   }
