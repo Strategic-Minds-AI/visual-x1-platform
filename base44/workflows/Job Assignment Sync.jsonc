@@ -1,0 +1,40 @@
+{
+  "name": "Job Assignment Sync",
+  "description": "Creates a Google Task automatically when a job is assigned to an agent",
+  "trigger": {
+    "config": {
+      "trigger_type": "entity",
+      "entity_name": "Job",
+      "events": [
+        "update"
+      ]
+    },
+    "condition": "${ .trigger.data.status == \"assigned\" and .trigger.old_data.status != \"assigned\" }"
+  },
+  "definition": {
+    "document": {
+      "dsl": "1.0.0",
+      "name": "job_assignment_sync",
+      "version": "1.0",
+      "namespace": "base44"
+    },
+    "do": [
+      {
+        "sync_task": {
+          "call": "invoke_backend_function",
+          "with": {
+            "function_name": "syncJobToGoogleTasks",
+            "args": {
+              "job_id": "${ .trigger.entity_id }"
+            }
+          },
+          "then": "end",
+          "x-base44": {
+            "title": "Create Google Task",
+            "description": "Sync assigned job to Google Tasks"
+          }
+        }
+      }
+    ]
+  }
+}

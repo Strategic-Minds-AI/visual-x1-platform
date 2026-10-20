@@ -126,6 +126,7 @@ export default function JobBoard() {
             </div>
           </div>
           <div className="flex items-center gap-2">
+            <Link to="/kanban"><Button variant="outline" size="sm">Kanban View</Button></Link>
             <Button variant="outline" size="sm" onClick={handleOrchestrate} disabled={orchestrating}>
               <Zap className="w-4 h-4 mr-1.5" /> {orchestrating ? "Assigning..." : "Orchestrate"}
             </Button>
