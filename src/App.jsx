@@ -45,6 +45,7 @@ import V2Experience from './pages/V2Experience';
 import X1CloneLedger from './pages/X1CloneLedger';
 import PricingExperience from './pages/PricingExperience';
 import ClientPortalExperience from './pages/ClientPortalExperience';
+import PortalAdmin from './pages/PortalAdmin';
 import BuilderMap from './pages/BuilderMap';
 import AppShell from '@/components/workspace/AppShell';
 import Login from '@/pages/Login';
@@ -142,8 +143,10 @@ const AuthenticatedApp = () => {
         <Route path="/v2/:variant" element={<V2Experience />} />
         <Route path="/pricing" element={<PricingExperience />} />
         <Route path="/portal" element={<ClientPortalExperience />} />
-        <Route path="/portal/demo" element={<ClientPortalExperience demo />} />
-        <Route path="/portal/workspace" element={<ClientPortalExperience demo />} />
+        {/* The operator admin. /portal/demo is the live console now, not a sandbox:
+            it reads real records and its buttons call the Visual X pipelines. */}
+        <Route path="/portal/demo" element={<PortalAdmin />} />
+        <Route path="/portal/workspace" element={<PortalAdmin />} />
       </Route>
       <Route element={<ProtectedRoute unauthenticatedElement={<Navigate to="/login?returnTo=/x1-module" replace />} />}>
         <Route path="/x1-module" element={<X1Module />} />
