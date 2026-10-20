@@ -119,6 +119,10 @@
       "type": "string",
       "description": "JSON of the independent validating agent pass: per-claim PASS/FAIL/NOT RUN, decision and what it could not verify"
     },
+    "pipeline_json": {
+      "type": "string",
+      "description": "JSON of the ingestion agent system run: stage trace for the ingestor, architect, QA, repair and validator agents, repair rounds used, the SUPPLY list of values the source does not show, open defects and the derived decision"
+    },
     "operational_score": {
       "type": "number",
       "default": 0,

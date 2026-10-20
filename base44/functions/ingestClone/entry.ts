@@ -116,17 +116,29 @@ export default async function(req) {
     } else if (sourceType === 'repo') {
       const repoUrl = String(body.url || '').trim();
       if (!repoUrl) return Response.json({ error: 'A repository URL (github.com/owner/repo) is required.' }, { status: 400 });
+      let accessToken = '';
+      try {
+        const connection = await base44.asServiceRole.connectors.getConnection('github');
+        accessToken = connection?.accessToken || '';
+      } catch {
+        accessToken = '';
+      }
       let repo;
       try {
-        repo = await fetchRepo(repoUrl);
+        repo = await fetchRepo(repoUrl, accessToken);
       } catch (e) {
         return Response.json({ error: `Could not read the repository: ${e.message}` }, { status: 200 });
       }
       sourceUrl = `https://github.com/${repo.owner}/${repo.repo}`;
       kind = 'system';
       measured.repo = repoSignature(repo.meta, repo.entries, repo.files);
+      measured.repo.private = Boolean(repo.meta?.private);
       text = [repo.files['README.md'] || '', repo.files['.env.example'] || '', repo.files['package.json'] || '', repo.files['requirements.txt'] || ''].join('\n\n').slice(0, 15000);
-      limitations.push('This read uses the public GitHub API only, so a private repository is not readable here and its live deployment was not inspected.');
+      limitations.push(
+        accessToken
+          ? 'The repository was read through the connected GitHub account, so private repositories are readable here. Its deployed instance was not inspected.'
+          : 'No GitHub account is connected to this app, so only public repositories can be read. Connect GitHub to ingest a private repository.'
+      );
     } else if (sourceType === 'document') {
       const url = String(body.file_url || body.url || '').trim();
       if (!url) return Response.json({ error: 'A document is required for this source type.' }, { status: 400 });

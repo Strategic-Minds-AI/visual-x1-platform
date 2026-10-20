@@ -286,18 +286,29 @@ export async function fetchJson(url, headers) {
   return res.json();
 }
 
-// Public repositories only: this reads the unauthenticated GitHub API, so a private
-// repository is reported as not readable rather than silently captured as nothing.
-export async function fetchRepo(repoUrl) {
+function decodeBase64(b64) {
+  try {
+    const clean = String(b64 || "").replace(/\s/g, "");
+    return new TextDecoder().decode(Uint8Array.from(atob(clean), (ch) => ch.charCodeAt(0)));
+  } catch {
+    return "";
+  }
+}
+
+// Reads a repository. Given an access token it reads through the authenticated GitHub
+// API, so a private repository is readable; without one it reads the public API only
+// and says so rather than reporting the repository as empty.
+export async function fetchRepo(repoUrl, accessToken) {
   const m = String(repoUrl || "").match(/github\.com\/([^\/\s]+)\/([^\/\s#?]+)/i);
   if (!m) throw new Error("Only a github.com repository URL (owner/repo) can be read.");
   const owner = m[1];
   const repo = m[2].replace(/\.git$/i, "");
-  const meta = await fetchJson(`https://api.github.com/repos/${owner}/${repo}`);
+  const auth = accessToken ? { authorization: `Bearer ${accessToken}` } : {};
+  const meta = await fetchJson(`https://api.github.com/repos/${owner}/${repo}`, auth);
   const branch = meta.default_branch || "main";
   let entries = [];
   try {
-    const tree = await fetchJson(`https://api.github.com/repos/${owner}/${repo}/git/trees/${encodeURIComponent(branch)}?recursive=1`);
+    const tree = await fetchJson(`https://api.github.com/repos/${owner}/${repo}/git/trees/${encodeURIComponent(branch)}?recursive=1`, auth);
     entries = (tree.tree || []).filter((e) => e.type === "blob").slice(0, 600).map((e) => ({ path: e.path, size: e.size }));
   } catch {
     entries = [];
@@ -307,9 +318,14 @@ export async function fetchRepo(repoUrl) {
   for (const key of keyNames) {
     if (!entries.some((e) => e.path === key) && key !== "package.json") continue;
     try {
-      const raw = await fetch(`https://raw.githubusercontent.com/${owner}/${repo}/${encodeURIComponent(branch)}/${key}`, { signal: AbortSignal.timeout(12000) });
-      if (raw.ok) files[key] = (await raw.text()).slice(0, 8000);
+      if (accessToken) {
+        const content = await fetchJson(`https://api.github.com/repos/${owner}/${repo}/contents/${key}?ref=${encodeURIComponent(branch)}`, auth);
+        if (content?.content) files[key] = decodeBase64(content.content).slice(0, 8000);
+      } else {
+        const raw = await fetch(`https://raw.githubusercontent.com/${owner}/${repo}/${encodeURIComponent(branch)}/${key}`, { signal: AbortSignal.timeout(12000) });
+        if (raw.ok) files[key] = (await raw.text()).slice(0, 8000);
+      }
     } catch { /* a missing manifest is not a capture failure */ }
   }
-  return { owner, repo, branch, meta, entries, files };
+  return { owner, repo, branch, meta, entries, files, authenticated: Boolean(accessToken) };
 }
