@@ -17,8 +17,8 @@
   --smai-white: #f6fbff;
   --smai-muted: #9bbdd0;
   --smai-focus: #83ffb4;
-  --smai-brand-emblem: url("https://www.strategicmindsai.com/v2-assets/silver-emblem.png");
-  --smai-connected-earth: url("https://www.strategicmindsai.com/v2-assets/connected-earth.jpg");
+  --smai-brand-emblem: url("/v2-assets/silver-emblem.png");
+  --smai-connected-earth: url("/v2-assets/connected-earth.jpg");
   --v2-cyan: var(--smai-cyan);
   --v2-blue: var(--smai-blue);
   --v2-lime: var(--smai-green);
@@ -313,8 +313,8 @@
   position: absolute; inset: 0; pointer-events: none; z-index: 1; opacity: .9;
   background: linear-gradient(108deg, transparent 27%, rgba(142, 224, 255, .05) 37%, rgba(240, 253, 255, .65) 49%, rgba(138, 226, 255, .12) 56%, transparent 68%);
   background-size: 315% 100%; background-position: 100% 50%;
-  -webkit-mask-image: url("https://www.strategicmindsai.com/v2-assets/silver-emblem.png");
-  mask-image: url("https://www.strategicmindsai.com/v2-assets/silver-emblem.png");
+  -webkit-mask-image: url("/v2-assets/silver-emblem.png");
+  mask-image: url("/v2-assets/silver-emblem.png");
   -webkit-mask-size: contain; mask-size: contain;
   -webkit-mask-position: center; mask-position: center;
   -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat;

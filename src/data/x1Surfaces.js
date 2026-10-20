@@ -9,9 +9,9 @@ export const X1_BRAND = {
   system: "X1 Operating System",
   tagline: "INTELLIGENCE IN MOTION",
   site: "https://www.strategicmindsai.com",
-  emblem: "https://www.strategicmindsai.com/v2-assets/silver-emblem.png",
-  wordmark: "https://www.strategicmindsai.com/v2-assets/chrome-wordmark.png",
-  earth: "https://www.strategicmindsai.com/v2-assets/connected-earth.jpg",
+  emblem: "/v2-assets/silver-emblem.png",
+  wordmark: "/v2-assets/chrome-wordmark.png",
+  earth: "/v2-assets/connected-earth.jpg",
   font: "Inter",
   swatches: [
     { token: "canvas", hex: "#02050d" },

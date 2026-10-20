@@ -10,12 +10,12 @@ import { base44 } from "@/api/base44Client";
 import { cn } from "@/lib/utils";
 
 // X1's own brand assets, taken from the live X1 front end.
-const X1_EMBLEM = "https://www.strategicmindsai.com/v2-assets/silver-emblem.png";
-const X1_WORDMARK = "https://www.strategicmindsai.com/v2-assets/chrome-wordmark.png";
+const X1_EMBLEM = "/v2-assets/silver-emblem.png";
+const X1_WORDMARK = "/v2-assets/chrome-wordmark.png";
 
 // Thin vertical rail: the always-visible spine of the system.
 const RAIL = [
-  { to: "/", label: "Workspace", Icon: Home, end: true },
+  { to: "/workspace", label: "Visual X Console", Icon: Home },
   { to: "/x1-home", label: "X1 Home", Icon: Star },
   { to: "/x1", label: "X1 Operating System", Icon: Radar },
   { to: "/x1-experience", label: "X1 Live App", Icon: Globe },
@@ -33,7 +33,7 @@ const RAIL = [
 ];
 
 const TOP_LINKS = [
-  { to: "/", label: "Workspace", end: true },
+  { to: "/workspace", label: "Visual X Console" },
   { to: "/x1-home", label: "X1 Home" },
   { to: "/x1", label: "X1 OS" },
   { to: "/x1-experience", label: "X1 Live App" },

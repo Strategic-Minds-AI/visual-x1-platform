@@ -1,7 +1,7 @@
 import React from "react";
 import { Image } from "@/components/ui/image";
 
-const ASSETS = "https://www.strategicmindsai.com/v2-assets/";
+const ASSETS = "/v2-assets/";
 
 export default function X1Brand({ small = false }) {
   return (

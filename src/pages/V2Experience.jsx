@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import "@/styles/x1-experience.css";
 import X1TopNav from "@/components/x1home/X1TopNav";
 import X1CinematicHero from "@/components/x1home/X1CinematicHero";
@@ -15,6 +15,7 @@ import X1SiteFooter from "@/components/x1home/X1SiteFooter";
 //   /v2/eden the same Eden workspace under its alias route
 export default function V2Experience({ forceVariant }) {
   const { variant: route } = useParams();
+  const location = useLocation();
   const variant = forceVariant || (route === "b" ? "b" : route === "c" || route === "eden" ? "c" : "a");
 
   useEffect(() => {
@@ -22,6 +23,14 @@ export default function V2Experience({ forceVariant }) {
     document.title = "Strategic Minds AI | Intelligence in Motion";
     return () => { document.title = title; };
   }, [variant]);
+
+  // X1's NavigateToHash: anchors such as /v2/c#onboarding scroll on arrival.
+  useEffect(() => {
+    if (!location.hash) return;
+    const target = decodeURIComponent(location.hash.substring(1));
+    const raf = requestAnimationFrame(() => document.getElementById(target)?.scrollIntoView({ behavior: "auto", block: "start" }));
+    return () => cancelAnimationFrame(raf);
+  }, [location.pathname, location.hash]);
 
   return (
     <div className={"v2-page v2-variant-" + variant}>

@@ -21,14 +21,14 @@ export const X1_SOURCE = {
 //         "module"  = this application's working implementation serving that X1 workspace
 //         "deferred"= source read and scheduled, not yet ported
 export const X1_ROUTES = [
-  { route: "/", source: "main.jsx redirect", target: "/v2/b", local: "/v2/b", status: "native", note: "Root redirect reproduced by the /v2/:variant surface" },
+  { route: "/", source: "main.jsx redirect", target: "/v2/b", local: "/", status: "native", note: "Root serves the extended homepage exactly as X1 does; the Visual X console moved behind /workspace" },
   { route: "/v2/a", source: "src/V2Experience.jsx", local: "/v2/a", status: "native", note: "Cinematic hero, chrome S, single CTA" },
   { route: "/v2/b", source: "src/V2Experience.jsx", local: "/v2/b", status: "native", note: "Extended homepage: hero, 8 services, reach, approach, CTA" },
   { route: "/v2/c", source: "src/V2Experience.jsx", local: "/v2/c", status: "native", note: "Eden Skye portrait plus four-question discovery demo" },
   { route: "/v2/eden", source: "main.jsx variant alias", local: "/v2/eden", status: "native", note: "Alias route to the same Eden workspace" },
-  { route: "/pricing", source: "src/PricingExperience.jsx (11.2 kB)", local: "—", status: "deferred", note: "Source read; port queued next batch" },
-  { route: "/portal", source: "src/ClientPortalExperience.jsx (20.9 kB)", local: "—", status: "deferred", note: "Client portal plus 40.8 kB CommercePortal.css; needs the read-only Supabase data plane wired" },
-  { route: "/portal/demo", source: "src/ClientPortalExperience.jsx (demo prop)", local: "—", status: "deferred", note: "Same workspace in demo mode" },
+  { route: "/pricing", source: "src/PricingExperience.jsx (11.2 kB)", local: "/pricing", status: "native", note: "Pricing workspace: three engagements, proposal builder, journey and FAQ" },
+  { route: "/portal", source: "src/ClientPortalExperience.jsx (20.9 kB)", local: "/portal", status: "native", note: "Portal gateway with the secure sign-in state, exactly as X1 renders it" },
+  { route: "/portal/demo", source: "src/ClientPortalExperience.jsx (demo prop)", local: "/portal/demo", status: "native", note: "Seven-workspace demo portal; 40.8 kB CommercePortal.css and brand assets self-hosted byte-exact" },
   { route: "/admin/studio", source: "src/VisualStudio.jsx (21.7 kB)", local: "/admin/studio", status: "module", note: "Served by the Visual X Visual Editor engine" },
   { route: "/admin/visual-editor", source: "src/VisualStudio.jsx", local: "/admin/visual-editor", status: "module", note: "Same X1 workspace under its second route" },
   { route: "/admin/coding-kanban", source: "src/CodingKanban.jsx (13.6 kB)", local: "/admin/coding-kanban", status: "module", note: "Served by the Kanban execution board" },

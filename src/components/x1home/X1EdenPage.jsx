@@ -8,7 +8,7 @@ import X1Onboarding from "./X1Onboarding";
 import X1ServiceGrid from "./X1ServiceGrid";
 import X1LastCta from "./X1LastCta";
 
-const ASSETS = "https://www.strategicmindsai.com/v2-assets/";
+const ASSETS = "/v2-assets/";
 
 // X1 /v2/c and /v2/eden — Eden Skye portrait plus the four-question discovery demo.
 export default function X1EdenPage() {

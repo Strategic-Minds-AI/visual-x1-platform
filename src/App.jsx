@@ -42,6 +42,8 @@ import X1Experience from './pages/X1Experience';
 import X1Home from './pages/X1Home';
 import V2Experience from './pages/V2Experience';
 import X1CloneLedger from './pages/X1CloneLedger';
+import PricingExperience from './pages/PricingExperience';
+import ClientPortalExperience from './pages/ClientPortalExperience';
 import BuilderMap from './pages/BuilderMap';
 import AppShell from '@/components/workspace/AppShell';
 import Login from '@/pages/Login';
@@ -85,7 +87,7 @@ const AuthenticatedApp = () => {
       <Route path="/oauth/consent" element={<OAuthConsent />} />
       <Route element={<ProtectedRoute unauthenticatedElement={<Navigate to="/login" replace />} />}>
         <Route element={<AppShell />}>
-        <Route path="/" element={<Workspace />} />
+        <Route path="/workspace" element={<Workspace />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/clone-ingest" element={<CloneIngest />} />
         <Route path="/delivery" element={<DeliveryConsole />} />
@@ -131,9 +133,14 @@ const AuthenticatedApp = () => {
         <Route path="/visual-x" element={<VisualEditor />} />
         </Route>
       </Route>
-      <Route element={<ProtectedRoute unauthenticatedElement={<Navigate to="/login?returnTo=/v2/b" replace />} />}>
+      {/* The X1 site is the front door; the Visual X console sits behind /workspace. */}
+      <Route element={<ProtectedRoute unauthenticatedElement={<Navigate to="/login?returnTo=/" replace />} />}>
+        <Route path="/" element={<V2Experience forceVariant="b" />} />
         <Route path="/x1-home" element={<X1Home />} />
         <Route path="/v2/:variant" element={<V2Experience />} />
+        <Route path="/pricing" element={<PricingExperience />} />
+        <Route path="/portal" element={<ClientPortalExperience />} />
+        <Route path="/portal/demo" element={<ClientPortalExperience demo />} />
       </Route>
       <Route element={<ProtectedRoute unauthenticatedElement={<Navigate to="/login?returnTo=/x1-module" replace />} />}>
         <Route path="/x1-module" element={<X1Module />} />

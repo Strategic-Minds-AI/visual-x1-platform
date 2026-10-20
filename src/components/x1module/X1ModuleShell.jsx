@@ -2,7 +2,7 @@ import React from "react";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 
-const X1_EMBLEM = "https://www.strategicmindsai.com/v2-assets/silver-emblem.png";
+const X1_EMBLEM = "/v2-assets/silver-emblem.png";
 
 // The frame Visual X presents while it is mounted as a page inside the X1 admin.
 // It carries X1's lockup, and it is deliberately chrome-free: X1 already owns the
