@@ -31,7 +31,7 @@ export const X1_BRAND = {
 export const X1_EXPERIENCES = [
   { name: "V2Experience", routes: "/v2/a · /v2/b · /v2/c · /v2/eden", what: "Cinematic marketing front end: chrome S, Earth and star motion, services, approach, Eden discovery demo.", parity: "pending" },
   { name: "PricingExperience", routes: "/pricing", what: "Discovery-first pricing across reach tiers (city, region, nationwide, international) with proposal request.", parity: "pending" },
-  { name: "ClientPortalExperience", routes: "/portal · /portal/demo", what: "Client workspace: project status, timeline, approvals, guided by Eden.", parity: "pending" },
+  { name: "ClientPortalExperience", routes: "/portal · /portal/workspace", what: "Client workspace: project status, timeline, approvals, guided by Eden.", parity: "pending" },
   { name: "LaunchStudio", routes: "/admin/launch-studio", what: "Largest module (62 KB): build brief to generated site — brand, industry, niche, market, audience, goal.", parity: "pending" },
   { name: "VisualStudio", routes: "/admin/visual-editor", what: "Visual editor surface for generated output.", parity: "pending" },
   { name: "X1AgentConsole", routes: "/admin/agent", what: "Agent console for the X1 agent plane.", parity: "pending" },

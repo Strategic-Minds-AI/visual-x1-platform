@@ -28,7 +28,7 @@ export const X1_ROUTES = [
   { route: "/v2/eden", source: "main.jsx variant alias", local: "/v2/eden", status: "native", note: "Alias route to the same Eden workspace" },
   { route: "/pricing", source: "src/PricingExperience.jsx (11.2 kB)", local: "/pricing", status: "native", note: "Pricing workspace: three engagements, proposal builder, journey and FAQ" },
   { route: "/portal", source: "src/ClientPortalExperience.jsx (20.9 kB)", local: "/portal", status: "native", note: "Portal gateway with the secure sign-in state, exactly as X1 renders it" },
-  { route: "/portal/demo", source: "src/ClientPortalExperience.jsx (demo prop)", local: "/portal/demo", status: "native", note: "Seven-workspace demo portal; 40.8 kB CommercePortal.css and brand assets self-hosted byte-exact" },
+  { route: "/portal/workspace", source: "src/ClientPortalExperience.jsx", local: "/portal/workspace", status: "native", note: "Seven-workspace client portal; X1's 40.8 kB CommercePortal.css and brand tokens bundled byte-exact" },
   { route: "/admin/studio", source: "src/VisualStudio.jsx (21.7 kB)", local: "/admin/studio", status: "module", note: "Served by the Visual X Visual Editor engine" },
   { route: "/admin/visual-editor", source: "src/VisualStudio.jsx", local: "/admin/visual-editor", status: "module", note: "Same X1 workspace under its second route" },
   { route: "/admin/coding-kanban", source: "src/CodingKanban.jsx (13.6 kB)", local: "/admin/coding-kanban", status: "module", note: "Served by the Kanban execution board" },

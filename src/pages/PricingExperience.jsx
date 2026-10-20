@@ -66,7 +66,7 @@ export default function PricingExperience() {
         <div className="cp-hero-content"><div className="cp-label"><span className="cp-signal" /> THE NEXT MOVE IS YOURS</div>
           <h1>Powerful AI.<br /><em>Built around you.</em></h1>
           <p>From your first automation to an entire intelligence ecosystem. Find the right level of partnership without being buried in technical jargon.</p>
-          <div className="cp-hero-actions"><a href="#packages" className="cp-primary">EXPLORE ENGAGEMENTS <ArrowRight size={17} /></a><Link to="/portal/demo" className="cp-subtle">Preview the client experience <ArrowUpRight size={16} /></Link></div>
+          <div className="cp-hero-actions"><a href="#packages" className="cp-primary">EXPLORE ENGAGEMENTS <ArrowRight size={17} /></a><Link to="/portal/workspace" className="cp-subtle">Open the client portal <ArrowUpRight size={16} /></Link></div>
         </div>
         <div className="cp-hero-visual" aria-hidden="true"><div className="cp-ring cp-ring-1" /><div className="cp-ring cp-ring-2" /><img src="https://www.strategicmindsai.com/v2-assets/silver-emblem.png" alt="" /><span>INTELLIGENCE IN MOTION</span></div>
       </section>
