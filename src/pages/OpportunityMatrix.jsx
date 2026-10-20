@@ -24,9 +24,9 @@ export default function OpportunityMatrix() {
           base44.entities.GoogleComplianceRule.filter({}, { sort: 'display_order', limit: 50 }),
           base44.entities.LaunchLocation.filter({ is_active: true }, { sort: 'rank', limit: 50 }),
         ]);
-        setOpportunities(ops);
-        setRules(rulesData);
-        setLocations(locs);
+        setOpportunities(ops.items || []);
+        setRules(rulesData.items || []);
+        setLocations(locs.items || []);
       } catch (e) {
         // entities may not be seeded yet
       } finally {
