@@ -7,6 +7,7 @@ import EditorCanvas from "@/components/visualeditor/EditorCanvas";
 import PromptSystemPanel from "@/components/visualeditor/PromptSystemPanel";
 import SimulatorResults from "@/components/editor/SimulatorResults";
 import PromptChainBuilder from "@/components/editor/PromptChainBuilder";
+import EditorTaskbar from "@/components/visualeditor/EditorTaskbar";
 import { MOBILE_TABS } from "@/components/visualeditor/editorNav";
 
 const STATUS = (engine, sending) => {
@@ -24,11 +25,22 @@ const STATUS = (engine, sending) => {
  * it from that tab's stored snapshot and writing every change back — so switching
  * tabs pulls up exactly the page the tab was left on.
  *
- * The row reads rail, composer, canvas. When the console hands it the rail (the
- * `rail` prop), that rail is the thin column flush to the left; the composer column
- * follows it, and the artifact canvas takes the rest.
+ * The row reads rail, composer, canvas, with the editor's own bottom bar under it.
+ * When the console hands it the rail (the `rail` prop), that rail is the thin column
+ * flush to the left; the composer column follows it, and the artifact canvas takes
+ * the rest. The canvas views, the devices and refresh live in that bottom bar, along
+ * with the search.
  */
-export default function EditorPane({ rail, railOpen = false, initial, onSnapshot, onName, projectName }) {
+export default function EditorPane({
+  rail,
+  railOpen = false,
+  initial,
+  onSnapshot,
+  onName,
+  projectName,
+  tabs = [],
+  onSelectTab,
+}) {
   const engine = useEditorEngine(initial);
   const [leftMode, setLeftMode] = useState(initial?.leftMode || "chat");
   const [canvasView, setCanvasView] = useState(initial?.canvasView || "preview");
@@ -124,14 +136,18 @@ export default function EditorPane({ rail, railOpen = false, initial, onSnapshot
     engine.handleRender(overridePrompt);
   };
 
+  // The bottom bar's search hands its request to the same pipelines the composer
+  // does: a question goes to the agent, through the composer it already reads.
+  const askAgent = (text) => {
+    pickComposer("chat");
+    engine.setInput(text);
+  };
+
   return (
     <>
       <EditorTopBar
         projectName={projectName}
-        device={device}
         panelCollapsed={panelCollapsed}
-        onDevice={setDevice}
-        onRefresh={() => setRefreshTick((t) => t + 1)}
         onTogglePanel={() => setPanelCollapsed((v) => !v)}
       />
 
@@ -148,8 +164,6 @@ export default function EditorPane({ rail, railOpen = false, initial, onSnapshot
                 engine={engine}
                 busy={busy}
                 status={status}
-                canvasView={canvasView}
-                onCanvas={pickCanvas}
                 leftMode={leftMode}
                 onComposer={pickComposer}
                 onSend={send}
@@ -216,6 +230,20 @@ export default function EditorPane({ rail, railOpen = false, initial, onSnapshot
           );
         })}
       </nav>
+
+      <EditorTaskbar
+        canvasView={canvasView}
+        onCanvas={pickCanvas}
+        device={device}
+        onDevice={setDevice}
+        onRefresh={() => setRefreshTick((t) => t + 1)}
+        status={status}
+        busy={busy}
+        tabs={tabs}
+        onSelectTab={onSelectTab}
+        onBuild={render}
+        onAsk={askAgent}
+      />
     </>
   );
 }

@@ -59,6 +59,8 @@ export default function VisualEditorWorkspace({ rail, railOpen = false }) {
           onSnapshot={tabs.saveSnapshot}
           onName={tabs.nameTab}
           projectName={projectName}
+          tabs={tabs.tabs}
+          onSelectTab={tabs.selectTab}
           rail={rail}
           railOpen={railOpen}
         />

@@ -725,3 +725,137 @@
   width: 0;
   height: 0;
 }
+
+/* ── the bottom bar: the editor's tools, as a desktop's own bar ───────────────
+   The canvas views pinned on the left, the search in the middle, and the canvas
+   tools over the state tray on the right. It stays pinned to the foot of the
+   workspace at every width, so a tool is never further than the bottom edge of the
+   screen it is being used on. */
+.cp-site .ve-taskbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  height: 46px;
+  padding: 0 12px;
+  border-top: 1px solid rgba(91, 175, 230, .18);
+  background: linear-gradient(180deg, rgba(3, 11, 22, .45), rgba(3, 11, 22, .92));
+  flex-shrink: 0;
+}
+
+.cp-site .ve-taskbar-tools,
+.cp-site .ve-taskbar-tray {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.cp-site .ve-taskbar-search {
+  display: flex;
+  justify-content: center;
+  flex: 1;
+  min-width: 0;
+}
+
+/* ── the search: the bar's own omnibox, recommending as it is typed ─────────── */
+.cp-site .ve-search {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  max-width: 460px;
+  height: 32px;
+  padding: 0 13px;
+  border: 1px solid rgba(66, 168, 227, .3);
+  border-radius: 100px;
+  background: rgba(6, 17, 31, .72);
+  color: #8fb0c4;
+}
+
+.cp-site .ve-search:focus-within {
+  border-color: rgba(64, 192, 254, .6);
+  box-shadow: 0 0 18px rgba(12, 179, 255, .18);
+}
+
+.cp-site .ve-search input {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  outline: none;
+  background: transparent;
+  color: #d9f6ff;
+  font: inherit;
+  font-size: 12px;
+}
+
+.cp-site .ve-search input::placeholder {
+  color: #7d9db2;
+}
+
+/* The recommendations open upward, because the bar they belong to is at the foot
+   of the workspace. */
+.cp-site .ve-search-list {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: calc(100% + 8px);
+  margin: 0;
+  padding: 6px;
+  list-style: none;
+  max-height: 264px;
+  overflow-y: auto;
+  border: 1px solid rgba(64, 192, 254, .28);
+  border-radius: 14px;
+  background: rgba(6, 23, 38, .97);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, .55);
+  z-index: 5;
+}
+
+.cp-site .ve-search-list li {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 8px 11px;
+  border-radius: 9px;
+  color: #cfe6f4;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.cp-site .ve-search-list li:hover,
+.cp-site .ve-search-list li.selected {
+  background: rgba(12, 81, 113, .42);
+  color: #eaf9ff;
+}
+
+.cp-site .ve-search-list li em {
+  flex-shrink: 0;
+  font-style: normal;
+  font-size: 8px;
+  font-weight: 830;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: #71a3c0;
+}
+
+/* A handset keeps the bar, thinner: the views and the search, without the tray's
+   device frames, so it never competes with the pane tabs above it. */
+@media (max-width: 700px) {
+  .cp-site .ve-taskbar {
+    height: 44px;
+    padding: 0 9px;
+    gap: 7px;
+  }
+  .cp-site .ve-taskbar-tray .ve-devices,
+  .cp-site .ve-taskbar-tray .ve-icon-btn {
+    display: none;
+  }
+  .cp-site .ve-taskbar-tools .ve-pill-label {
+    display: none;
+  }
+}

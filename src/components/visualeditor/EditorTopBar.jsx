@@ -1,21 +1,15 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { Boxes, LayoutDashboard, Monitor, PanelLeftClose, PanelLeftOpen, RefreshCw, Smartphone, Tablet } from "lucide-react";
+import { Boxes, LayoutDashboard, PanelLeftClose, PanelLeftOpen } from "lucide-react";
 import ModuleHub from "@/components/admin/ModuleHub";
 
-const DEVICES = [
-  { id: "desktop", label: "Desktop preview", Icon: Monitor },
-  { id: "tablet", label: "Tablet preview", Icon: Tablet },
-  { id: "mobile", label: "Phone preview", Icon: Smartphone },
-];
-
-// The package's builder header: the Dashboard button and the project on the left,
-// the module launcher, refresh and the device frames on the right — in console pill
+// The package's builder header: the Dashboard button, the project and the composer
+// panel toggle on the left, the module launcher on the right — in console pill
 // styling. Every control here does something: Dashboard returns to the console's
-// command deck, MODULES opens every Visual X module, and the rest drive the canvas.
-// The Preview/Dashboard-style view switch lives at the top right of the composer
-// column's own navigation bar, where the operator asked for it.
-export default function EditorTopBar({ projectName, device, panelCollapsed, onDevice, onRefresh, onTogglePanel }) {
+// command deck and MODULES opens every Visual X module. The canvas tools — the view
+// switch, the device frames, refresh — sit in the editor's own bottom bar, which is
+// where the Windows-style taskbar of the workspace belongs.
+export default function EditorTopBar({ projectName, panelCollapsed, onTogglePanel }) {
   const [hubOpen, setHubOpen] = useState(false);
 
   return (
@@ -43,24 +37,6 @@ export default function EditorTopBar({ projectName, device, panelCollapsed, onDe
             <Boxes size={13} />
             <span className="ve-pill-label">MODULES</span>
           </button>
-          <button className="ve-icon-btn" onClick={onRefresh} title="Refresh the canvas">
-            <RefreshCw size={15} />
-          </button>
-          <div className="ve-devices" role="group" aria-label="Preview device">
-            {DEVICES.map(({ id, label, Icon }) => (
-              <button
-                key={id}
-                type="button"
-                onClick={() => onDevice(id)}
-                title={label}
-                aria-label={label}
-                aria-pressed={device === id}
-                className={device === id ? "selected" : ""}
-              >
-                <Icon size={15} />
-              </button>
-            ))}
-          </div>
         </div>
       </header>
 
