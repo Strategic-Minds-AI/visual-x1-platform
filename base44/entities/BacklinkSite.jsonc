@@ -39,6 +39,10 @@
       "type": "string",
       "description": "URL this site links back to (the main site)"
     },
+    "site_url": {
+      "type": "string",
+      "description": "Public URL of the backlink site itself, used for health checks"
+    },
     "status": {
       "type": "string",
       "enum": [
@@ -53,6 +57,35 @@
       "type": "number",
       "default": 0,
       "description": "Target domain authority score"
+    },
+    "health_status": {
+      "type": "string",
+      "enum": [
+        "unknown",
+        "healthy",
+        "degraded",
+        "not_live",
+        "down"
+      ],
+      "default": "unknown",
+      "description": "Result of the last live health check on site_url"
+    },
+    "http_status": {
+      "type": "number",
+      "description": "HTTP status code returned by the last health check"
+    },
+    "response_ms": {
+      "type": "number",
+      "description": "Response time of the last health check in milliseconds"
+    },
+    "last_checked_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When site_url was last checked"
+    },
+    "health_note": {
+      "type": "string",
+      "description": "What the health check observed, or why the site needs attention"
     }
   },
   "required": [
@@ -65,11 +98,13 @@
     "read": {
       "$or": [
         {
-          "created_by_id": "{{user.id}}"
+          "user_condition": {
+            "role": "admin"
+          }
         },
         {
           "user_condition": {
-            "role": "admin"
+            "role": "user"
           }
         }
       ]

@@ -80,6 +80,48 @@ async function findOpportunity(base44, term) {
   return null;
 }
 
+// An uploaded layout may be a bare array of sections or an object wrapping one.
+const toSections = (parsed) => {
+  const raw = Array.isArray(parsed)
+    ? parsed
+    : parsed && Array.isArray(parsed.sections)
+      ? parsed.sections
+      : [];
+  return raw
+    .map((entry) => {
+      if (typeof entry === 'string') return { section: entry, components: [] };
+      if (!entry || typeof entry !== 'object') return null;
+      const name = entry.section || entry.name || entry.role || '';
+      if (!name) return null;
+      return {
+        section: String(name),
+        components: Array.isArray(entry.components) ? entry.components.map(String) : [],
+      };
+    })
+    .filter(Boolean);
+};
+
+const parseSections = (json) => {
+  if (!json) return [];
+  try {
+    return toSections(JSON.parse(json));
+  } catch {
+    return [];
+  }
+};
+
+// Reads the layout the user uploaded, so an uploaded file drives the mapping too.
+async function loadSectionsFromFile(base44, fileUri) {
+  try {
+    const { signed_url } = await base44.asServiceRole.integrations.Core.CreateFileSignedUrl({ file_uri: fileUri });
+    const res = await fetch(signed_url, { signal: AbortSignal.timeout(10000) });
+    if (!res.ok) return [];
+    return toSections(JSON.parse(await res.text()));
+  } catch {
+    return [];
+  }
+}
+
 export default async function (req) {
   try {
     const base44 = createClientFromRequest(req);
@@ -109,6 +151,19 @@ export default async function (req) {
     const pattern = (template && template.url_pattern) || body.url_pattern || '/{region}/{city}/{service}/';
     const strategy = body.domain_strategy || (template && template.domain_strategy) || 'both';
     const funnel = (template && template.funnel_type) || 'quote_request';
+
+    // The layout drives section order: inline JSON first, else the uploaded layout file.
+    let layoutSections = [];
+    let layoutSource = 'none';
+    if (template) {
+      layoutSections = parseSections(template.layout_json);
+      if (layoutSections.length) {
+        layoutSource = 'inline';
+      } else if (template.layout_file_uri) {
+        layoutSections = await loadSectionsFromFile(base44, template.layout_file_uri);
+        if (layoutSections.length) layoutSource = 'file';
+      }
+    }
 
     // Look up matching lead opportunities in small concurrent batches (never one await per item).
     const opportunities = [];
@@ -157,6 +212,9 @@ export default async function (req) {
           nearme_url: strategy === 'nearyou' ? '' : `https://${nearmeDomain}${path}`,
           nearyou_url: strategy === 'nearme' ? '' : `https://${nearyouDomain}${path}`,
           funnel_type: funnel,
+          layout_source: layoutSource,
+          layout_sections: layoutSections.map((s) => s.section),
+          layout_component_count: layoutSections.reduce((total, s) => total + s.components.length, 0),
           matched_vertical: (opportunity && opportunity.vertical) || null,
           benchmark_cpl: (opportunity && opportunity.benchmark_cpl) || null,
         });

@@ -1,0 +1,129 @@
+{
+  "name": "SiteVariation",
+  "type": "object",
+  "properties": {
+    "batch_id": {
+      "type": "string",
+      "description": "FactoryBatch this variation tests"
+    },
+    "label": {
+      "type": "string",
+      "description": "Short name for the variation, e.g. Variation A"
+    },
+    "variant_type": {
+      "type": "string",
+      "enum": [
+        "layout",
+        "headline",
+        "cta",
+        "funnel",
+        "domain",
+        "offer"
+      ],
+      "default": "layout",
+      "description": "What this variation changes versus the control"
+    },
+    "url": {
+      "type": "string",
+      "description": "Live URL of this variation"
+    },
+    "ga_property_id": {
+      "type": "string",
+      "description": "GA4 property id whose data is read for this variation"
+    },
+    "ga_measurement_id": {
+      "type": "string",
+      "description": "GA4 measurement id embedded in this variation's site"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "tracking",
+        "paused",
+        "failed"
+      ],
+      "default": "draft"
+    },
+    "sessions": {
+      "type": "number",
+      "default": 0,
+      "description": "Sessions in the last reporting window"
+    },
+    "users": {
+      "type": "number",
+      "default": 0,
+      "description": "Total users in the last reporting window"
+    },
+    "conversions": {
+      "type": "number",
+      "default": 0,
+      "description": "Key events in the last reporting window"
+    },
+    "conversion_rate": {
+      "type": "number",
+      "default": 0,
+      "description": "Conversions as a percentage of sessions"
+    },
+    "avg_engagement_seconds": {
+      "type": "number",
+      "default": 0,
+      "description": "Average engagement time per session"
+    },
+    "performance_score": {
+      "type": "number",
+      "default": 0,
+      "description": "Weighted score used to rank variations against each other"
+    },
+    "is_leader": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether this is the best performing variation in its batch"
+    },
+    "last_synced_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When Google Analytics data was last pulled for this variation"
+    },
+    "notes": {
+      "type": "string",
+      "description": "What was changed in this variation and what it is testing"
+    }
+  },
+  "required": [
+    "batch_id",
+    "label"
+  ],
+  "rls": {
+    "read": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "create": {},
+    "update": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

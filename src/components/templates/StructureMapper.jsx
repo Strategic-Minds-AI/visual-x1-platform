@@ -92,7 +92,14 @@ export default function StructureMapper({ templates }) {
         <div className="grid md:grid-cols-3 gap-3">
           <div className="space-y-1.5">
             <Label className="text-xs">Template</Label>
-            <Select value={templateId} onValueChange={setTemplateId}>
+            <Select
+              value={templateId}
+              onValueChange={(value) => {
+                setTemplateId(value);
+                const picked = templates.find((t) => t.id === value);
+                if (picked && !keywords.trim()) setKeywords(picked.keywords || "");
+              }}
+            >
               <SelectTrigger><SelectValue placeholder="Select a layout" /></SelectTrigger>
               <SelectContent>
                 {templates.map((t) => (
@@ -136,6 +143,7 @@ export default function StructureMapper({ templates }) {
                   <TableHead className="text-xs">Location</TableHead>
                   <TableHead className="text-xs">NearMe URL</TableHead>
                   <TableHead className="text-xs">NearYou URL</TableHead>
+                  <TableHead className="text-xs">Layout Sections</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -145,6 +153,11 @@ export default function StructureMapper({ templates }) {
                     <TableCell className="text-xs">{s.location || "National"}</TableCell>
                     <TableCell className="text-xs font-mono text-muted-foreground">{s.nearme_url || "—"}</TableCell>
                     <TableCell className="text-xs font-mono text-muted-foreground">{s.nearyou_url || "—"}</TableCell>
+                    <TableCell className="text-xs text-muted-foreground">
+                      {s.layout_sections?.length
+                        ? `${s.layout_sections.length} sections · ${s.layout_source === "file" ? "from uploaded layout" : "from template"}`
+                        : "—"}
+                    </TableCell>
                   </TableRow>
                 ))}
               </TableBody>
