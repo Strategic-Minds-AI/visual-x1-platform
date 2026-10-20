@@ -89,7 +89,6 @@ const AuthenticatedApp = () => {
         <Route path="/delivery" element={<DeliveryConsole />} />
         <Route path="/x1" element={<X1OperatingSystem />} />
         <Route path="/x1-experience" element={<X1Experience />} />
-        <Route path="/x1-home" element={<X1Home />} />
         <Route path="/builder-map" element={<BuilderMap />} />
         <Route path="/job-board" element={<JobBoard />} />
         <Route path="/prompt-studio" element={<PromptStudio />} />
@@ -117,6 +116,9 @@ const AuthenticatedApp = () => {
         <Route path="/system-audit" element={<SystemAudit />} />
         <Route path="/prompt-system" element={<PromptSystem />} />
         </Route>
+      </Route>
+      <Route element={<ProtectedRoute unauthenticatedElement={<Navigate to="/login?returnTo=/x1-home" replace />} />}>
+        <Route path="/x1-home" element={<X1Home />} />
       </Route>
       <Route element={<ProtectedRoute unauthenticatedElement={<Navigate to="/login?returnTo=/x1-module" replace />} />}>
         <Route path="/x1-module" element={<X1Module />} />

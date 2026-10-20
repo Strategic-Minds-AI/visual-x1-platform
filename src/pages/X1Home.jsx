@@ -1,18 +1,33 @@
-import React from "react";
-import X1Hero from "@/components/x1home/X1Hero";
-import X1ProofStrip from "@/components/x1home/X1ProofStrip";
-import X1Approach from "@/components/x1home/X1Approach";
-import X1ModuleGrid from "@/components/x1home/X1ModuleGrid";
-import X1ClosingCta from "@/components/x1home/X1ClosingCta";
+import React, { useEffect } from "react";
+import "@/styles/x1-experience.css";
+import X1TopNav from "@/components/x1home/X1TopNav";
+import X1HeroEarth from "@/components/x1home/X1HeroEarth";
+import X1ServiceGrid from "@/components/x1home/X1ServiceGrid";
+import X1ReachBand from "@/components/x1home/X1ReachBand";
+import X1ProcessGrid from "@/components/x1home/X1ProcessGrid";
+import X1LastCta from "@/components/x1home/X1LastCta";
+import X1SiteFooter from "@/components/x1home/X1SiteFooter";
 
 export default function X1Home() {
+  // X1's public home page owns this document title.
+  useEffect(() => {
+    const title = document.title;
+    document.title = "Strategic Minds AI | Intelligence in Motion";
+    return () => { document.title = title; };
+  }, []);
+
   return (
-    <div className="min-h-full">
-      <X1Hero />
-      <X1ProofStrip />
-      <X1Approach />
-      <X1ModuleGrid />
-      <X1ClosingCta />
+    <div className="v2-page v2-variant-b">
+      <a href="#main-content" className="v2-skip">Skip to content</a>
+      <X1TopNav />
+      <main id="main-content">
+        <X1HeroEarth />
+        <X1ServiceGrid />
+        <X1ReachBand />
+        <X1ProcessGrid />
+        <X1LastCta />
+      </main>
+      <X1SiteFooter />
     </div>
   );
 }
