@@ -7,6 +7,37 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#02050d" />
     <meta name="description" content="Strategic Minds AI — X1 Operating System. Intelligence in motion: capture, specify, validate and deliver." />
+
+    <!-- X1 theme bootstrap. Runs before any stylesheet or script, so the very
+         first paint is already the persisted theme: no light canvas flash and no
+         theme reset when a route changes. Kept in lockstep with
+         src/hooks/useTheme.js (same key, same class, same canvas colour). -->
+    <script>
+      (function () {
+        var root = document.documentElement;
+        var stored = null;
+        try {
+          stored = window.localStorage.getItem("visualx-theme");
+        } catch (e) {
+          /* storage unavailable: fall through to the X1 default */
+        }
+        var dark = stored !== "light";
+        if (dark) root.classList.add("dark");
+        root.dataset.theme = dark ? "dark" : "light";
+        root.style.colorScheme = dark ? "dark" : "light";
+        root.style.backgroundColor = dark ? "#02050d" : "";
+      })();
+    </script>
+
+    <!-- Brand typography loads as early as the document head rather than from a
+         late CSS @import, so Inter is applied in the same paint as the theme. -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+    />
+
     <link rel="manifest" href="/manifest.json" />
     <title>Strategic Minds AI — X1 Operating System</title>
   </head>

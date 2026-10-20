@@ -1,4 +1,6 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+/* Brand typography is loaded from index.html (preconnect + stylesheet) so Inter
+   is available in the first paint instead of being discovered from a late CSS
+   import, which caused the font to swap in after the theme had rendered. */
 
 @tailwind base;
 @tailwind components;
