@@ -13,6 +13,7 @@ import PromptStudio from './pages/PromptStudio';
 import VisualEditor from './pages/VisualEditor';
 import AgentActivity from './pages/AgentActivity';
 import PromptLab from './pages/PromptLab';
+import SystemControl from './pages/SystemControl';
 import Login from '@/pages/Login';
 import Register from '@/pages/Register';
 import ForgotPassword from '@/pages/ForgotPassword';
@@ -59,6 +60,7 @@ const AuthenticatedApp = () => {
         <Route path="/visual-editor" element={<VisualEditor />} />
         <Route path="/agent-activity" element={<AgentActivity />} />
         <Route path="/prompt-lab" element={<PromptLab />} />
+        <Route path="/system-control" element={<SystemControl />} />
       </Route>
       <Route path="*" element={<PageNotFound />} />
     </Routes>
