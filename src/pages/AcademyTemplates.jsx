@@ -1,8 +1,6 @@
 import React, { useState } from "react";
-import {Link} from "react-router-dom";
-import {ArrowUpRight,BookOpen,ExternalLink,LayoutTemplate,Monitor,Smartphone,Tablet,ShieldCheck} from "lucide-react";
+import {BookOpen,ExternalLink,LayoutTemplate,Monitor,Smartphone,Tablet,ShieldCheck} from "lucide-react";
 import {Button} from "@/components/ui/button";
-import {Card,CardContent} from "@/components/ui/card";
 
 // The exact X1 preview SHA is pinned; release promotion is a separate guarded process.
 const X1_PREVIEW="https://x1-operating-system-7ji2a88jl-strategic-minds-advisory.vercel.app";
