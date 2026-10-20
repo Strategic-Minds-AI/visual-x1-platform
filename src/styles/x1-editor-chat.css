@@ -1,0 +1,371 @@
+/* The Visual Editor's chat column and bottom bar.
+ *
+ * The thread, the agent's own navigation strip, the small composer at the foot of the
+ * column, and the bottom bar that now carries the composer's controls, laid out left to
+ * right as the workflow runs: the two composer modes, then build, convert, simulate and
+ * add to chain. Everything is scoped under .cp-site so it keeps the console's palette.
+ */
+
+/* ── chat ───────────────────────────────────────────────────────────────── */
+.cp-site .ve-agent {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  min-width: 0;
+}
+
+.cp-site .ve-avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  color: #02050d;
+  background: linear-gradient(120deg, var(--smai-cyan), var(--smai-green));
+}
+
+.cp-site .ve-avatar.is-user {
+  width: 26px;
+  height: 26px;
+  background: rgba(246, 251, 255, .88);
+  font-size: 8px;
+  font-weight: 850;
+  letter-spacing: .06em;
+}
+
+.cp-site .ve-name {
+  font-size: 9px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  font-weight: 830;
+  color: #79adc0;
+  margin: 0;
+}
+
+.cp-site .ve-msg {
+  display: flex;
+  gap: 9px;
+}
+
+.cp-site .ve-msg.is-user {
+  flex-direction: row-reverse;
+}
+
+.cp-site .ve-bubble {
+  max-width: 92%;
+  border-radius: 14px;
+  padding: 9px 12px;
+  font-size: 12px;
+  line-height: 1.7;
+  color: #d9f6ff;
+  background: linear-gradient(138deg, rgba(13, 33, 54, .9), rgba(6, 17, 31, .95));
+  border: 1px solid rgba(79, 175, 232, .24);
+}
+
+.cp-site .ve-msg.is-user .ve-bubble {
+  background: linear-gradient(115deg, rgba(2, 207, 255, .2), rgba(18, 140, 255, .16));
+  border-color: rgba(64, 192, 254, .4);
+}
+
+.cp-site .ve-bubble.is-error {
+  border-color: rgba(255, 157, 157, .38);
+  color: #ff9d9d;
+}
+
+.cp-site .ve-bubble p {
+  margin: 0 0 6px;
+}
+
+.cp-site .ve-bubble p:last-child {
+  margin-bottom: 0;
+}
+
+.cp-site .ve-bubble pre {
+  margin: 0;
+  white-space: pre-wrap;
+  word-break: break-word;
+  font: 11px/1.75 ui-monospace, SFMono-Regular, Menlo, monospace;
+  color: #cfe6f4;
+}
+
+/* ── composer ───────────────────────────────────────────────────────────── */
+/* The composer sits at the very foot of the chat column, directly above the bottom
+   bar, and stays slim: the suggestions, then one small field with its send control.
+   Everything that acts on the request lives in the bottom bar instead. */
+.cp-site .ve-composer {
+  border-top: 1px solid rgba(91, 175, 230, .14);
+  padding: 9px 11px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  flex-shrink: 0;
+}
+
+.cp-site .ve-suggest-label {
+  font-size: 8px;
+  letter-spacing: .14em;
+  font-weight: 830;
+  color: #71a3c0;
+  margin: 0;
+}
+
+.cp-site .ve-chips {
+  display: flex;
+  gap: 5px;
+  overflow-x: auto;
+  padding-bottom: 2px;
+}
+
+.cp-site .ve-chip {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 9px;
+  border-radius: 100px;
+  border: 1px solid rgba(66, 168, 227, .34);
+  background: rgba(12, 39, 61, .5);
+  color: #cfe6f4;
+  font-size: 9px;
+  font-weight: 730;
+  letter-spacing: .04em;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: border-color 180ms ease, background 180ms ease;
+}
+
+.cp-site .ve-chip:hover {
+  border-color: var(--smai-cyan);
+  background: rgba(2, 207, 255, .1);
+}
+
+.cp-site .ve-input-row {
+  display: flex;
+  align-items: flex-end;
+  gap: 6px;
+}
+
+.cp-site .ve-input-row .cp-field {
+  min-height: 36px;
+  max-height: 92px;
+  padding: 8px 10px;
+  font-size: 11.5px;
+  line-height: 1.5;
+  resize: none;
+}
+
+.cp-site .ve-send {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  flex-shrink: 0;
+  border-radius: 9px;
+  border: 1px solid rgba(64, 192, 254, .4);
+  background: linear-gradient(115deg, var(--smai-cyan), var(--smai-blue));
+  color: #02050d;
+  cursor: pointer;
+}
+
+.cp-site .ve-send:disabled {
+  opacity: .45;
+  cursor: not-allowed;
+}
+
+/* ── the composer's controls, in the bottom bar ──────────────────────────────
+   The workflow left to right: the two composer modes, then build, convert, simulate
+   and add to chain — small pills, so the bar stays a bar and the search keeps its
+   middle. */
+.cp-site .ve-taskbar .ve-pill-group {
+  padding: 2px;
+  gap: 3px;
+}
+
+.cp-site .ve-taskbar .ve-pill {
+  padding: 4px 9px;
+  font-size: 8.5px;
+  gap: 5px;
+}
+
+.cp-site .ve-flow {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 10px;
+  border: 1px solid rgba(66, 168, 227, .3);
+  border-radius: 100px;
+  background: rgba(6, 17, 31, .55);
+  color: #cfe6f4;
+  font: inherit;
+  font-size: 8.5px;
+  font-weight: 850;
+  letter-spacing: .12em;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: border-color 180ms ease, background 180ms ease, color 180ms ease;
+}
+
+.cp-site .ve-flow:hover:not(:disabled) {
+  border-color: var(--smai-cyan, #02cfff);
+  color: #d7fbff;
+}
+
+.cp-site .ve-flow:disabled {
+  opacity: .45;
+  cursor: not-allowed;
+}
+
+.cp-site .ve-flow.is-go {
+  border-color: rgba(64, 192, 254, .5);
+  background: linear-gradient(115deg, rgba(2, 207, 255, .22), rgba(18, 140, 255, .18));
+  color: #d7fbff;
+}
+
+.cp-site .ve-flow-sep {
+  width: 1px;
+  height: 18px;
+  flex-shrink: 0;
+  background: linear-gradient(180deg, transparent, rgba(64, 192, 254, .3), transparent);
+}
+
+/* ── the bottom bar: the editor's tools, as a desktop's own bar ───────────────
+   The composer's controls on the left, the search in the middle, and the state tray on
+   the right. It stays pinned to the foot of the workspace at every width, so a control
+   is never further than the bottom edge of the screen it is being used on. */
+.cp-site .ve-taskbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  height: 46px;
+  padding: 0 12px;
+  border-top: 1px solid rgba(91, 175, 230, .18);
+  background: linear-gradient(180deg, rgba(3, 11, 22, .45), rgba(3, 11, 22, .92));
+  flex-shrink: 0;
+}
+
+.cp-site .ve-taskbar-tools,
+.cp-site .ve-taskbar-tray {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.cp-site .ve-taskbar-tools {
+  gap: 6px;
+}
+
+.cp-site .ve-taskbar-search {
+  display: flex;
+  justify-content: center;
+  flex: 1;
+  min-width: 0;
+}
+
+/* ── the search: the bar's own omnibox, recommending as it is typed ─────────── */
+.cp-site .ve-search {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  max-width: 460px;
+  height: 32px;
+  padding: 0 13px;
+  border: 1px solid rgba(66, 168, 227, .3);
+  border-radius: 100px;
+  background: rgba(6, 17, 31, .72);
+  color: #8fb0c4;
+}
+
+.cp-site .ve-search:focus-within {
+  border-color: rgba(64, 192, 254, .6);
+  box-shadow: 0 0 18px rgba(12, 179, 255, .18);
+}
+
+.cp-site .ve-search input {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  outline: none;
+  background: transparent;
+  color: #d9f6ff;
+  font: inherit;
+  font-size: 12px;
+}
+
+.cp-site .ve-search input::placeholder {
+  color: #7d9db2;
+}
+
+/* The recommendations open upward, because the bar they belong to is at the foot
+   of the workspace. */
+.cp-site .ve-search-list {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: calc(100% + 8px);
+  margin: 0;
+  padding: 6px;
+  list-style: none;
+  max-height: 264px;
+  overflow-y: auto;
+  border: 1px solid rgba(64, 192, 254, .28);
+  border-radius: 14px;
+  background: rgba(6, 23, 38, .97);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, .55);
+  z-index: 5;
+}
+
+.cp-site .ve-search-list li {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 8px 11px;
+  border-radius: 9px;
+  color: #cfe6f4;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.cp-site .ve-search-list li:hover,
+.cp-site .ve-search-list li.selected {
+  background: rgba(12, 81, 113, .42);
+  color: #eaf9ff;
+}
+
+.cp-site .ve-search-list li em {
+  flex-shrink: 0;
+  font-style: normal;
+  font-size: 8px;
+  font-weight: 830;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: #71a3c0;
+}
+
+/* A handset keeps the bar, thinner: the composer's controls and the search, with the
+   labels dropped to icons, so it never competes with the pane tabs above it. */
+@media (max-width: 700px) {
+  .cp-site .ve-taskbar {
+    height: 44px;
+    padding: 0 9px;
+    gap: 7px;
+  }
+  .cp-site .ve-taskbar-tools .ve-devices,
+  .cp-site .ve-taskbar-tools .ve-icon-btn {
+    display: none;
+  }
+  .cp-site .ve-taskbar-tools .ve-pill-label,
+  .cp-site .ve-flow-label {
+    display: none;
+  }
+  .cp-site .ve-flow {
+    padding: 5px 8px;
+  }
+}

@@ -1,12 +1,12 @@
 import React from "react";
-import { Loader2, Send, Sparkles, Zap } from "lucide-react";
+import { Loader2, Send, Sparkles } from "lucide-react";
 import { SUGGESTIONS } from "@/components/visualeditor/editorNav";
-import ComposerModeSwitch from "@/components/visualeditor/ComposerModeSwitch";
 
-// The composer, in the package's shape: suggestion chips, the request field with
-// its send control, and the panel's own controls on that same request — the two
-// composer modes, the build control, and the prompt system's actions.
-export default function EditorComposer({ input, setInput, loading, busy, leftMode, onComposer, onSend, onRender, onConvert, onSimulate, onAddToChain }) {
+// The composer, at the foot of the chat column and directly above the bottom bar: the
+// suggestions, then one slim request field with its send control. Everything that acts
+// on the request — the two composer modes, the build, and the prompt system's own steps
+// — lives in the bottom bar, so the field stays as small as the thread above it.
+export default function EditorComposer({ input, setInput, loading, busy, onSend, onRender }) {
   const empty = !input.trim();
 
   return (
@@ -21,7 +21,7 @@ export default function EditorComposer({ input, setInput, loading, busy, leftMod
             onClick={() => onRender(suggestion)}
             disabled={loading.render}
           >
-            <Sparkles size={11} />
+            <Sparkles size={10} />
             {suggestion}
           </button>
         ))}
@@ -30,7 +30,7 @@ export default function EditorComposer({ input, setInput, loading, busy, leftMod
       <div className="ve-input-row">
         <textarea
           className="cp-field"
-          rows={2}
+          rows={1}
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={(e) => {
@@ -46,29 +46,7 @@ export default function EditorComposer({ input, setInput, loading, busy, leftMod
           title="Ask the agent"
           aria-label="Ask the agent"
         >
-          {busy ? <Loader2 size={16} className="animate-spin" /> : <Send size={16} />}
-        </button>
-      </div>
-
-      <div className="ve-actions">
-        <ComposerModeSwitch leftMode={leftMode} onChange={onComposer} />
-        <button
-          className="cp-green-button"
-          type="button"
-          onClick={() => onRender()}
-          disabled={empty || loading.render}
-        >
-          {loading.render ? <Loader2 size={12} className="animate-spin" /> : <Zap size={12} />}
-          BUILD
-        </button>
-        <button className="cp-outline" type="button" onClick={onConvert} disabled={empty || loading.convert}>
-          CONVERT
-        </button>
-        <button className="cp-outline" type="button" onClick={onSimulate} disabled={empty || loading.simulate}>
-          SIMULATE
-        </button>
-        <button className="cp-outline" type="button" onClick={onAddToChain} disabled={empty}>
-          ADD TO CHAIN
+          {busy ? <Loader2 size={13} className="animate-spin" /> : <Send size={13} />}
         </button>
       </div>
     </div>

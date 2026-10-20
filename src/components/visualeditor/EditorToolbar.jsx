@@ -14,6 +14,7 @@ import {
   Wand2,
   X
 } from "lucide-react";
+import { DEVICES } from "@/components/visualeditor/editorNav";
 
 function Pill({ Icon, label, title, onClick, disabled, busy, active, className = "" }) {
   return (
@@ -38,7 +39,7 @@ function Pill({ Icon, label, title, onClick, disabled, busy, active, className =
  * it back, publish it or deploy it. The far right holds the screen's own actions —
  * open the artifact, and open another visual project.
  */
-export default function EditorToolbar({ pointer, build, verify, source, release, screen }) {
+export default function EditorToolbar({ pointer, build, verify, source, release, screen, devices }) {
   return (
     <div className="ve-toolbar">
       <div className="ve-toolbar-track">
@@ -109,6 +110,23 @@ export default function EditorToolbar({ pointer, build, verify, source, release,
       </div>
 
       <div className="ve-toolbar-right">
+        {/* The canvas's own device frames, on the bar directly above the canvas. */}
+        <div className="ve-devices" role="group" aria-label="Preview device">
+          {DEVICES.map(({ id, label, Icon }) => (
+            <button
+              key={id}
+              type="button"
+              onClick={() => devices.onDevice(id)}
+              title={label}
+              aria-label={label}
+              aria-pressed={devices.device === id}
+              className={devices.device === id ? "selected" : ""}
+            >
+              <Icon size={15} />
+            </button>
+          ))}
+        </div>
+        <span className="ve-toolbar-rule" aria-hidden="true" />
         {pointer.target && (
           <span className="ve-picked" title={pointer.target.path}>
             <MousePointerClick size={11} />

@@ -1,4 +1,12 @@
-import { Eye, Link2, MessageSquare, Shield, Sparkles } from "lucide-react";
+import { Eye, Link2, MessageSquare, Monitor, Shield, Smartphone, Sparkles, Tablet } from "lucide-react";
+
+// The device frames the canvas is previewed in. They sit on the bar directly above the
+// canvas, next to the tools that act on what is being previewed.
+export const DEVICES = [
+  { id: "desktop", label: "Desktop preview", Icon: Monitor },
+  { id: "tablet", label: "Tablet preview", Icon: Tablet },
+  { id: "mobile", label: "Phone preview", Icon: Smartphone },
+];
 
 // The editor's controls, in one place: the composer column's two modes, the
 // canvas's three views, the request suggestions, and the narrow-screen panes.

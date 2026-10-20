@@ -207,6 +207,9 @@ export default function EditorPane({
       deployTarget: vercel.selected?.name || "",
     },
     screen: { onOpen: tools.openArtifact, canOpen: tools.hasArtifact, onNewProject },
+    // The device frames belong to the canvas, so they sit on the bar above it rather
+    // than in the bottom bar with the composer's own controls.
+    devices: { device, onDevice: setDevice },
   };
 
   return (
@@ -234,19 +237,8 @@ export default function EditorPane({
                 engine={engine}
                 busy={busy}
                 status={status}
-                leftMode={leftMode}
-                onComposer={pickComposer}
                 onSend={send}
                 onRender={render}
-                onConvert={engine.handleConvert}
-                onSimulate={() => {
-                  pickCanvas("simulator");
-                  engine.handleSimulate();
-                }}
-                onAddToChain={() => {
-                  pickCanvas("chain");
-                  engine.handleAddToChain();
-                }}
               />
             ) : (
               <PromptSystemPanel leftMode={leftMode} onComposer={pickComposer} />
@@ -329,8 +321,6 @@ export default function EditorPane({
       </nav>
 
       <EditorTaskbar
-        device={device}
-        onDevice={setDevice}
         onRefresh={() => setRefreshTick((t) => t + 1)}
         status={status}
         busy={busy}
@@ -338,6 +328,22 @@ export default function EditorPane({
         onSelectTab={onSelectTab}
         onBuild={render}
         onAsk={askAgent}
+        // The composer's controls, moved down here and laid out as the workflow runs.
+        composer={{
+          mode: leftMode,
+          onMode: pickComposer,
+          running: engine.loading,
+          canAct: Boolean(engine.input.trim()),
+          onConvert: engine.handleConvert,
+          onSimulate: () => {
+            pickCanvas("simulator");
+            engine.handleSimulate();
+          },
+          onAddToChain: () => {
+            pickCanvas("chain");
+            engine.handleAddToChain();
+          },
+        }}
       />
 
       <EditorAgentResults

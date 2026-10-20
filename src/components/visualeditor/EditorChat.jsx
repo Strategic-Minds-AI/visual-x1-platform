@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { LayoutDashboard, Loader2, Sparkles } from "lucide-react";
 import ChatBubble from "@/components/visualeditor/ChatBubble";
 import EditorComposer from "@/components/visualeditor/EditorComposer";
+import "@/styles/x1-editor-chat.css";
 
 // The package's chat panel: a navigation bar carrying the agent and, at its top
 // right, the way back to the console's command deck — then the message stream, then
@@ -61,13 +62,8 @@ export default function EditorChat({ engine, busy, status, leftMode, onComposer,
         setInput={engine.setInput}
         loading={engine.loading}
         busy={busy}
-        leftMode={leftMode}
-        onComposer={onComposer}
         onSend={onSend}
         onRender={onRender}
-        onConvert={onConvert}
-        onSimulate={onSimulate}
-        onAddToChain={onAddToChain}
       />
     </>
   );

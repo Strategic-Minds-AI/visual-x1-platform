@@ -388,3 +388,19 @@
   background: transparent;
   box-shadow: none;
 }
+
+/* The console's left menu scrolls without ever drawing a bar: on a long menu the silver
+   scrollbar was the last piece of chrome in an otherwise frameless rail. Every entry
+   stays reachable — the bar is simply not painted. */
+.cp-site .cp-sidebar,
+.cp-site .cp-sidebar nav {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.cp-site .cp-sidebar::-webkit-scrollbar,
+.cp-site .cp-sidebar nav::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+  display: none;
+}

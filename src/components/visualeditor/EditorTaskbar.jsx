@@ -1,23 +1,17 @@
 import React from "react";
-import { Monitor, RefreshCw, Smartphone, Tablet } from "lucide-react";
+import { Loader2, RefreshCw, Repeat2, SlidersHorizontal, Wand2, Zap } from "lucide-react";
 import EditorSearch from "@/components/visualeditor/EditorSearch";
-
-const DEVICES = [
-  { id: "desktop", label: "Desktop preview", Icon: Monitor },
-  { id: "tablet", label: "Tablet preview", Icon: Tablet },
-  { id: "mobile", label: "Phone preview", Icon: Smartphone },
-];
+import ComposerModeSwitch from "@/components/visualeditor/ComposerModeSwitch";
 
 /**
- * The editor's bottom bar, in the shape of a desktop's own: the device frames and the
- * refresh on the left, the search in the middle, and the state tray on the right. The
- * canvas views and the project dashboard live on the top bar, where the reference
- * places them. The bar stays at the foot of the workspace, so a tool is never further
- * than the bottom edge of the screen it is used on.
+ * The editor's bottom bar, in the shape of a desktop's own. It carries the composer's
+ * controls, in the order the workflow runs left to right: the two composer modes, then
+ * build, convert, simulate and add to chain, with the refresh beside them. The search
+ * holds the middle and the state tray the right. The device frames are not here — they
+ * sit over the canvas itself, on the editor's own tool bar.
  */
 export default function EditorTaskbar({
-  device,
-  onDevice,
+  composer,
   onRefresh,
   status,
   busy,
@@ -26,24 +20,54 @@ export default function EditorTaskbar({
   onBuild,
   onAsk,
 }) {
+  const { mode, onMode, running, canAct } = composer;
+
   return (
     <footer className="ve-taskbar">
       <div className="ve-taskbar-tools">
-        <div className="ve-devices" role="group" aria-label="Preview device">
-          {DEVICES.map(({ id, label, Icon }) => (
-            <button
-              key={id}
-              type="button"
-              onClick={() => onDevice(id)}
-              title={label}
-              aria-label={label}
-              aria-pressed={device === id}
-              className={device === id ? "selected" : ""}
-            >
-              <Icon size={15} />
-            </button>
-          ))}
-        </div>
+        <ComposerModeSwitch leftMode={mode} onChange={onMode} />
+        <span className="ve-flow-sep" aria-hidden="true" />
+        <button
+          className="ve-flow is-go"
+          type="button"
+          onClick={() => onBuild()}
+          disabled={!canAct || running.render}
+          title="Build the request into an artifact"
+        >
+          {running.render ? <Loader2 size={12} className="animate-spin" /> : <Zap size={12} />}
+          <span className="ve-flow-label">BUILD</span>
+        </button>
+        <button
+          className="ve-flow"
+          type="button"
+          onClick={composer.onConvert}
+          disabled={!canAct || running.convert}
+          title="Convert the request into a structured specification"
+        >
+          {running.convert ? <Loader2 size={12} className="animate-spin" /> : <Wand2 size={12} />}
+          <span className="ve-flow-label">CONVERT</span>
+        </button>
+        <button
+          className="ve-flow"
+          type="button"
+          onClick={composer.onSimulate}
+          disabled={!canAct || running.simulate}
+          title="Simulate the request against the benchmark library"
+        >
+          {running.simulate ? <Loader2 size={12} className="animate-spin" /> : <SlidersHorizontal size={12} />}
+          <span className="ve-flow-label">SIMULATE</span>
+        </button>
+        <button
+          className="ve-flow"
+          type="button"
+          onClick={composer.onAddToChain}
+          disabled={!canAct}
+          title="Add the request as the next step in the chain"
+        >
+          <Repeat2 size={12} />
+          <span className="ve-flow-label">ADD TO CHAIN</span>
+        </button>
+        <span className="ve-flow-sep" aria-hidden="true" />
         <button className="ve-icon-btn" onClick={onRefresh} title="Refresh the canvas" aria-label="Refresh the canvas">
           <RefreshCw size={15} />
         </button>
