@@ -11,14 +11,18 @@ const WELCOME = {
 /**
  * One engine, shared by the standalone Visual Editor page and the workspace.
  * Keeps the editor's actions in a single place so both surfaces behave identically.
+ *
+ * An optional `initial` snapshot seeds it with the page a tab was left on; the
+ * draft in the composer is deliberately not part of that, so a tab comes back with
+ * the work it produced rather than a half-typed request.
  */
-export default function useEditorEngine() {
-  const [messages, setMessages] = useState([WELCOME]);
+export default function useEditorEngine(initial) {
+  const [messages, setMessages] = useState(() => (initial?.messages?.length ? initial.messages : [WELCOME]));
   const [input, setInput] = useState("");
-  const [previewHtml, setPreviewHtml] = useState("");
-  const [simulatorResult, setSimulatorResult] = useState(null);
-  const [chain, setChain] = useState([]);
-  const [chainResult, setChainResult] = useState(null);
+  const [previewHtml, setPreviewHtml] = useState(initial?.previewHtml || "");
+  const [simulatorResult, setSimulatorResult] = useState(initial?.simulatorResult || null);
+  const [chain, setChain] = useState(initial?.chain || []);
+  const [chainResult, setChainResult] = useState(initial?.chainResult || null);
   const [loading, setLoading] = useState({ convert: false, simulate: false, render: false, chain: false });
 
   const addMessage = (msg) => setMessages((prev) => [...prev, msg]);

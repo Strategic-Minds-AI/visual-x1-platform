@@ -38,7 +38,6 @@
 }
 
 .cp-site .ve-topbar-left,
-.cp-site .ve-topbar-center,
 .cp-site .ve-topbar-right {
   display: flex;
   align-items: center;
@@ -357,6 +356,7 @@
 .cp-site .ve-actions {
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
   gap: 6px;
 }
 
@@ -586,4 +586,142 @@
     border-color: rgba(64, 192, 254, .45);
     background: rgba(6, 104, 152, .28);
   }
+}
+
+/* ── the browser strip: one tab per visual project ────────────────────────────
+   The editor's own tabs, connected to the workspace the way a browser's tabs are
+   connected to the pages they hold: the selected tab is the page on screen, and
+   every other tab keeps the page it was left on. */
+.cp-site .ve-tabbar {
+  display: flex;
+  align-items: flex-end;
+  gap: 4px;
+  height: 38px;
+  padding: 6px 8px 0;
+  border-bottom: 1px solid rgba(91, 175, 230, .16);
+  flex-shrink: 0;
+}
+
+.cp-site .ve-tabs {
+  display: flex;
+  align-items: flex-end;
+  gap: 3px;
+  min-width: 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.cp-site .ve-tab {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  max-width: 210px;
+  height: 30px;
+  border: 1px solid transparent;
+  border-radius: 10px 10px 0 0;
+  background: rgba(12, 39, 61, .34);
+  color: #9eb6ca;
+  transition: background 180ms ease, color 180ms ease, border-color 180ms ease;
+}
+
+.cp-site .ve-tab:hover {
+  background: rgba(12, 81, 113, .34);
+}
+
+.cp-site .ve-tab.selected {
+  background: linear-gradient(180deg, rgba(6, 104, 152, .4), rgba(6, 23, 38, .7));
+  border-color: rgba(64, 192, 254, .42);
+  border-bottom-color: transparent;
+  color: #d7fbff;
+}
+
+.cp-site .ve-tab-label {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  min-width: 0;
+  height: 100%;
+  padding: 0 4px 0 11px;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-size: 10px;
+  font-weight: 780;
+  letter-spacing: .05em;
+  cursor: pointer;
+}
+
+.cp-site .ve-tab-label span {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.cp-site .ve-tab-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  background: rgba(158, 182, 202, .55);
+}
+
+.cp-site .ve-tab.selected .ve-tab-dot {
+  background: var(--smai-cyan);
+  box-shadow: 0 0 8px var(--smai-cyan);
+}
+
+.cp-site .ve-tab-close {
+  display: grid;
+  place-items: center;
+  width: 18px;
+  height: 18px;
+  margin-right: 5px;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: #7fa5b1;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.cp-site .ve-tab-close:hover {
+  background: rgba(64, 192, 254, .18);
+  color: #d7fbff;
+}
+
+.cp-site .ve-tab-new {
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  margin-bottom: 2px;
+  border: 1px solid transparent;
+  border-radius: 9px;
+  background: rgba(12, 39, 61, .5);
+  color: #9eb6ca;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.cp-site .ve-tab-new:hover {
+  border-color: rgba(64, 192, 254, .45);
+  color: #d7fbff;
+}
+
+/* ── the editor carries no scrollbars ────────────────────────────────────────
+   Everything in the workspace still scrolls — the thread, the rail, the artifact —
+   but the bars themselves are gone, as the reference layout shows them gone. */
+.cp-site.cp-ve-mode,
+.cp-site.cp-ve-mode *,
+.cp-site.cp-ve-fill,
+.cp-site.cp-ve-fill * {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.cp-site.cp-ve-mode *::-webkit-scrollbar,
+.cp-site.cp-ve-fill *::-webkit-scrollbar {
+  width: 0;
+  height: 0;
 }

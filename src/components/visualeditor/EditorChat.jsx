@@ -1,12 +1,13 @@
 import React, { useEffect, useRef } from "react";
-import { Loader2, Sparkles, Zap } from "lucide-react";
+import { Loader2, Sparkles } from "lucide-react";
 import ChatBubble from "@/components/visualeditor/ChatBubble";
 import EditorComposer from "@/components/visualeditor/EditorComposer";
-import ComposerModeSwitch from "@/components/visualeditor/ComposerModeSwitch";
+import { CANVAS_VIEWS } from "@/components/visualeditor/editorNav";
 
-// The package's chat panel: an agent header strip carrying the build control, the
-// message stream, then the composer. Wired to this app's own agent and pipelines.
-export default function EditorChat({ engine, busy, status, leftMode, onComposer, onSend, onRender, onConvert, onSimulate, onAddToChain }) {
+// The package's chat panel: a navigation bar carrying the agent and the canvas view
+// switch at its top right, the message stream, then the composer. Wired to this
+// app's own agent and pipelines.
+export default function EditorChat({ engine, busy, status, canvasView, onCanvas, leftMode, onComposer, onSend, onRender, onConvert, onSimulate, onAddToChain }) {
   const endRef = useRef(null);
 
   useEffect(() => {
@@ -29,17 +30,23 @@ export default function EditorChat({ engine, busy, status, leftMode, onComposer,
           </div>
         </div>
 
+        {/* The canvas view switch (Preview, Simulator, Chain), at the top right of
+            the chat's own navigation bar. */}
         <div className="ve-head-actions">
-          <ComposerModeSwitch leftMode={leftMode} onChange={onComposer} />
-          <button
-            className="cp-green-button"
-            type="button"
-            onClick={() => onRender()}
-            disabled={!engine.input.trim() || engine.loading.render}
-          >
-            {engine.loading.render ? <Loader2 size={13} className="animate-spin" /> : <Zap size={13} />}
-            BUILD
-          </button>
+          <div className="ve-pill-group" role="group" aria-label="Canvas view">
+            {CANVAS_VIEWS.map(({ id, label, Icon }) => (
+              <button
+                key={id}
+                type="button"
+                onClick={() => onCanvas(id)}
+                className={`ve-pill${canvasView === id ? " selected" : ""}`}
+                aria-pressed={canvasView === id}
+              >
+                <Icon size={13} />
+                <span className="ve-pill-label">{label.toUpperCase()}</span>
+              </button>
+            ))}
+          </div>
         </div>
       </div>
 
@@ -65,6 +72,8 @@ export default function EditorChat({ engine, busy, status, leftMode, onComposer,
         setInput={engine.setInput}
         loading={engine.loading}
         busy={busy}
+        leftMode={leftMode}
+        onComposer={onComposer}
         onSend={onSend}
         onRender={onRender}
         onConvert={onConvert}

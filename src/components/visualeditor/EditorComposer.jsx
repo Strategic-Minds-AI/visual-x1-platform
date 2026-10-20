@@ -1,10 +1,12 @@
 import React from "react";
-import { Loader2, Send, Sparkles } from "lucide-react";
+import { Loader2, Send, Sparkles, Zap } from "lucide-react";
 import { SUGGESTIONS } from "@/components/visualeditor/editorNav";
+import ComposerModeSwitch from "@/components/visualeditor/ComposerModeSwitch";
 
 // The composer, in the package's shape: suggestion chips, the request field with
-// its send control, and the prompt system's actions on that same request.
-export default function EditorComposer({ input, setInput, loading, busy, onSend, onRender, onConvert, onSimulate, onAddToChain }) {
+// its send control, and the panel's own controls on that same request — the two
+// composer modes, the build control, and the prompt system's actions.
+export default function EditorComposer({ input, setInput, loading, busy, leftMode, onComposer, onSend, onRender, onConvert, onSimulate, onAddToChain }) {
   const empty = !input.trim();
 
   return (
@@ -49,6 +51,16 @@ export default function EditorComposer({ input, setInput, loading, busy, onSend,
       </div>
 
       <div className="ve-actions">
+        <ComposerModeSwitch leftMode={leftMode} onChange={onComposer} />
+        <button
+          className="cp-green-button"
+          type="button"
+          onClick={() => onRender()}
+          disabled={empty || loading.render}
+        >
+          {loading.render ? <Loader2 size={12} className="animate-spin" /> : <Zap size={12} />}
+          BUILD
+        </button>
         <button className="cp-outline" type="button" onClick={onConvert} disabled={empty || loading.convert}>
           CONVERT
         </button>
