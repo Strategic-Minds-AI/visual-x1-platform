@@ -16,6 +16,7 @@ const X1_EMBLEM = "https://www.strategicmindsai.com/v2-assets/silver-emblem.png"
 const RAIL = [
   { to: "/", label: "Workspace", Icon: Home, end: true },
   { to: "/x1", label: "X1 Operating System", Icon: Radar },
+  { to: "/academy-templates", label: "Template Designer", Icon: Layers },
   { to: "/clone-ingest", label: "Clone & Ingest", Icon: Copy },
   { to: "/delivery", label: "Delivery", Icon: Rocket },
   { to: "/visual-editor", label: "Visual Editor", Icon: Code2 },
@@ -31,6 +32,7 @@ const RAIL = [
 const TOP_LINKS = [
   { to: "/", label: "Workspace", end: true },
   { to: "/x1", label: "X1 OS" },
+  { to: "/academy-templates", label: "Templates" },
   { to: "/clone-ingest", label: "Clone & Ingest" },
   { to: "/visual-editor", label: "Visual Editor" },
   { to: "/delivery", label: "Delivery" },
@@ -75,6 +77,7 @@ const TOP_GROUPS = [
       { to: "/seo-simulator", label: "Growth Simulator", Icon: Sprout },
       { to: "/opportunities", label: "Opportunities", Icon: Sparkles },
       { to: "/template-engine", label: "Template Engine", Icon: Layers },
+      { to: "/academy-templates", label: "Universal Academy Designer", Icon: Layers },
       { to: "/variations", label: "Variations", Icon: Gauge },
       { to: "/backlink-health", label: "Backlink Health", Icon: ShieldCheck },
       { to: "/social-studio", label: "Social Studio", Icon: CalendarClock },
