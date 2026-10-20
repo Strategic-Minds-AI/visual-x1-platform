@@ -6,15 +6,27 @@ import { CONSOLE_SECTIONS, RAIL_MODULES } from "@/data/adminModules";
 import ModuleHub from "@/components/admin/ModuleHub";
 
 /**
- * The console's navigation, as the builder rail: a thin bar flush to the left edge
- * of the page at every width above a handset, with the page buttons drawn as icons
- * (hover names them) and the rail's own toggle to expand it back to the portal's
- * labelled sidebar. Its entries are both the console sections and the Visual X
- * modules, so this rail is the way into the rest of the system's technology.
- * Below a handset the portal's off-canvas drawer takes over, where a rail would
- * eat the content width.
+ * The console's navigation: the portal's own sidebar, carrying both the console
+ * sections and the Visual X modules, so it is the way into the rest of the
+ * system's technology.
+ *
+ * Every section shows it at full size — the portal's labelled sidebar, in flow
+ * from a handset up. Only the Visual Editor thins it: there the console renders
+ * this same rail inside the editor's row, where the `collapsible` mode draws the
+ * page buttons as icon tiles (hover names them) and offers the toggle that expands
+ * it back to the labelled sidebar. Below a handset the portal's off-canvas drawer
+ * takes over, where a rail would eat the content width.
  */
-export default function AdminRail({ section, onSection, pending, railOpen, onToggleRail, navOpen, onCloseNav }) {
+export default function AdminRail({
+  section,
+  onSection,
+  pending,
+  collapsible = false,
+  railOpen = false,
+  onToggleRail,
+  navOpen,
+  onCloseNav,
+}) {
   const { pathname } = useLocation();
   const [hubOpen, setHubOpen] = useState(false);
 
@@ -72,15 +84,17 @@ export default function AdminRail({ section, onSection, pending, railOpen, onTog
             <Boxes size={17} />
             <span className="cp-rail-label">ALL MODULES</span>
           </button>
-          <button
-            className="admin-rail-toggle"
-            type="button"
-            onClick={onToggleRail}
-            title={railOpen ? "Collapse the rail" : "Expand the rail"}
-          >
-            {railOpen ? <PanelLeftClose size={17} /> : <PanelLeftOpen size={17} />}
-            <span className="cp-rail-label">{railOpen ? "COLLAPSE" : "EXPAND"}</span>
-          </button>
+          {collapsible && (
+            <button
+              className="admin-rail-toggle"
+              type="button"
+              onClick={onToggleRail}
+              title={railOpen ? "Collapse the rail" : "Expand the rail"}
+            >
+              {railOpen ? <PanelLeftClose size={17} /> : <PanelLeftOpen size={17} />}
+              <span className="cp-rail-label">{railOpen ? "COLLAPSE" : "EXPAND"}</span>
+            </button>
+          )}
         </div>
       </aside>
 

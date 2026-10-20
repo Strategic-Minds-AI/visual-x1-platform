@@ -1,8 +1,9 @@
 /* Visual Editor workspace.
  *
  * The layout is the Xtreme AutoBuilder's own: one top bar, then a split pane
- * with the composer column on the left (30%, 248–360px, its own header strip)
- * and the artifact canvas on the right, full-bleed and headerless. Only the
+ * with the composer column on the left (30%, 260–360px, its own header strip)
+ * and the artifact canvas on the right, full-bleed and headerless. The console
+ * also hands it the rail, a fixed 62px column between the two. Only the
  * palette and control language are the operator console's — the portal shell
  * classes, panel/pill/button styles and x1-brand-theme tokens from
  * vendor/x1/CommercePortal.css — so the editor reads as part of the console.
@@ -30,7 +31,8 @@
   align-items: center;
   justify-content: space-between;
   gap: 10px;
-  padding: 9px 13px;
+  height: 48px;
+  padding: 0 13px;
   border-bottom: 1px solid rgba(91, 175, 230, .16);
   flex-shrink: 0;
 }
@@ -140,7 +142,7 @@
 
 .cp-site .ve-chatcol {
   width: 30%;
-  min-width: 248px;
+  min-width: 260px;
   max-width: 360px;
   flex-shrink: 0;
   display: flex;
@@ -415,13 +417,14 @@
   display: flex;
   align-items: stretch;
   justify-content: center;
-  padding: 14px;
+  padding: 16px;
 }
 
 .cp-site .ve-frame {
   display: flex;
   flex-direction: column;
   width: 100%;
+  max-width: 1440px;
   min-height: 0;
   border-radius: 14px;
   border: 1px solid rgba(65, 166, 228, .28);
@@ -520,9 +523,6 @@
 }
 
 @media (max-width: 1100px) {
-  .cp-site .ve-chatcol {
-    min-width: 238px;
-  }
   .cp-site .ve-project {
     max-width: 130px;
   }

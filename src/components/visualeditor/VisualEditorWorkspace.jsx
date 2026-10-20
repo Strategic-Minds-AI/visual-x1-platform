@@ -22,13 +22,15 @@ const STATUS = (engine, sending) => {
 /**
  * The Visual Editor, as a section of the operator console. It keeps the builder
  * shell's layout — one header bar, then the composer column beside a full-bleed
- * artifact canvas, and a single pane with bottom tabs on phones — while running on
+ * artifact canvas, and a single pane with bottom tabs on phones. When the console
+ * hands it the rail (the `rail` prop), that rail sits between the composer and the
+ * canvas, so the row reads composer, rail, canvas — while running on
  * this app's own backend: the autonomy agent for conversation, the render pipeline
  * for builds, the prompt system's convert/simulate/chain for everything else. The
  * prompt system is the composer column's second mode, so a module and the canvas
  * it produces share one workspace.
  */
-export default function VisualEditorWorkspace() {
+export default function VisualEditorWorkspace({ rail, railOpen = false }) {
   const engine = useEditorEngine();
   const [leftMode, setLeftMode] = useState("chat");
   const [canvasView, setCanvasView] = useState("preview");
@@ -148,6 +150,11 @@ export default function VisualEditorWorkspace() {
               )}
             </div>
           )}
+
+          {/* The console's own rail, thinned to icon tiles, sitting between the
+              composer column and the canvas — the way into the rest of the system
+              from inside the editor. */}
+          {rail && <div className={"ve-railcol" + (railOpen ? " is-open" : "")}>{rail}</div>}
 
           <div className="ve-canvascol">
             {canvasView === "preview" && (

@@ -110,14 +110,14 @@
   }
 }
 
-/* ── the console's navigation: a thin icon rail ───────────────────────────────
-   The console keeps the portal's own sidebar markup and palette, but above a
-   handset it renders as the builder rail the operator asked for: a thin bar flush
-   to the left edge of the page, full height, with the page buttons drawn as icons.
-   Hover names each one; the rail's own toggle expands it back to the portal's
-   labelled sidebar. Modules that live on their own routes are styled exactly like
-   the portal's nav buttons so the rail reads as one control. Below 621px the
-   portal's off-canvas drawer takes over, where a rail would eat the content. */
+/* ── the console's navigation: the portal's own sidebar ───────────────────────
+   Every console section keeps the portal's navigation at its full, persistent
+   size: the labelled sidebar, in flow, flush to the left edge of the page, from a
+   handset up. Modules that live on their own routes are styled exactly like the
+   portal's nav buttons, so the sidebar reads as one control.
+   The Visual Editor is the one section that transforms — there the console renders
+   this same component inside the editor's own row as a thin icon rail, which is
+   the `.ve-railcol` block below. */
 .cp-site .cp-sidebar nav a.admin-rail-item {
   width: 100%;
   display: flex;
@@ -174,115 +174,167 @@
   color: #d7fbff;
 }
 
+/* From a handset up the sidebar is the portal's own — in flow, the full height of
+   the page, at the portal's own width for the breakpoint (228px, and 260px on a
+   wide screen) — rather than the off-canvas drawer that breakpoint would use. */
 @media (min-width: 621px) {
   .cp-site .cp-portal-shell {
-    grid-template-columns: 62px minmax(0, 1fr);
+    grid-template-columns: 228px minmax(0, 1fr);
   }
-  .cp-site.admin-rail-open .cp-portal-shell {
-    grid-template-columns: 234px minmax(0, 1fr);
-  }
-
-  /* in flow, flush to the left edge, the full height of the page */
   .cp-site .cp-sidebar {
     position: sticky;
     top: 0;
-    width: auto;
-    height: 100vh;
     transform: none;
     box-shadow: none;
-    padding: 12px 8px 14px;
     overflow-y: auto;
     overflow-x: hidden;
-    scrollbar-width: none;
   }
-  .cp-site .cp-sidebar::-webkit-scrollbar {
-    width: 0;
-    height: 0;
-  }
-
-  .cp-site .cp-sidebar-head {
-    display: flex;
-    justify-content: center;
-    padding: 0 0 12px;
-  }
-  .cp-site .cp-sidebar .cp-portal-logo {
-    gap: 0;
-    justify-content: center;
-  }
-  .cp-site .cp-sidebar .cp-brand-mark {
-    width: 34px;
-    height: 34px;
-    border-radius: 11px;
-  }
-  .cp-site .cp-sidebar .cp-brand-mark img {
-    height: 29px;
-    width: 26px;
-  }
-  .cp-site .cp-sidebar .cp-rail-label,
+  .cp-site .cp-sidebar-backdrop,
   .cp-site .cp-sidebar .cp-sidebar-close,
-  .cp-site .cp-sidebar .cp-panel-note,
   .cp-site .cp-mobile-toggle {
     display: none;
   }
+}
+@media (min-width: 1190px) {
+  .cp-site .cp-portal-shell {
+    grid-template-columns: 260px minmax(0, 1fr);
+  }
+}
 
-  /* every page button becomes an icon tile */
-  .cp-site .cp-sidebar nav button,
-  .cp-site .cp-sidebar nav a.admin-rail-item,
-  .cp-site .admin-rail-toggle {
-    position: relative;
-    height: 40px;
-    justify-content: center;
-    gap: 0;
-    padding: 0;
-    border-radius: 12px;
-  }
-  .cp-site .cp-sidebar nav button svg {
-    color: inherit;
-  }
-  .cp-site .cp-sidebar nav .cp-side-count {
-    position: absolute;
-    top: 4px;
-    right: 5px;
-    margin: 0;
-    padding: 1px 4px;
-    font-size: 8px;
-  }
-  /* The rail's own controls stay reachable however long the rail gets. */
-  .cp-site .cp-sidebar-bottom {
-    margin-top: auto;
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    padding-top: 8px;
-    position: sticky;
-    bottom: 0;
-    background: linear-gradient(180deg, rgba(3, 11, 22, 0), rgba(3, 11, 22, 0.94) 45%, #030b16);
-  }
+/* ── the Visual Editor's rail: the same navigation, thinned to icons ───────────
+   Only this section shrinks it. The rail keeps the portal's markup and palette,
+   drawn as icon tiles that hover names, between the composer column and the canvas,
+   with the toggle that expands it back to the labelled sidebar. */
+.cp-site .ve-railcol {
+  flex: 0 0 auto;
+  width: 62px;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  border-right: 1px solid rgba(91, 175, 230, 0.16);
+}
+.cp-site .ve-railcol.is-open {
+  width: 234px;
+}
+.cp-site .ve-railcol .cp-sidebar {
+  position: static;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  transform: none;
+  box-shadow: none;
+  padding: 12px 8px 14px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: none;
+}
+.cp-site .ve-railcol .cp-sidebar::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}
+.cp-site .ve-railcol .cp-sidebar-head {
+  display: flex;
+  justify-content: center;
+  padding: 0 0 12px;
+}
+.cp-site .ve-railcol .cp-sidebar .cp-portal-logo {
+  gap: 0;
+  justify-content: center;
+}
+.cp-site .ve-railcol .cp-sidebar .cp-brand-mark {
+  width: 34px;
+  height: 34px;
+  border-radius: 11px;
+}
+.cp-site .ve-railcol .cp-sidebar .cp-brand-mark img {
+  height: 29px;
+  width: 26px;
+}
+.cp-site .ve-railcol .cp-sidebar .cp-rail-label,
+.cp-site .ve-railcol .cp-sidebar .cp-sidebar-close {
+  display: none;
+}
 
-  /* expanded, the portal's labelled navigation returns */
-  .cp-site.admin-rail-open .cp-sidebar-head {
-    justify-content: flex-start;
-    padding: 0 4px 14px;
-  }
-  .cp-site.admin-rail-open .cp-sidebar .cp-portal-logo {
-    gap: 10px;
-    justify-content: flex-start;
-  }
-  .cp-site.admin-rail-open .cp-sidebar .cp-rail-label {
-    display: block;
-  }
-  .cp-site.admin-rail-open .cp-sidebar nav button,
-  .cp-site.admin-rail-open .cp-sidebar nav a.admin-rail-item,
-  .cp-site.admin-rail-open .admin-rail-toggle {
-    justify-content: flex-start;
-    gap: 12px;
-    padding: 0 12px;
-  }
-  .cp-site.admin-rail-open .cp-sidebar nav .cp-side-count {
-    position: static;
-    margin-left: auto;
-    padding: 3px 6px;
-    font-size: 9px;
+/* every page button becomes an icon tile */
+.cp-site .ve-railcol .cp-sidebar nav button,
+.cp-site .ve-railcol .cp-sidebar nav a.admin-rail-item,
+.cp-site .ve-railcol .admin-rail-toggle {
+  position: relative;
+  height: 40px;
+  justify-content: center;
+  gap: 0;
+  padding: 0;
+  border-radius: 12px;
+}
+.cp-site .ve-railcol .cp-sidebar nav button svg {
+  color: inherit;
+}
+.cp-site .ve-railcol .cp-sidebar nav .cp-side-count {
+  position: absolute;
+  top: 4px;
+  right: 5px;
+  margin: 0;
+  padding: 1px 4px;
+  font-size: 8px;
+}
+/* The rail's own controls stay reachable however long the rail gets. */
+.cp-site .ve-railcol .cp-sidebar-bottom {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding-top: 8px;
+  position: sticky;
+  bottom: 0;
+  background: linear-gradient(180deg, rgba(3, 11, 22, 0), rgba(3, 11, 22, 0.94) 45%, #030b16);
+}
+
+/* expanded, the portal's labelled navigation returns */
+.cp-site .ve-railcol.is-open .cp-sidebar-head {
+  justify-content: flex-start;
+  padding: 0 4px 14px;
+}
+.cp-site .ve-railcol.is-open .cp-sidebar .cp-portal-logo {
+  gap: 10px;
+  justify-content: flex-start;
+}
+.cp-site .ve-railcol.is-open .cp-sidebar .cp-rail-label {
+  display: block;
+}
+.cp-site .ve-railcol.is-open .cp-sidebar nav button,
+.cp-site .ve-railcol.is-open .cp-sidebar nav a.admin-rail-item,
+.cp-site .ve-railcol.is-open .admin-rail-toggle {
+  justify-content: flex-start;
+  gap: 12px;
+  padding: 0 12px;
+}
+.cp-site .ve-railcol.is-open .cp-sidebar nav .cp-side-count {
+  position: static;
+  margin-left: auto;
+  padding: 3px 6px;
+  font-size: 9px;
+}
+
+/* ── the Visual Editor is the page ────────────────────────────────────────────
+   In this one section the console's own chrome comes off: no sidebar column
+   outside the editor, no breadcrumb header, no footer. The editor holds the whole
+   viewport, and its row is composer, thin rail, canvas, left to right. */
+.cp-site.cp-ve-mode .cp-portal-shell {
+  grid-template-columns: minmax(0, 1fr);
+  height: 100vh;
+  min-height: 0;
+  overflow: hidden;
+}
+.cp-site.cp-ve-mode .cp-portal-main {
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* On a handset the editor is the package's single pane with its bottom tabs, and
+   the console is reached from the editor's own Dashboard and Modules buttons. */
+@media (max-width: 700px) {
+  .cp-site .ve-railcol {
+    display: none;
   }
 }
 
