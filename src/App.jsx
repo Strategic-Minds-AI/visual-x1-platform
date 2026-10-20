@@ -33,6 +33,7 @@ import SystemAudit from './pages/SystemAudit';
 import PromptSystem from './pages/PromptSystem';
 import Workspace from './pages/Workspace';
 import CloneIngest from './pages/CloneIngest';
+import SocialStudio from './pages/SocialStudio';
 import AppShell from '@/components/workspace/AppShell';
 import Login from '@/pages/Login';
 import Register from '@/pages/Register';
@@ -80,6 +81,7 @@ const AuthenticatedApp = () => {
         <Route path="/clone-ingest" element={<CloneIngest />} />
         <Route path="/job-board" element={<JobBoard />} />
         <Route path="/prompt-studio" element={<PromptStudio />} />
+        <Route path="/social-studio" element={<SocialStudio />} />
         <Route path="/visual-editor" element={<VisualEditor />} />
         <Route path="/agent-activity" element={<AgentActivity />} />
         <Route path="/prompt-lab" element={<PromptLab />} />

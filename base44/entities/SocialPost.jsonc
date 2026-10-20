@@ -1,0 +1,148 @@
+{
+  "name": "SocialPost",
+  "type": "object",
+  "properties": {
+    "client_id": {
+      "type": "string",
+      "description": "ClientIntake this schedule was drafted for"
+    },
+    "campaign_name": {
+      "type": "string",
+      "description": "Name of the 30-day schedule these posts belong to"
+    },
+    "day_index": {
+      "type": "number",
+      "default": 1,
+      "description": "Position in the 30-day schedule"
+    },
+    "scheduled_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Day the post is staged for"
+    },
+    "platform": {
+      "type": "string",
+      "enum": [
+        "instagram",
+        "facebook",
+        "linkedin",
+        "x",
+        "tiktok",
+        "youtube_shorts",
+        "google_business"
+      ],
+      "default": "instagram"
+    },
+    "post_type": {
+      "type": "string",
+      "enum": [
+        "educational",
+        "proof",
+        "offer",
+        "story",
+        "seo_article",
+        "faq",
+        "behind_the_scenes",
+        "testimonial",
+        "update"
+      ],
+      "default": "educational",
+      "description": "What kind of post this is"
+    },
+    "hook": {
+      "type": "string",
+      "description": "First line that stops the scroll"
+    },
+    "caption": {
+      "type": "string",
+      "description": "The drafted post body"
+    },
+    "hashtags": {
+      "type": "string",
+      "description": "Comma-separated hashtags"
+    },
+    "cta": {
+      "type": "string",
+      "description": "The call to action"
+    },
+    "image_prompt": {
+      "type": "string",
+      "description": "Prompt for the visual that goes with the post"
+    },
+    "source_refs_json": {
+      "type": "string",
+      "description": "JSON of what this post was drafted from: SEO strategy targets and business updates used"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "staged",
+        "posted",
+        "rejected"
+      ],
+      "default": "staged",
+      "description": "Drafted and staged by the generator; moved on by the operator"
+    },
+    "notes": {
+      "type": "string"
+    },
+    "posted_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "client_id",
+    "campaign_name",
+    "day_index",
+    "platform",
+    "caption",
+    "status"
+  ],
+  "rls": {
+    "create": {
+      "$or": [
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "user"
+          }
+        }
+      ]
+    },
+    "read": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "update": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

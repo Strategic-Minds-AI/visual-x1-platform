@@ -2,11 +2,13 @@ import React from "react";
 import { Link, NavLink, Outlet, useLocation } from "react-router-dom";
 import {
   Home, LayoutDashboard, Copy, Code2, Briefcase, Users, Boxes, Gauge,
-  Sprout, Cpu, ChevronDown, LogOut, Wand2, Sparkles, Search, ListChecks, Layers, ShieldCheck
+  Sprout, Cpu, ChevronDown, LogOut, Wand2, Sparkles, Search, ListChecks, Layers, ShieldCheck,
+  Moon, Sun, CalendarClock, Palette
 } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { base44 } from "@/api/base44Client";
 import { cn } from "@/lib/utils";
+import useTheme from "@/hooks/useTheme";
 
 const BRAND_LOGO = "https://media.base44.com/images/public/6ad5e96eb2cfcf9aafe9f1df/eda871bc3_logo.png";
 
@@ -69,6 +71,7 @@ const TOP_GROUPS = [
       { to: "/template-engine", label: "Template Engine", Icon: Layers },
       { to: "/variations", label: "Variations", Icon: Gauge },
       { to: "/backlink-health", label: "Backlink Health", Icon: ShieldCheck },
+      { to: "/social-studio", label: "Social Studio", Icon: CalendarClock },
       { to: "/prompt-studio", label: "Prompt Studio", Icon: Wand2 },
       { to: "/prompt-lab", label: "Prompt Lab", Icon: Sparkles },
     ],
@@ -77,6 +80,7 @@ const TOP_GROUPS = [
 
 export default function AppShell() {
   const { pathname } = useLocation();
+  const { isDark, toggle } = useTheme();
 
   return (
     <div className="h-screen flex flex-col bg-background">
@@ -95,7 +99,7 @@ export default function AppShell() {
                 end={l.end}
                 className={({ isActive }) =>
                   cn(
-                    "px-2.5 py-1.5 rounded-md text-sm whitespace-nowrap transition",
+                    "px-2.5 py-1.5 rounded-md border border-transparent text-sm whitespace-nowrap electric-hover",
                     isActive ? "bg-muted font-medium text-foreground" : "text-muted-foreground hover:text-foreground hover:bg-muted"
                   )
                 }
@@ -124,6 +128,14 @@ export default function AppShell() {
           <div className="ml-auto flex items-center gap-2 shrink-0">
             <span className="text-xs text-muted-foreground hidden md:inline">Autonomy console</span>
             <button
+              onClick={toggle}
+              className="p-2 rounded-md border border-transparent text-muted-foreground hover:text-foreground hover:bg-muted electric-hover"
+              title={isDark ? "Switch to light mode" : "Switch to dark mode"}
+              aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
+            >
+              {isDark ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+            </button>
+            <button
               onClick={() => base44.auth.logout(window.location.origin)}
               className="p-2 rounded-md text-muted-foreground hover:text-foreground hover:bg-muted transition"
               title="Sign out"
@@ -145,7 +157,7 @@ export default function AppShell() {
                 title={label}
                 aria-label={label}
                 className={cn(
-                  "w-10 h-10 rounded-lg flex items-center justify-center transition",
+                  "w-10 h-10 rounded-lg flex items-center justify-center border border-transparent electric-hover",
                   active ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-foreground hover:bg-muted"
                 )}
               >

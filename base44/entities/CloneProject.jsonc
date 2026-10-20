@@ -10,15 +10,32 @@
       "type": "string",
       "enum": [
         "url",
+        "ip",
         "markup",
-        "file"
+        "file",
+        "repo",
+        "config",
+        "folder",
+        "document",
+        "image"
       ],
       "default": "url",
-      "description": "Where the source came from"
+      "description": "Where the source came from: a live URL or host/IP, pasted markup, an uploaded file, a repository, a configuration, a folder listing, a document, or an image"
+    },
+    "source_kind": {
+      "type": "string",
+      "enum": [
+        "site",
+        "system",
+        "document",
+        "image"
+      ],
+      "default": "site",
+      "description": "What class of thing was captured, which decides how parity is judged"
     },
     "source_url": {
       "type": "string",
-      "description": "Source URL when the clone was captured from a live page"
+      "description": "Source URL when the clone was captured from a live page, host or repository"
     },
     "source_label": {
       "type": "string",
@@ -29,7 +46,7 @@
     },
     "capture_json": {
       "type": "string",
-      "description": "JSON of the deterministic capture signature: http status, byte size, title, meta, headings, nav links, sections, forms, images, stylesheet and script counts, colors, fonts"
+      "description": "JSON of the deterministic capture signature: http status, byte size, title, meta, headings, nav links, sections, forms, images, stylesheet and script counts, colors, fonts; for system sources the host fingerprint, repo tree, or configuration key map"
     },
     "capture_text": {
       "type": "string",

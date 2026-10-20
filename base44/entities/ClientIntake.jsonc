@@ -123,6 +123,30 @@
       "type": "number",
       "description": "Monthly marketing/operating budget the client is willing to commit"
     },
+    "tagline": {
+      "type": "string",
+      "description": "The brand promise line used on cards, apparel and posts"
+    },
+    "logo_url": {
+      "type": "string",
+      "description": "Public URL of the brand logo used as a reference for generated assets"
+    },
+    "brand_colors": {
+      "type": "string",
+      "description": "Comma-separated hex colors that make up the brand palette"
+    },
+    "brand_fonts": {
+      "type": "string",
+      "description": "Brand typefaces used for headings and body"
+    },
+    "brand_voice": {
+      "type": "string",
+      "description": "How the brand sounds: tone, words to use and words to avoid"
+    },
+    "brand_notes": {
+      "type": "string",
+      "description": "Anything else the brand standard requires"
+    },
     "status": {
       "type": "string",
       "enum": [

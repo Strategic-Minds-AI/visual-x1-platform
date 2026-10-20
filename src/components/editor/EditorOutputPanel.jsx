@@ -1,12 +1,14 @@
 import React from "react";
-import { Eye, Globe, Users, Shield, Link2 } from "lucide-react";
+import { Eye, Globe, Users, Shield, Link2, Clapperboard } from "lucide-react";
 import SimulatorResults from "@/components/editor/SimulatorResults";
 import PromptChainBuilder from "@/components/editor/PromptChainBuilder";
 import BrowserPanel from "@/components/editor/BrowserPanel";
 import MultiAgentPanel from "@/components/editor/MultiAgentPanel";
+import VideoGenerator from "@/components/editor/VideoGenerator";
 
 const TABS = [
   { id: "preview", label: "Preview", icon: Eye },
+  { id: "video", label: "Video", icon: Clapperboard },
   { id: "browser", label: "Browser", icon: Globe },
   { id: "agents", label: "Multi-Agent", icon: Users },
   { id: "simulator", label: "Simulator", icon: Shield },
@@ -46,6 +48,7 @@ export default function EditorOutputPanel({ engine, activeTab, setActiveTab, onS
             )}
           </div>
         )}
+        {activeTab === "video" && <VideoGenerator />}
         {activeTab === "browser" && <BrowserPanel onSendToChat={onSendToChat} />}
         {activeTab === "agents" && <MultiAgentPanel onSendToChat={onSendToChat} />}
         {activeTab === "simulator" && <SimulatorResults result={engine.simulatorResult} onUseEnhanced={engine.useEnhanced} />}

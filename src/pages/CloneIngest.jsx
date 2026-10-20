@@ -4,6 +4,7 @@ import { Copy } from "lucide-react";
 import CloneIntake from "@/components/clone/CloneIntake";
 import CloneVerifyPanel from "@/components/clone/CloneVerifyPanel";
 import CloneList from "@/components/clone/CloneList";
+import CloneAuditLedger from "@/components/clone/CloneAuditLedger";
 
 export default function CloneIngest() {
   const [projects, setProjects] = useState([]);
@@ -52,6 +53,10 @@ export default function CloneIngest() {
             <p className="text-sm font-medium">Projects</p>
             {loading ? <p className="text-sm text-muted-foreground">Loading…</p> : <CloneList projects={projects} selectedId={selected?.id} onSelect={setSelected} />}
           </div>
+        </div>
+
+        <div className="mt-6">
+          <CloneAuditLedger refreshKey={projects.length} />
         </div>
       </div>
     </div>

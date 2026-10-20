@@ -1,0 +1,101 @@
+{
+  "name": "BrandAsset",
+  "type": "object",
+  "properties": {
+    "client_id": {
+      "type": "string",
+      "description": "ClientIntake this asset was generated for"
+    },
+    "company_name": {
+      "type": "string"
+    },
+    "asset_type": {
+      "type": "string",
+      "enum": [
+        "business_card",
+        "apparel"
+      ],
+      "default": "business_card",
+      "description": "Whether this is a business card layout or an apparel mockup"
+    },
+    "variant_name": {
+      "type": "string",
+      "description": "Short name of the variant, e.g. 'Minimal Front' or 'Black Hoodie'"
+    },
+    "image_url": {
+      "type": "string",
+      "description": "Rendered image of the asset"
+    },
+    "spec_json": {
+      "type": "string",
+      "description": "JSON of the layout spec: concept, dimensions, colors used, typography, placement of each element, print notes"
+    },
+    "prompt_used": {
+      "type": "string",
+      "description": "The image prompt that produced this asset"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "generated",
+        "approved",
+        "rejected"
+      ],
+      "default": "generated"
+    },
+    "notes": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "client_id",
+    "asset_type",
+    "image_url",
+    "status"
+  ],
+  "rls": {
+    "create": {
+      "$or": [
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "user"
+          }
+        }
+      ]
+    },
+    "read": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "update": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

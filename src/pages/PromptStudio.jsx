@@ -7,11 +7,19 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { ChevronLeft, Wand2, Copy, Check, Search, Sparkles, Shield, AlertTriangle } from "lucide-react";
+import { ChevronLeft, Wand2, Copy, Check, Search, Sparkles, Shield, AlertTriangle, BookOpen, Palette } from "lucide-react";
 import { Link } from "react-router-dom";
 import { TOP_PROMPTS, PROMPT_CATEGORIES } from "@/data/topPrompts";
+import BrandAssetStudio from "@/components/promptstudio/BrandAssetStudio";
+
+const VIEWS = [
+  { id: "converter", label: "Prompt Converter", Icon: Wand2 },
+  { id: "library", label: "Prompt Library", Icon: BookOpen },
+  { id: "assets", label: "Brand Assets", Icon: Palette }
+];
 
 export default function PromptStudio() {
+  const [view, setView] = useState("converter");
   const [sentence, setSentence] = useState("");
   const [category, setCategory] = useState("general");
   const [converting, setConverting] = useState(false);
@@ -76,8 +84,18 @@ export default function PromptStudio() {
         </div>
       </header>
 
-      <main className="max-w-7xl mx-auto px-6 py-8 space-y-10">
-        {/* Converter */}
+      <main className="max-w-7xl mx-auto px-6 py-8 space-y-8">
+        <div className="flex flex-wrap gap-2">
+          {VIEWS.map((v) => (
+            <Button key={v.id} size="sm" variant={view === v.id ? "default" : "outline"} onClick={() => setView(v.id)}>
+              <v.Icon className="w-3.5 h-3.5 mr-1.5" /> {v.label}
+            </Button>
+          ))}
+        </div>
+
+        {view === "assets" && <BrandAssetStudio />}
+
+        {view === "converter" && (
         <section>
           <div className="flex items-center gap-3 mb-4">
             <Sparkles className="w-5 h-5 text-primary" />
@@ -141,8 +159,9 @@ export default function PromptStudio() {
             </CardContent>
           </Card>
         </section>
+        )}
 
-        {/* Library */}
+        {view === "library" && (
         <section>
           <div className="flex items-center gap-3 mb-4">
             <div>
@@ -198,6 +217,7 @@ export default function PromptStudio() {
             ))}
           </div>
         </section>
+        )}
       </main>
     </div>
   );
