@@ -26,7 +26,7 @@ const STAGES = [
 
 export default function X1Approach() {
   return (
-    <section className="border-b border-border">
+    <section>
       <div className="max-w-6xl mx-auto px-6 py-14 sm:py-20">
         <X1SectionHeading
           eyebrow="Our approach"
@@ -36,7 +36,7 @@ export default function X1Approach() {
         />
         <div className="mt-10 grid sm:grid-cols-2 lg:grid-cols-4 gap-3">
           {STAGES.map((s) => (
-            <div key={s.step} className="x1-glass rounded-xl p-5 flex flex-col gap-3">
+            <div key={s.step} className="x1-glass-flat rounded-xl p-5 flex flex-col gap-3">
               <span className="font-heading text-xs font-bold text-primary x1-track">{s.step}</span>
               <h3 className="font-heading text-lg font-bold tracking-tight">{s.title}</h3>
               <p className="text-xs text-muted-foreground leading-relaxed">{s.line}</p>

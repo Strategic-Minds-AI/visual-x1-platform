@@ -37,11 +37,11 @@ export default function X1ProofStrip() {
   }, []);
 
   return (
-    <section className="border-b border-border">
+    <section>
       <div className="max-w-6xl mx-auto px-6 py-8">
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
           {TILES.map((t) => (
-            <div key={t.key} className="x1-glass rounded-xl px-4 py-4">
+            <div key={t.key} className="x1-glass-flat rounded-xl px-4 py-4">
               <p className="font-heading text-2xl sm:text-3xl font-extrabold text-primary tabular-nums">
                 {stats ? stats[t.key] : "—"}
               </p>

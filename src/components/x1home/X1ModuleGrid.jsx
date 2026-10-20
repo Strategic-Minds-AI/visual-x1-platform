@@ -45,7 +45,7 @@ const MODULES = [
 
 export default function X1ModuleGrid() {
   return (
-    <section className="border-b border-border">
+    <section>
       <div className="max-w-6xl mx-auto px-6 py-14 sm:py-20">
         <X1SectionHeading
           eyebrow="What the system does"
@@ -55,7 +55,7 @@ export default function X1ModuleGrid() {
         />
         <div className="mt-10 grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
           {MODULES.map((m) => (
-            <Link key={m.to} to={m.to} className="x1-glass rounded-xl p-5 flex flex-col gap-3 electric-hover">
+            <Link key={m.to} to={m.to} className="x1-glass-flat rounded-xl p-5 flex flex-col gap-3 electric-hover">
               <m.Icon className="w-5 h-5 text-primary" />
               <h3 className="font-heading text-base font-bold tracking-tight">{m.title}</h3>
               <p className="text-xs text-muted-foreground leading-relaxed">{m.line}</p>

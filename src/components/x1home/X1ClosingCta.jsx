@@ -28,7 +28,7 @@ export default function X1ClosingCta() {
           </Link>
           <Link
             to="/x1-experience"
-            className="x1-pill x1-pill-outline x1-track text-[10px] font-semibold px-7 py-3.5 inline-flex items-center gap-2"
+            className="x1-pill x1-track text-[10px] font-semibold px-7 py-3.5 inline-flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
           >
             Open the X1 app <ArrowRight className="w-4 h-4" />
           </Link>

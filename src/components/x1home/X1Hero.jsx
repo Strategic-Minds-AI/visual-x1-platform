@@ -8,7 +8,7 @@ const EARTH = "https://www.strategicmindsai.com/v2-assets/connected-earth.jpg";
 
 export default function X1Hero() {
   return (
-    <section className="relative overflow-hidden border-b border-border">
+    <section className="relative overflow-hidden">
       <img src={EARTH} alt="" className="absolute inset-0 w-full h-full object-cover opacity-50" />
       <div className="absolute inset-0 bg-gradient-to-b from-background/60 via-background/85 to-background" />
 
@@ -42,7 +42,7 @@ export default function X1Hero() {
           </Link>
           <Link
             to="/system-audit"
-            className="x1-pill x1-pill-outline x1-track text-[10px] font-semibold px-7 py-3.5 inline-flex items-center gap-2"
+            className="x1-pill x1-track text-[10px] font-semibold px-7 py-3.5 inline-flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
           >
             Review the evidence <ArrowRight className="w-4 h-4" />
           </Link>
