@@ -4,7 +4,7 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 
 const ORIGIN="https://www.strategicmindsai.com";
-const SOURCE_PREVIEW="https://x1-operating-system-7ji2a88jl-strategic-minds-advisory.vercel.app";
+const SOURCE_PREVIEW="https://x1-operating-system-8h398mh99-strategic-minds-advisory.vercel.app";
 const SCREENS=[
  {label:"V2 marketing",path:"/v2/b"},
  {label:"Pricing",path:"/pricing"},
