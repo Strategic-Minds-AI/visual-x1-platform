@@ -1,30 +1,23 @@
 import React, { useEffect, useState } from "react";
-import { LayoutDashboard, Sparkles, Download, Factory, ShieldCheck, Users, FolderOpen, Rocket, Menu, X, Code2 } from "lucide-react";
-import { Link, useSearchParams } from "react-router-dom";
+import { Menu } from "lucide-react";
+import { useSearchParams } from "react-router-dom";
 import AdminOverview from "@/components/admin/AdminOverview";
+import AdminRail from "@/components/admin/AdminRail";
 import PromptPipeline from "@/components/admin/PromptPipeline";
 import VisualEditorWorkspace from "@/components/visualeditor/VisualEditorWorkspace";
 import ClonePipeline from "@/components/admin/ClonePipeline";
 import FactoryPipeline from "@/components/admin/FactoryPipeline";
 import ApprovalQueue from "@/components/admin/ApprovalQueue";
 import LiveRecords from "@/components/admin/LiveRecords";
-import emblemArt from "@/assets/x1/silver-emblem.png";
 import "../../vendor/x1/CommercePortal.css";
 import "@/styles/x1-brand-theme.css";
 import "@/styles/x1-admin.css";
+import { CONSOLE_SECTIONS } from "@/data/adminModules";
 import { countRecords } from "@/lib/adminPipelines";
 
-const SECTIONS = [
-  { id: "overview", label: "Command Deck", icon: LayoutDashboard },
-  { id: "prompt", label: "Prompt System", icon: Sparkles },
-  { id: "visualeditor", label: "Visual Editor", icon: Code2 },
-  { id: "clone", label: "Clone & Ingest", icon: Download },
-  { id: "factory", label: "Website Factory", icon: Factory },
-  { id: "approvals", label: "Release Gates", icon: ShieldCheck },
-  { id: "clients", label: "Client Intake", icon: Users },
-  { id: "assets", label: "Brand Assets", icon: FolderOpen },
-  { id: "releases", label: "QA & Deployments", icon: Rocket },
-];
+// The sections live in src/data/adminModules.js, alongside the module registry the
+// rail and the module hub both read, so the console's navigation has one source.
+const SECTIONS = CONSOLE_SECTIONS;
 
 // The operator admin. It renders inside the client portal's own shell (same
 // stylesheet, same panels, buttons and lists), reads live records only, and every
@@ -36,6 +29,7 @@ export default function PortalAdmin() {
   const requested = params.get("section");
   const section = SECTIONS.some((s) => s.id === requested) ? requested : "overview";
   const [navOpen, setNavOpen] = useState(false);
+  const [railOpen, setRailOpen] = useState(false);
   const [pending, setPending] = useState(null);
 
   useEffect(() => {
@@ -59,49 +53,21 @@ export default function PortalAdmin() {
   };
 
   return (
-    <div className="cp-site">
+    <div className={"cp-site" + (railOpen ? " admin-rail-open" : "")}>
       <div className="cp-portal-shell">
         {navOpen && (
           <button className="cp-sidebar-backdrop" aria-label="Close navigation" onClick={() => setNavOpen(false)} />
         )}
 
-        <aside className={`cp-sidebar${navOpen ? " cp-sidebar-open" : ""}`}>
-          <div className="cp-sidebar-head">
-            <Link to="/v2/b" className="cp-portal-logo" onClick={() => setNavOpen(false)}>
-              <span className="cp-brand-mark">
-                <img src={emblemArt} alt="Metallic S emblem" />
-              </span>
-              <span>
-                STRATEGIC MINDS <b>AI</b>
-                <small>OPERATOR CONSOLE</small>
-              </span>
-            </Link>
-            <button className="cp-sidebar-close" aria-label="Close navigation" onClick={() => setNavOpen(false)}>
-              <X size={18} />
-            </button>
-          </div>
-
-          <nav aria-label="Console sections">
-            {SECTIONS.map(({ id, label, icon: Icon }) => (
-              <button
-                key={id}
-                onClick={() => go(id)}
-                aria-current={section === id ? "page" : undefined}
-                className={section === id ? "selected" : ""}
-              >
-                <Icon size={17} />
-                {label}
-                {id === "approvals" && pending !== null && pending > 0 && <span className="cp-side-count">{pending}</span>}
-              </button>
-            ))}
-          </nav>
-
-          <div className="cp-sidebar-bottom">
-            <p className="cp-panel-note">
-              Live records only. A high score never authorizes release; the gates decide.
-            </p>
-          </div>
-        </aside>
+        <AdminRail
+          section={section}
+          onSection={go}
+          pending={pending}
+          railOpen={railOpen}
+          onToggleRail={() => setRailOpen((v) => !v)}
+          navOpen={navOpen}
+          onCloseNav={() => setNavOpen(false)}
+        />
 
         <div className="cp-portal-main">
           <header className="cp-portal-top">
@@ -118,7 +84,9 @@ export default function PortalAdmin() {
             </div>
           </header>
 
-          <div className="cp-portal-content">
+          {/* The Visual Editor fills the console: no inset, no outer panel, so its
+              own three-band layout is the page (the package's layout exactly). */}
+          <div className={"cp-portal-content" + (section === "visualeditor" ? " cp-ve-host" : "")}>
             {section === "overview" && <AdminOverview onNavigate={go} />}
             {section === "prompt" && <PromptPipeline />}
             {section === "visualeditor" && <VisualEditorWorkspace />}

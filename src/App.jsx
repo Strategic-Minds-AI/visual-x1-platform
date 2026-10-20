@@ -10,7 +10,6 @@ import ScrollToTop from './components/ScrollToTop';
 import Dashboard from './pages/Dashboard';
 import JobBoard from './pages/JobBoard';
 import PromptStudio from './pages/PromptStudio';
-import VisualEditor from './pages/VisualEditor';
 import VisualStudio from './pages/VisualStudio';
 import AgentActivity from './pages/AgentActivity';
 import PromptLab from './pages/PromptLab';
@@ -131,8 +130,9 @@ const AuthenticatedApp = () => {
         <Route path="/admin/agent" element={<AgentActivity />} />
         <Route path="/admin/launch-studio" element={<WebsiteFactory />} />
         <Route path="/admin/parity" element={<X1CloneLedger />} />
-        {/* Visual X installed as one native X1 module. */}
-        <Route path="/visual-x" element={<VisualEditor />} />
+        {/* The Visual X editor is the console's Visual Editor section, so this
+            path lands on it: one editor, one layout. */}
+        <Route path="/visual-x" element={<Navigate to="/admin?section=visualeditor" replace />} />
         </Route>
         </Route>
       {/* The X1 site is the front door; the Visual X console sits behind /workspace. */}

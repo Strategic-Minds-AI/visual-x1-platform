@@ -118,6 +118,12 @@
   background: rgba(12, 81, 113, .24);
 }
 
+/* The Dashboard and Modules entries are links, so they take the pill look without
+   the anchor underline. */
+.cp-site a.ve-pill {
+  text-decoration: none;
+}
+
 .cp-site .ve-pill.selected {
   color: #d7fbff;
   border-color: rgba(64, 192, 254, .45);
@@ -399,12 +405,15 @@
   max-width: 210px;
 }
 
+/* The artifact fills the canvas, as the package's does: the frame stretches to the
+   canvas height and the document scrolls inside it, rather than the frame being a
+   short strip in a tall empty area. */
 .cp-site .ve-frame-body {
   flex: 1;
   min-height: 0;
   overflow: auto;
   display: flex;
-  align-items: flex-start;
+  align-items: stretch;
   justify-content: center;
   padding: 14px;
 }

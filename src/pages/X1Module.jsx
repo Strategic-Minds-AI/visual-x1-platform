@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from "react";
 import { Code2, Copy, Boxes, Radar } from "lucide-react";
-import VisualEditor from "@/pages/VisualEditor";
+import VisualEditorWorkspace from "@/components/visualeditor/VisualEditorWorkspace";
 import CloneIngest from "@/pages/CloneIngest";
 import WebsiteFactory from "@/pages/WebsiteFactory";
 import X1OperatingSystem from "@/pages/X1OperatingSystem";
@@ -11,7 +11,7 @@ import useX1ModuleBridge, { notifyHostSurface } from "@/components/x1module/useX
 // module scope so the frame announces a stable surface list to its host instead
 // of a fresh array on every render.
 const SURFACES = [
-  { id: "editor", label: "Visual Editor", Icon: Code2, Component: VisualEditor },
+  { id: "editor", label: "Visual Editor", Icon: Code2, Component: VisualEditorWorkspace },
   { id: "ingest", label: "Clone & Ingest", Icon: Copy, Component: CloneIngest },
   { id: "factory", label: "Website Factory", Icon: Boxes, Component: WebsiteFactory },
   { id: "x1", label: "X1 Live", Icon: Radar, Component: X1OperatingSystem },
@@ -34,7 +34,16 @@ export default function X1Module() {
 
   return (
     <X1ModuleShell surfaces={SURFACES} active={active} onSelect={select} hostContext={hostContext}>
-      <Surface />
+      {/* The editor is the console's own section, so the module hosts that same
+          editor: the wrapper supplies its portal scope and full height, and every
+          other surface renders directly as before. */}
+      {active === "editor" ? (
+        <div className="cp-site cp-ve-fill">
+          <VisualEditorWorkspace />
+        </div>
+      ) : (
+        <Surface />
+      )}
     </X1ModuleShell>
   );
 }

@@ -109,3 +109,230 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* ── the console's navigation: a thin icon rail ───────────────────────────────
+   The console keeps the portal's own sidebar markup and palette, but above a
+   handset it renders as the builder rail the operator asked for: a thin bar flush
+   to the left edge of the page, full height, with the page buttons drawn as icons.
+   Hover names each one; the rail's own toggle expands it back to the portal's
+   labelled sidebar. Modules that live on their own routes are styled exactly like
+   the portal's nav buttons so the rail reads as one control. Below 621px the
+   portal's off-canvas drawer takes over, where a rail would eat the content. */
+.cp-site .cp-sidebar nav a.admin-rail-item {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  padding: 13px 14px;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  background: transparent;
+  color: #9eb6ca;
+  font-size: 12px;
+  font-weight: 690;
+  text-align: left;
+  text-decoration: none;
+}
+.cp-site .cp-sidebar nav a.admin-rail-item:hover {
+  background: rgba(12, 81, 113, 0.24);
+  color: #fff;
+}
+.cp-site .cp-sidebar nav a.admin-rail-item.selected {
+  background: linear-gradient(95deg, rgba(6, 104, 152, 0.35), rgba(11, 56, 84, 0.21));
+  color: #d7fbff;
+  border-color: rgba(64, 192, 254, 0.26);
+}
+.cp-site .cp-sidebar nav a.admin-rail-item.selected svg {
+  color: #65dbff;
+}
+
+.cp-site .admin-rail-rule {
+  height: 1px;
+  margin: 11px 7px;
+  flex-shrink: 0;
+  background: linear-gradient(90deg, transparent, rgba(64, 192, 254, 0.34), transparent);
+}
+
+.cp-site .admin-rail-toggle {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  padding: 12px 14px;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  background: transparent;
+  color: #7fa5b1;
+  font-size: 10px;
+  font-weight: 830;
+  letter-spacing: 0.1em;
+  text-align: left;
+  cursor: pointer;
+}
+.cp-site .admin-rail-toggle:hover {
+  background: rgba(12, 81, 113, 0.24);
+  color: #d7fbff;
+}
+
+@media (min-width: 621px) {
+  .cp-site .cp-portal-shell {
+    grid-template-columns: 62px minmax(0, 1fr);
+  }
+  .cp-site.admin-rail-open .cp-portal-shell {
+    grid-template-columns: 234px minmax(0, 1fr);
+  }
+
+  /* in flow, flush to the left edge, the full height of the page */
+  .cp-site .cp-sidebar {
+    position: sticky;
+    top: 0;
+    width: auto;
+    height: 100vh;
+    transform: none;
+    box-shadow: none;
+    padding: 12px 8px 14px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    scrollbar-width: none;
+  }
+  .cp-site .cp-sidebar::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+  }
+
+  .cp-site .cp-sidebar-head {
+    display: flex;
+    justify-content: center;
+    padding: 0 0 12px;
+  }
+  .cp-site .cp-sidebar .cp-portal-logo {
+    gap: 0;
+    justify-content: center;
+  }
+  .cp-site .cp-sidebar .cp-brand-mark {
+    width: 34px;
+    height: 34px;
+    border-radius: 11px;
+  }
+  .cp-site .cp-sidebar .cp-brand-mark img {
+    height: 29px;
+    width: 26px;
+  }
+  .cp-site .cp-sidebar .cp-rail-label,
+  .cp-site .cp-sidebar .cp-sidebar-close,
+  .cp-site .cp-sidebar .cp-panel-note,
+  .cp-site .cp-mobile-toggle {
+    display: none;
+  }
+
+  /* every page button becomes an icon tile */
+  .cp-site .cp-sidebar nav button,
+  .cp-site .cp-sidebar nav a.admin-rail-item,
+  .cp-site .admin-rail-toggle {
+    position: relative;
+    height: 40px;
+    justify-content: center;
+    gap: 0;
+    padding: 0;
+    border-radius: 12px;
+  }
+  .cp-site .cp-sidebar nav button svg {
+    color: inherit;
+  }
+  .cp-site .cp-sidebar nav .cp-side-count {
+    position: absolute;
+    top: 4px;
+    right: 5px;
+    margin: 0;
+    padding: 1px 4px;
+    font-size: 8px;
+  }
+  /* The rail's own controls stay reachable however long the rail gets. */
+  .cp-site .cp-sidebar-bottom {
+    margin-top: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding-top: 8px;
+    position: sticky;
+    bottom: 0;
+    background: linear-gradient(180deg, rgba(3, 11, 22, 0), rgba(3, 11, 22, 0.94) 45%, #030b16);
+  }
+
+  /* expanded, the portal's labelled navigation returns */
+  .cp-site.admin-rail-open .cp-sidebar-head {
+    justify-content: flex-start;
+    padding: 0 4px 14px;
+  }
+  .cp-site.admin-rail-open .cp-sidebar .cp-portal-logo {
+    gap: 10px;
+    justify-content: flex-start;
+  }
+  .cp-site.admin-rail-open .cp-sidebar .cp-rail-label {
+    display: block;
+  }
+  .cp-site.admin-rail-open .cp-sidebar nav button,
+  .cp-site.admin-rail-open .cp-sidebar nav a.admin-rail-item,
+  .cp-site.admin-rail-open .admin-rail-toggle {
+    justify-content: flex-start;
+    gap: 12px;
+    padding: 0 12px;
+  }
+  .cp-site.admin-rail-open .cp-sidebar nav .cp-side-count {
+    position: static;
+    margin-left: auto;
+    padding: 3px 6px;
+    font-size: 9px;
+  }
+}
+
+/* ── the Visual Editor runs full-bleed inside the console ─────────────────────
+   The package's builder is the page, not a card inside one: the editor takes the
+   whole area between the console header and its footer, and its own three bands
+   (top bar, composer column, canvas) use the full width. The console's own
+   content inset and panel chrome are removed for this section only. */
+.cp-site .cp-portal-content.cp-ve-host {
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+.cp-site .cp-ve-host .ve-section {
+  height: auto;
+  min-height: 0;
+  flex: 1;
+}
+.cp-site .cp-ve-host .cp-portal-panel.ve-shell {
+  flex: 1;
+  min-height: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+/* The same editor, hosted by the X1 admin module frame: the wrapper supplies the
+   portal scope the editor's own stylesheet expects, and the full height of the
+   frame, so both hosts show one identical editor. */
+.cp-site.cp-ve-fill {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+}
+.cp-site.cp-ve-fill .ve-section {
+  height: auto;
+  min-height: 0;
+  flex: 1;
+}
+.cp-site.cp-ve-fill .cp-portal-panel.ve-shell {
+  flex: 1;
+  min-height: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
