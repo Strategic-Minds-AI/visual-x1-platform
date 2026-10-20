@@ -6,6 +6,7 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.54';
 const X1_ORIGIN = 'https://www.strategicmindsai.com';
 
 const ROUTES = {
+  public_status: '/api/x1/status-public',
   health: '/api/x1/health',
   worker_status: '/api/x1/worker-status',
   operator_status: '/api/x1/operator-status',
@@ -16,7 +17,7 @@ const ROUTES = {
   prompt_assets: '/api/x1/prompt-assets'
 };
 
-const MAX_ROUTES = 8;
+const MAX_ROUTES = 9;
 
 export default async function (req) {
   try {
@@ -37,7 +38,7 @@ export default async function (req) {
     const names = (asked.length ? asked : Object.keys(ROUTES)).filter((n) => ROUTES[n]).slice(0, MAX_ROUTES);
 
     // This value comes only from Base44's SERVER-SIDE secret store, never VITE_* or an entity.
-    // Missing secret leaves protected X1 routes correctly blocked.
+    // Missing secret leaves protected X1 routes correctly blocked. Public status returns no tenant data.
     const token = Deno.env.get('X1_VISUALX_READ_TOKEN');
     const tenantId = Deno.env.get('X1_VISUALX_TENANT_ID');
     const settled = await Promise.allSettled(
