@@ -35,6 +35,7 @@ import Workspace from './pages/Workspace';
 import CloneIngest from './pages/CloneIngest';
 import SocialStudio from './pages/SocialStudio';
 import DeliveryConsole from './pages/DeliveryConsole';
+import X1OperatingSystem from './pages/X1OperatingSystem';
 import BuilderMap from './pages/BuilderMap';
 import AppShell from '@/components/workspace/AppShell';
 import Login from '@/pages/Login';
@@ -82,6 +83,7 @@ const AuthenticatedApp = () => {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/clone-ingest" element={<CloneIngest />} />
         <Route path="/delivery" element={<DeliveryConsole />} />
+        <Route path="/x1" element={<X1OperatingSystem />} />
         <Route path="/builder-map" element={<BuilderMap />} />
         <Route path="/job-board" element={<JobBoard />} />
         <Route path="/prompt-studio" element={<PromptStudio />} />

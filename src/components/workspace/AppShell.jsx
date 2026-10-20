@@ -3,18 +3,19 @@ import { Link, NavLink, Outlet, useLocation } from "react-router-dom";
 import {
   Home, LayoutDashboard, Copy, Code2, Briefcase, Users, Boxes, Gauge,
   Sprout, Cpu, ChevronDown, LogOut, Wand2, Sparkles, Search, ListChecks, Layers, ShieldCheck,
-  Moon, Sun, CalendarClock, Palette, Rocket, Map as MapIcon
+  Moon, Sun, CalendarClock, Palette, Rocket, Map as MapIcon, Radar
 } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { base44 } from "@/api/base44Client";
 import { cn } from "@/lib/utils";
 import useTheme from "@/hooks/useTheme";
 
-const BRAND_LOGO = "https://media.base44.com/images/public/6ad5e96eb2cfcf9aafe9f1df/eda871bc3_logo.png";
+const X1_EMBLEM = "https://www.strategicmindsai.com/v2-assets/silver-emblem.png";
 
 // Thin vertical rail: the always-visible spine of the system.
 const RAIL = [
   { to: "/", label: "Workspace", Icon: Home, end: true },
+  { to: "/x1", label: "X1 Operating System", Icon: Radar },
   { to: "/clone-ingest", label: "Clone & Ingest", Icon: Copy },
   { to: "/delivery", label: "Delivery", Icon: Rocket },
   { to: "/visual-editor", label: "Visual Editor", Icon: Code2 },
@@ -29,6 +30,7 @@ const RAIL = [
 
 const TOP_LINKS = [
   { to: "/", label: "Workspace", end: true },
+  { to: "/x1", label: "X1 OS" },
   { to: "/clone-ingest", label: "Clone & Ingest" },
   { to: "/visual-editor", label: "Visual Editor" },
   { to: "/delivery", label: "Delivery" },
@@ -47,6 +49,7 @@ const TOP_GROUPS = [
   {
     label: "System",
     items: [
+      { to: "/x1", label: "X1 Operating System", Icon: Radar },
       { to: "/system-capabilities", label: "Capabilities", Icon: Layers },
       { to: "/builder-map", label: "Builder Map", Icon: MapIcon },
       { to: "/system-benchmarks", label: "System Benchmarks", Icon: Gauge },
@@ -90,8 +93,11 @@ export default function AppShell() {
       <header className="shrink-0 border-b border-border bg-card">
         <div className="h-14 px-4 flex items-center gap-4">
           <Link to="/" className="flex items-center gap-2.5 shrink-0">
-            <img src={BRAND_LOGO} alt="" className="h-7 w-7 rounded-md object-contain" />
-            <span className="font-heading font-semibold tracking-tight hidden sm:inline">Visual X</span>
+            <img src={X1_EMBLEM} alt="Strategic Minds AI" className="h-7 w-7 object-contain" />
+            <span className="hidden sm:flex flex-col leading-none">
+              <span className="font-heading font-semibold tracking-[0.16em] text-[11px]">STRATEGIC MINDS AI</span>
+              <span className="text-[9px] tracking-[0.3em] text-muted-foreground mt-0.5">X1 OPERATING SYSTEM</span>
+            </span>
           </Link>
 
           <nav className="flex items-center gap-0.5 overflow-x-auto">
