@@ -4,11 +4,13 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 
 const ORIGIN="https://www.strategicmindsai.com";
+const SOURCE_PREVIEW="https://x1-operating-system-7ji2a88jl-strategic-minds-advisory.vercel.app";
 const SCREENS=[
  {label:"V2 marketing",path:"/v2/b"},
  {label:"Pricing",path:"/pricing"},
  {label:"Client portal",path:"/portal"},
  {label:"Launch Studio",path:"/admin/launch-studio"},
+ {label:"Template Designer",path:"/admin/template-designer"},
  {label:"Visual Studio",path:"/admin/visual-editor"},
  {label:"Agent Console",path:"/admin/agent"},
  {label:"Prompt Lab",path:"/admin/prompt-lab"},
@@ -23,7 +25,7 @@ const VIEWPORTS=[
 export default function X1EmbedPanel(){
  const [path,setPath]=useState(SCREENS[0].path);
  const [width,setWidth]=useState(1440);
- const target=ORIGIN+path;
+ const target=(path==="/admin/template-designer"?SOURCE_PREVIEW:ORIGIN)+path;
  return <Card>
   <CardHeader className="pb-2">
    <CardTitle className="text-base">X1 embed & visual parity viewport</CardTitle>
