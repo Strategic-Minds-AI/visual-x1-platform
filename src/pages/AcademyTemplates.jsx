@@ -3,7 +3,7 @@ import {BookOpen,ExternalLink,LayoutTemplate,Monitor,Smartphone,Tablet,ShieldChe
 import {Button} from "@/components/ui/button";
 
 // The exact X1 preview SHA is pinned; release promotion is a separate guarded process.
-const X1_PREVIEW="https://x1-operating-system-7ji2a88jl-strategic-minds-advisory.vercel.app";
+const X1_PREVIEW="https://x1-operating-system-8h398mh99-strategic-minds-advisory.vercel.app";
 const ACADEMY="https://universal-factory-academy.vercel.app";
 const CATEGORIES=[
  {id:"all",name:"40 master templates",query:""},
