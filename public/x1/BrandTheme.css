@@ -1,0 +1,24 @@
+/* STRATEGIC MINDS AI 2.0 — CANONICAL BRAND TOKENS v1
+ * Source of truth: approved /v2/a homepage, V2Experience.css.
+ * Other pages must inherit these exact hexadecimal values and original assets.
+ * Theme updates require visual acceptance against /v2/a desktop + mobile.
+ */
+:root{
+  --smai-canvas:#02050d;
+  --smai-header:#02060f;
+  --smai-surface:#030914;
+  --smai-panel:#061726;
+  --smai-cyan:#02cfff;
+  --smai-blue:#128cff;
+  --smai-green:#66ff9c;
+  --smai-border:rgba(74,201,255,.5);
+  --smai-border-soft:rgba(74,201,255,.21);
+  --smai-white:#f6fbff;
+  --smai-muted:#9bbdd0;
+  --smai-focus:#83ffb4;
+  --smai-brand-emblem:url("/v2-assets/silver-emblem.png");
+  --smai-connected-earth:url("/v2-assets/connected-earth.jpg");
+  --smai-star-field:radial-gradient(circle at 12% 18%,rgba(167,220,255,.7) 0 1px,transparent 1.5px),radial-gradient(circle at 80% 47%,rgba(55,177,250,.65) 0 .8px,transparent 1.5px);
+  --smai-canvas-glow:radial-gradient(ellipse at 70% 28%,rgba(18,140,255,.14),transparent 55%);
+  color-scheme:dark;
+}
