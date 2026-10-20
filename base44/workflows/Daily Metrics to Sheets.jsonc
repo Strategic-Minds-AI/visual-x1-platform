@@ -1,0 +1,45 @@
+{
+  "name": "Daily Metrics to Sheets",
+  "trigger": {
+    "condition": null,
+    "config": {
+      "trigger_type": "scheduled",
+      "events": [],
+      "schedule_mode": "recurring",
+      "cron_expression": "0 7 * * *",
+      "one_time_date": null,
+      "timezone": "America/New_York",
+      "interval_value": null,
+      "interval_unit": null,
+      "interval_anchor": null,
+      "ends_type": "never",
+      "ends_on_date": null,
+      "ends_after_count": null
+    }
+  },
+  "description": "Pushes daily agent performance metrics and site SEO rankings into Google Sheets",
+  "definition": {
+    "document": {
+      "dsl": "1.0.0",
+      "name": "daily_metrics_to_sheets",
+      "version": "1.0",
+      "namespace": "base44"
+    },
+    "do": [
+      {
+        "sync_metrics": {
+          "call": "invoke_backend_function",
+          "with": {
+            "function_name": "syncMetricsToSheets",
+            "args": {}
+          },
+          "then": "end",
+          "x-base44": {
+            "title": "Sync metrics to Google Sheets",
+            "description": "Agent performance and SEO rankings"
+          }
+        }
+      }
+    ]
+  }
+}

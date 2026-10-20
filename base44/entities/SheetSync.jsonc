@@ -1,0 +1,58 @@
+{
+  "name": "SheetSync",
+  "type": "object",
+  "properties": {
+    "spreadsheet_id": {
+      "type": "string",
+      "description": "Google Sheets spreadsheet id the daily metrics sync writes to"
+    },
+    "spreadsheet_url": {
+      "type": "string",
+      "description": "Shareable URL of the metrics spreadsheet"
+    },
+    "last_sync_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the sync last ran"
+    },
+    "last_agent_rows": {
+      "type": "number",
+      "default": 0,
+      "description": "Agent rows written in the last sync"
+    },
+    "last_seo_rows": {
+      "type": "number",
+      "default": 0,
+      "description": "SEO ranking rows written in the last sync"
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true
+    }
+  },
+  "required": [
+    "spreadsheet_id"
+  ],
+  "rls": {
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}
