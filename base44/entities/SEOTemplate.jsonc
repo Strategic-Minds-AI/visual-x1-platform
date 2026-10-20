@@ -1,0 +1,120 @@
+{
+  "name": "SEOTemplate",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Template name"
+    },
+    "industry": {
+      "type": "string",
+      "description": "Industry this layout template serves"
+    },
+    "keywords": {
+      "type": "string",
+      "description": "Comma-separated input keywords mapped to programmatic structures"
+    },
+    "layout_json": {
+      "type": "string",
+      "description": "JSON structure of the industry layout (section order, components, copy slots)"
+    },
+    "layout_file_uri": {
+      "type": "string",
+      "description": "Storage URI of the uploaded layout file"
+    },
+    "domain_strategy": {
+      "type": "string",
+      "enum": [
+        "nearme",
+        "nearyou",
+        "both"
+      ],
+      "default": "both",
+      "description": "Which NearMe / NearYou domain system to generate"
+    },
+    "url_pattern": {
+      "type": "string",
+      "default": "/{region}/{city}/{service}/",
+      "description": "Programmatic URL pattern"
+    },
+    "funnel_type": {
+      "type": "string",
+      "enum": [
+        "click_to_call",
+        "quote_request",
+        "booking",
+        "emergency_contact",
+        "consultation"
+      ],
+      "default": "quote_request",
+      "description": "Lead funnel these structures use"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Notes about the layout or its mapping rules"
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true
+    }
+  },
+  "required": [
+    "name",
+    "industry",
+    "keywords"
+  ],
+  "rls": {
+    "read": {
+      "$or": [
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "user"
+          }
+        }
+      ]
+    },
+    "create": {
+      "$or": [
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "user"
+          }
+        }
+      ]
+    },
+    "update": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "delete": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    }
+  }
+}

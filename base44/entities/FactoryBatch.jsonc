@@ -93,6 +93,29 @@
       "default": 0,
       "description": "Number of backlink sites actually created"
     },
+    "visual_approval": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "approved",
+        "rejected"
+      ],
+      "default": "pending",
+      "description": "Manual visual quality approval before the live deployment gate"
+    },
+    "approval_notes": {
+      "type": "string",
+      "description": "Reviewer notes on the visual quality decision"
+    },
+    "approved_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the visual approval decision was recorded"
+    },
+    "approved_by": {
+      "type": "string",
+      "description": "Email of the reviewer who approved or rejected"
+    },
     "error_message": {
       "type": "string",
       "description": "Error details if the pipeline failed"

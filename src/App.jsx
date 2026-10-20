@@ -19,6 +19,8 @@ import AnalyticsDashboard from './pages/AnalyticsDashboard';
 import BenchmarkLibrary from './pages/BenchmarkLibrary';
 import WebsiteFactory from './pages/WebsiteFactory';
 import OpportunityMatrix from './pages/OpportunityMatrix';
+import VisualApproval from './pages/VisualApproval';
+import TemplateEngine from './pages/TemplateEngine';
 import Login from '@/pages/Login';
 import Register from '@/pages/Register';
 import ForgotPassword from '@/pages/ForgotPassword';
@@ -71,6 +73,8 @@ const AuthenticatedApp = () => {
         <Route path="/benchmarks" element={<BenchmarkLibrary />} />
         <Route path="/factory" element={<WebsiteFactory />} />
         <Route path="/opportunities" element={<OpportunityMatrix />} />
+        <Route path="/visual-approval" element={<VisualApproval />} />
+        <Route path="/template-engine" element={<TemplateEngine />} />
       </Route>
       <Route path="*" element={<PageNotFound />} />
     </Routes>

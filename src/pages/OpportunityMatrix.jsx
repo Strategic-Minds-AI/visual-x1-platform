@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { ChevronLeft, Target, MapPin, Shield, TrendingUp, DollarSign, Search } from "lucide-react";
+import { ChevronLeft, Target, MapPin, Shield, TrendingUp, DollarSign, Search, LayoutTemplate } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
@@ -73,6 +73,12 @@ export default function OpportunityMatrix() {
           <h1 className="font-heading text-lg font-semibold">Opportunity Matrix</h1>
         </div>
         <Badge variant="outline" className="text-xs ml-2">{filtered.length} opportunities</Badge>
+        <Link
+          to="/template-engine"
+          className="ml-auto flex items-center gap-1 text-xs font-medium text-muted-foreground hover:text-foreground transition px-2 py-1 rounded-md hover:bg-muted"
+        >
+          <LayoutTemplate className="w-3.5 h-3.5" /> Template Engine
+        </Link>
       </header>
 
       <div className="max-w-7xl mx-auto p-6 space-y-4">

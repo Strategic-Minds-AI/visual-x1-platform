@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { ChevronLeft, Factory, PanelLeft, PanelRight, History } from "lucide-react";
+import { ChevronLeft, Factory, PanelLeft, PanelRight, History, ShieldCheck } from "lucide-react";
 import FactoryLauncher from "@/components/factory/FactoryLauncher";
 import LivePreview from "@/components/factory/LivePreview";
 import ValidationInspector from "@/components/factory/ValidationInspector";
@@ -98,6 +98,12 @@ export default function WebsiteFactory() {
           <h1 className="font-semibold text-sm">Visual X Autonomous Factory</h1>
         </div>
         <div className="ml-auto flex items-center gap-2">
+          <Link
+            to="/visual-approval"
+            className="flex items-center gap-1 text-xs font-medium text-muted-foreground hover:text-foreground transition px-2 py-1 rounded-md hover:bg-muted"
+          >
+            <ShieldCheck className="w-3.5 h-3.5" /> Visual Approval
+          </Link>
           <button
             onClick={() => setLeftPanelOpen(!leftPanelOpen)}
             className={`p-1.5 rounded-md transition ${leftPanelOpen ? "bg-primary/10 text-primary" : "text-muted-foreground hover:bg-muted"}`}
