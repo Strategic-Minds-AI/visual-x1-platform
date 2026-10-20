@@ -11,6 +11,7 @@ import Dashboard from './pages/Dashboard';
 import JobBoard from './pages/JobBoard';
 import PromptStudio from './pages/PromptStudio';
 import VisualEditor from './pages/VisualEditor';
+import VisualEditorStudio from './pages/VisualEditorStudio';
 import VisualStudio from './pages/VisualStudio';
 import AgentActivity from './pages/AgentActivity';
 import PromptLab from './pages/PromptLab';
@@ -99,7 +100,6 @@ const AuthenticatedApp = () => {
         <Route path="/job-board" element={<JobBoard />} />
         <Route path="/prompt-studio" element={<PromptStudio />} />
         <Route path="/social-studio" element={<SocialStudio />} />
-        <Route path="/visual-editor" element={<VisualEditor />} />
         <Route path="/agent-activity" element={<AgentActivity />} />
         <Route path="/prompt-lab" element={<PromptLab />} />
         <Route path="/system-control" element={<SystemControl />} />
@@ -146,6 +146,9 @@ const AuthenticatedApp = () => {
         {/* The operator admin, at the standard path. It reads live records and its
             buttons call the Visual X pipelines. */}
         <Route path="/admin" element={<PortalAdmin />} />
+        {/* The Visual Editor, opened from the console. It is the builder shell
+            rendered in the console's own portal language. */}
+        <Route path="/visual-editor" element={<VisualEditorStudio />} />
         {/* The console's earlier paths stay valid so existing links keep working. */}
         <Route path="/portal/demo" element={<Navigate to="/admin" replace />} />
         <Route path="/portal/workspace" element={<Navigate to="/portal" replace />} />

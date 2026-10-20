@@ -58,12 +58,15 @@ export default function useEditorEngine() {
     }
   };
 
-  const handleRender = async () => {
-    if (!input.trim()) return;
-    addMessage({ role: "user", content: `Rendering: ${input.slice(0, 80)}...`, type: "text" });
+  // An optional prompt lets a caller render text it just produced (a suggestion
+  // chip, a loaded module) instead of waiting for the composer's state to settle.
+  const handleRender = async (overridePrompt) => {
+    const prompt = (overridePrompt ?? input).trim();
+    if (!prompt) return;
+    addMessage({ role: "user", content: `Rendering: ${prompt.slice(0, 80)}...`, type: "text" });
     setLoading((l) => ({ ...l, render: true }));
     try {
-      const res = await base44.functions.invoke("renderPreview", { prompt: input });
+      const res = await base44.functions.invoke("renderPreview", { prompt });
       setPreviewHtml(res.data.html || "");
       addMessage({ role: "assistant", name: "Editor", content: `Rendered ${(res.data.html || "").length.toLocaleString()} characters of HTML. Open it on the right.`, type: "text" });
     } catch (e) {

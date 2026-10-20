@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { LayoutDashboard, Sparkles, Download, Factory, ShieldCheck, Users, FolderOpen, Rocket, Menu, X } from "lucide-react";
+import { LayoutDashboard, Sparkles, Download, Factory, ShieldCheck, Users, FolderOpen, Rocket, Menu, X, Code2 } from "lucide-react";
 import { Link } from "react-router-dom";
 import AdminOverview from "@/components/admin/AdminOverview";
 import PromptPipeline from "@/components/admin/PromptPipeline";
@@ -106,6 +106,9 @@ export default function PortalAdmin() {
               <span className="cp-demo-pill">
                 <span /> LIVE RECORDS
               </span>
+              <Link to="/visual-editor" className="cp-green-button">
+                <Code2 size={15} /> VISUAL EDITOR
+              </Link>
               <button className="cp-mobile-toggle" aria-label="Open navigation" onClick={() => setNavOpen(true)}>
                 <Menu size={20} />
               </button>
