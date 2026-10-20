@@ -5,6 +5,7 @@ import CloneIntake from "@/components/clone/CloneIntake";
 import CloneVerifyPanel from "@/components/clone/CloneVerifyPanel";
 import CloneList from "@/components/clone/CloneList";
 import CloneAuditLedger from "@/components/clone/CloneAuditLedger";
+import AgentPipelinePanel from "@/components/clone/AgentPipelinePanel";
 
 export default function CloneIngest() {
   const [projects, setProjects] = useState([]);
@@ -48,7 +49,10 @@ export default function CloneIngest() {
           <div className="space-y-4">
             <CloneIntake onCaptured={upsert} />
           </div>
-          <CloneVerifyPanel project={selected} cloneHtml={selected?.__html || ""} onUpdated={upsert} />
+          <div className="space-y-4">
+            <CloneVerifyPanel project={selected} cloneHtml={selected?.__html || ""} onUpdated={upsert} />
+            <AgentPipelinePanel project={selected} onUpdated={upsert} />
+          </div>
           <div className="space-y-3">
             <p className="text-sm font-medium">Projects</p>
             {loading ? <p className="text-sm text-muted-foreground">Loading…</p> : <CloneList projects={projects} selectedId={selected?.id} onSelect={setSelected} />}

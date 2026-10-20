@@ -399,10 +399,18 @@ For each significant claim in the build prompt, return a verdict: PASS when the 
       ? validation.decision
       : 'PASS';
 
+    // One value named twice is one value to supply: the list is normalized so the
+    // operator sees each missing value once, with the first (most specific) mention kept.
+    const seenValue = new Set();
     const supply = [
       ...(ingestOut.supply || []),
       ...rounds.flatMap((r) => (r.repair?.supply_added || []).map((v) => ({ value: v, belongs_to: 'revealed during repair', why: 'Named by the repair pass as a value the source does not show.' })))
-    ];
+    ].filter((s) => {
+      const key = String(s.value || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+      if (!key || seenValue.has(key)) return false;
+      seenValue.add(key);
+      return true;
+    });
 
     const pipeline = {
       ran_at: new Date().toISOString(),

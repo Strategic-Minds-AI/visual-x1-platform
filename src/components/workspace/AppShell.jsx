@@ -3,7 +3,7 @@ import { Link, NavLink, Outlet, useLocation } from "react-router-dom";
 import {
   Home, LayoutDashboard, Copy, Code2, Briefcase, Users, Boxes, Gauge,
   Sprout, Cpu, ChevronDown, LogOut, Wand2, Sparkles, Search, ListChecks, Layers, ShieldCheck,
-  Moon, Sun, CalendarClock, Palette
+  Moon, Sun, CalendarClock, Palette, Rocket, Map as MapIcon
 } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { base44 } from "@/api/base44Client";
@@ -16,6 +16,7 @@ const BRAND_LOGO = "https://media.base44.com/images/public/6ad5e96eb2cfcf9aafe9f
 const RAIL = [
   { to: "/", label: "Workspace", Icon: Home, end: true },
   { to: "/clone-ingest", label: "Clone & Ingest", Icon: Copy },
+  { to: "/delivery", label: "Delivery", Icon: Rocket },
   { to: "/visual-editor", label: "Visual Editor", Icon: Code2 },
   { to: "/dashboard", label: "Dashboard", Icon: LayoutDashboard },
   { to: "/job-board", label: "Job Board", Icon: Briefcase },
@@ -30,6 +31,7 @@ const TOP_LINKS = [
   { to: "/", label: "Workspace", end: true },
   { to: "/clone-ingest", label: "Clone & Ingest" },
   { to: "/visual-editor", label: "Visual Editor" },
+  { to: "/delivery", label: "Delivery" },
   { to: "/prompt-system", label: "Prompt System" },
 ];
 
@@ -46,6 +48,7 @@ const TOP_GROUPS = [
     label: "System",
     items: [
       { to: "/system-capabilities", label: "Capabilities", Icon: Layers },
+      { to: "/builder-map", label: "Builder Map", Icon: MapIcon },
       { to: "/system-benchmarks", label: "System Benchmarks", Icon: Gauge },
       { to: "/system-audit", label: "System Audit", Icon: ShieldCheck },
       { to: "/system-control", label: "System Control", Icon: Cpu },

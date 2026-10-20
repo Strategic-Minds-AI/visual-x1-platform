@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Globe, Loader2, ExternalLink, Send, FileSearch } from "lucide-react";
+import VercelProjectPicker from "@/components/delivery/VercelProjectPicker";
 
 export default function BrowserPanel({ onSendToChat }) {
   const [url, setUrl] = useState("");
@@ -51,6 +52,7 @@ export default function BrowserPanel({ onSendToChat }) {
         <Button size="sm" variant="outline" onClick={read} disabled={!url.trim() || loading}>
           {loading ? <Loader2 className="w-3.5 h-3.5 mr-1 animate-spin" /> : <FileSearch className="w-3.5 h-3.5 mr-1" />} Read page
         </Button>
+        <VercelProjectPicker onPick={(picked) => { setUrl(picked); setFrameUrl(picked); setError(""); }} />
         {frameUrl && (
           <Button size="icon" variant="ghost" asChild title="Open in a new tab">
             <a href={frameUrl} target="_blank" rel="noreferrer"><ExternalLink className="w-4 h-4" /></a>
