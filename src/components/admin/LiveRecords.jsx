@@ -1,16 +1,18 @@
 import React, { useEffect, useState } from "react";
 import { base44 } from "@/api/base44Client";
-import { Card } from "@/components/ui/card";
 import { Image } from "@/components/ui/image";
+import { Panel, Empty, StatusPill, ErrorText } from "@/components/admin/adminUi";
 import { pipelineError, when } from "@/lib/adminPipelines";
 
 // One live record surface, driven by configuration, so every admin list reads
-// from real entities with the same loading and empty behaviour.
+// from real entities with the same loading and empty behaviour. Rows use the
+// portal's own list markup.
 export default function LiveRecords({
   title,
   entity,
   columns,
   imageKey,
+  pillKey,
   query = {},
   sort = "-created_date",
   limit = 50,
@@ -39,46 +41,44 @@ export default function LiveRecords({
     };
   }, [entity, sort, limit, refreshKey, JSON.stringify(query)]);
 
-  return (
-    <Card className="p-5">
-      <div className="flex flex-wrap items-center justify-between gap-2">
-        <p className="x1-track text-xs font-bold text-muted-foreground">{title}</p>
-        {rows !== null && <span className="text-[10px] text-muted-foreground">{rows.length} live</span>}
-      </div>
+  const primary = columns.find((column) => column.primary) || columns[0];
+  const rest = columns.filter((column) => column !== primary && column.key !== pillKey);
 
-      {error && <p className="mt-3 text-xs text-destructive">{error}</p>}
+  return (
+    <Panel
+      kicker={title}
+      aside={rows !== null ? <span className="cp-fine">{rows.length} live</span> : null}
+    >
+      <ErrorText>{error}</ErrorText>
       {rows === null ? (
-        <p className="mt-3 text-xs text-muted-foreground">Loading…</p>
+        <Empty>Loading…</Empty>
       ) : rows.length === 0 ? (
-        <p className="mt-3 text-xs text-muted-foreground">{emptyText}</p>
+        <Empty>{emptyText}</Empty>
       ) : (
-        <ul className="mt-3 divide-y divide-border">
+        <div className="cp-asset-list">
           {rows.map((row) => (
-            <li key={row.id} className="flex items-center gap-3 py-3">
-              {imageKey && row[imageKey] && (
-                <Image src={row[imageKey]} className="h-10 w-10 shrink-0 rounded-lg object-cover" fittingType="fill" />
+            <div key={row.id}>
+              {imageKey && row[imageKey] ? (
+                <Image src={row[imageKey]} className="h-11 w-11 shrink-0 rounded-xl object-cover" fittingType="fill" />
+              ) : (
+                <span className="cp-lead-avatar">
+                  {String(row[primary.key] || "—").slice(0, 2).toUpperCase()}
+                </span>
               )}
-              <div className="min-w-0 flex-1">
-                {columns.map((column) => (
-                  <span
-                    key={column.key}
-                    className={
-                      column.primary
-                        ? "block truncate text-xs text-foreground"
-                        : "block truncate text-[10px] text-muted-foreground"
-                    }
-                  >
+              <div>
+                <h3>{primary.format ? primary.format(row[primary.key], row) : row[primary.key] || "—"}</h3>
+                {rest.map((column) => (
+                  <p key={column.key} className="cp-fine">
                     {column.format ? column.format(row[column.key], row) : row[column.key] || "—"}
-                  </span>
+                  </p>
                 ))}
+                {row.created_date && <p className="cp-fine">{when(row.created_date)}</p>}
               </div>
-              {row.created_date && (
-                <span className="shrink-0 text-[10px] text-muted-foreground">{when(row.created_date)}</span>
-              )}
-            </li>
+              {pillKey && row[pillKey] ? <StatusPill>{row[pillKey]}</StatusPill> : null}
+            </div>
           ))}
-        </ul>
+        </div>
       )}
-    </Card>
+    </Panel>
   );
 }

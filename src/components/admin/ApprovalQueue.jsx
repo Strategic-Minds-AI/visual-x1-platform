@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { Check, ShieldCheck, X } from "lucide-react";
+import { Check, X } from "lucide-react";
 import { base44 } from "@/api/base44Client";
-import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
+import { Panel, PrimaryButton, OutlineButton, ErrorText, StatusPill } from "@/components/admin/adminUi";
 import { pipelineError, readRecords, when } from "@/lib/adminPipelines";
 
 // Live release gates. Factory batches awaiting a visual decision and verified
@@ -32,7 +30,10 @@ export default function ApprovalQueue() {
 
   useEffect(() => {
     load();
-    base44.auth.me().then((me) => setOperator(me?.email || "")).catch(() => setOperator(""));
+    base44.auth
+      .me()
+      .then((me) => setOperator(me?.email || ""))
+      .catch(() => setOperator(""));
   }, []);
 
   const decideBatch = async (batch, decision) => {
@@ -73,79 +74,79 @@ export default function ApprovalQueue() {
   const loading = batches === null || clones === null;
 
   return (
-    <div className="space-y-4">
-      <Card className="p-5">
-        <div className="flex items-center gap-2">
-          <ShieldCheck className="h-4 w-4 text-primary" />
-          <span className="x1-track text-xs font-bold text-muted-foreground">Release Gates</span>
-        </div>
-        <p className="mt-2 text-xs text-muted-foreground">
-          Nothing advances to public release without this decision. A high score never substitutes for it.
+    <div className="cp-admin-stack">
+      <Panel kicker="RELEASE GATES" title="Nothing ships without this decision">
+        <p className="cp-panel-note">
+          A high score never substitutes for the gate. The operator named on this account is recorded against every
+          decision.
         </p>
-        {error && <p className="mt-3 text-xs text-destructive">{error}</p>}
-      </Card>
+        <ErrorText>{error}</ErrorText>
+      </Panel>
 
-      <Card className="p-5">
-        <p className="x1-track text-xs font-bold text-muted-foreground">Factory batches awaiting visual approval</p>
+      <Panel kicker="FACTORY BATCHES AWAITING VISUAL APPROVAL">
         {loading ? (
-          <p className="mt-3 text-xs text-muted-foreground">Loading…</p>
+          <p className="cp-empty">Loading…</p>
         ) : batches.length === 0 ? (
-          <p className="mt-3 text-xs text-muted-foreground">No batch is waiting on a visual decision.</p>
+          <p className="cp-empty">No batch is waiting on a visual decision.</p>
         ) : (
-          <ul className="mt-3 divide-y divide-border">
+          <div className="cp-asset-list">
             {batches.map((batch) => (
-              <li key={batch.id} className="flex flex-wrap items-center justify-between gap-3 py-3">
-                <span className="min-w-0 flex-1">
-                  <span className="block truncate text-xs text-foreground">{batch.sentence}</span>
-                  <span className="text-[10px] text-muted-foreground">
+              <div key={batch.id}>
+                <span className="cp-lead-avatar">BATCH</span>
+                <div>
+                  <h3>{batch.sentence}</h3>
+                  <p className="cp-fine">
                     QA {batch.quality_score || 0} · {batch.status} · {when(batch.created_date)}
-                  </span>
-                </span>
-                <span className="flex gap-2">
-                  <Button size="sm" onClick={() => decideBatch(batch, "approved")} disabled={busy === batch.id}>
-                    <Check /> Approve
-                  </Button>
-                  <Button size="sm" variant="outline" onClick={() => decideBatch(batch, "rejected")} disabled={busy === batch.id}>
-                    <X /> Reject
-                  </Button>
-                </span>
-              </li>
+                  </p>
+                </div>
+                <div className="cp-admin-row-buttons">
+                  <PrimaryButton onClick={() => decideBatch(batch, "approved")} disabled={busy === batch.id}>
+                    <Check size={13} /> Approve
+                  </PrimaryButton>
+                  <OutlineButton onClick={() => decideBatch(batch, "rejected")} disabled={busy === batch.id}>
+                    <X size={13} /> Reject
+                  </OutlineButton>
+                </div>
+              </div>
             ))}
-          </ul>
+          </div>
         )}
-      </Card>
+      </Panel>
 
-      <Card className="p-5">
-        <p className="x1-track text-xs font-bold text-muted-foreground">Clones awaiting human acceptance</p>
+      <Panel kicker="CLONES AWAITING HUMAN ACCEPTANCE">
         {loading ? (
-          <p className="mt-3 text-xs text-muted-foreground">Loading…</p>
+          <p className="cp-empty">Loading…</p>
         ) : clones.length === 0 ? (
-          <p className="mt-3 text-xs text-muted-foreground">No clone is waiting on acceptance.</p>
+          <p className="cp-empty">No clone is waiting on acceptance.</p>
         ) : (
-          <ul className="mt-3 divide-y divide-border">
+          <div className="cp-asset-list">
             {clones.map((clone) => (
-              <li key={clone.id} className="flex flex-wrap items-center justify-between gap-3 py-3">
-                <span className="min-w-0 flex-1">
-                  <span className="block truncate text-xs text-foreground">{clone.name}</span>
-                  <span className="text-[10px] text-muted-foreground">
+              <div key={clone.id}>
+                <span className="cp-lead-avatar">{String(clone.source_type || "src").slice(0, 3).toUpperCase()}</span>
+                <div>
+                  <h3>{clone.name}</h3>
+                  <p className="cp-fine">
                     {clone.source_label || clone.source_url || clone.source_type} · {clone.status} · operational{" "}
                     {clone.operational_gate} · visual {clone.visual_gate}
-                  </span>
-                </span>
-                <span className="flex items-center gap-2">
-                  <Badge variant="outline">{clone.visual_score || 0} visual</Badge>
-                  <Button size="sm" onClick={() => acceptClone(clone, true)} disabled={busy === clone.id}>
-                    <Check /> Accept
-                  </Button>
-                  <Button size="sm" variant="outline" onClick={() => acceptClone(clone, false)} disabled={busy === clone.id}>
-                    <X /> Reject
-                  </Button>
-                </span>
-              </li>
+                  </p>
+                  <p className="cp-fine">
+                    operational {clone.operational_score || 0}% · visual {clone.visual_score || 0}
+                  </p>
+                </div>
+                <div className="cp-admin-row-buttons">
+                  <StatusPill>HUMAN GATE</StatusPill>
+                  <PrimaryButton onClick={() => acceptClone(clone, true)} disabled={busy === clone.id}>
+                    <Check size={13} /> Accept
+                  </PrimaryButton>
+                  <OutlineButton onClick={() => acceptClone(clone, false)} disabled={busy === clone.id}>
+                    <X size={13} /> Reject
+                  </OutlineButton>
+                </div>
+              </div>
             ))}
-          </ul>
+          </div>
         )}
-      </Card>
+      </Panel>
     </div>
   );
 }

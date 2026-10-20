@@ -1,9 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { BadgeCheck, Download, FileCode2, RefreshCw } from "lucide-react";
-import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import ArtifactFrame from "@/components/admin/ArtifactFrame";
+import { Panel, Metric, PrimaryButton, OutlineButton, LinkButton, ErrorText, StatusPill } from "@/components/admin/adminUi";
 import { pipelineError, readRecords, runPipeline, when } from "@/lib/adminPipelines";
 
 // Technology 2 of 3: clone and ingest. A live captured project is measured, run
@@ -82,135 +80,130 @@ export default function ClonePipeline() {
   };
 
   return (
-    <div className="space-y-4">
-      <Card className="p-5">
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <div className="flex items-center gap-2">
-            <Download className="h-4 w-4 text-primary" />
-            <span className="x1-track text-xs font-bold text-muted-foreground">Clone &amp; Ingest</span>
-          </div>
-          <Button variant="ghost" onClick={loadProjects}>
-            <RefreshCw /> Refresh
-          </Button>
-        </div>
-
+    <div className="cp-admin-stack">
+      <Panel
+        kicker="CLONE & INGEST"
+        title="Captured source, measured against itself"
+        aside={<LinkButton onClick={loadProjects}><RefreshCw size={13} /> REFRESH</LinkButton>}
+      >
         {projects === null ? (
-          <p className="mt-4 text-xs text-muted-foreground">Loading captured projects…</p>
+          <p className="cp-empty">Loading captured projects…</p>
         ) : projects.length === 0 ? (
-          <p className="mt-4 text-xs text-muted-foreground">
+          <p className="cp-empty">
             No captured sources yet. Capture one in the Clone &amp; Ingest workspace and it appears here.
           </p>
         ) : (
           <>
-            <select
-              aria-label="Captured project"
-              value={selectedId}
-              onChange={(e) => { setSelectedId(e.target.value); setArtifact(""); setReport(null); }}
-              className="mt-4 w-full rounded-xl border border-border bg-secondary px-3 py-2 text-sm text-foreground"
-            >
-              {projects.map((p) => (
-                <option key={p.id} value={p.id}>
-                  {p.name} · {p.source_type} · {p.status}
-                </option>
-              ))}
-            </select>
+            <div className="cp-quote-fields">
+              <label htmlFor="clone-project">Captured project</label>
+              <select
+                id="clone-project"
+                value={selectedId}
+                onChange={(e) => {
+                  setSelectedId(e.target.value);
+                  setArtifact("");
+                  setReport(null);
+                }}
+              >
+                {projects.map((p) => (
+                  <option key={p.id} value={p.id}>
+                    {p.name} · {p.source_type} · {p.status}
+                  </option>
+                ))}
+              </select>
+            </div>
 
             {selected && (
-              <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-                {[
-                  ["Status", selected.status],
-                  ["Operational gate", selected.operational_gate],
-                  ["Operational score", `${selected.operational_score || 0}%`],
-                  ["Visual gate", selected.visual_gate],
-                ].map(([label, value]) => (
-                  <div key={label} className="rounded-xl border border-border p-3">
-                    <p className="x1-track text-[10px] font-bold text-muted-foreground">{label}</p>
-                    <p className="mt-1 truncate text-sm text-foreground">{value || "—"}</p>
-                  </div>
-                ))}
+              <div className="cp-metrics">
+                <Metric label="Status" value={selected.status} foot="Recorded state" />
+                <Metric label="Operational Gate" value={selected.operational_gate} foot="Required checks" accent />
+                <Metric label="Operational Score" value={`${selected.operational_score || 0}%`} foot="Checks passed" />
+                <Metric label="Visual Gate" value={selected.visual_gate} foot="Image comparison" />
               </div>
             )}
 
-            <div className="mt-4 flex flex-wrap gap-2">
-              <Button onClick={ingest} disabled={!selected || Boolean(busy)}>
-                <Download /> {busy === "ingest" ? "Running agents…" : "Run agent pipeline"}
-              </Button>
-              <Button variant="outline" onClick={render} disabled={!selected || Boolean(busy)}>
-                <FileCode2 /> {busy === "render" ? "Rendering…" : "Render build prompt"}
-              </Button>
-              <Button variant="outline" onClick={verify} disabled={!selected || !artifact || Boolean(busy)}>
-                <BadgeCheck /> {busy === "verify" ? "Checking…" : "Run operational checks"}
-              </Button>
+            <div className="cp-admin-actions">
+              <PrimaryButton onClick={ingest} disabled={!selected || Boolean(busy)}>
+                <Download size={14} /> {busy === "ingest" ? "Running agents…" : "Run agent pipeline"}
+              </PrimaryButton>
+              <OutlineButton onClick={render} disabled={!selected || Boolean(busy)}>
+                <FileCode2 size={14} /> {busy === "render" ? "Rendering…" : "Render build prompt"}
+              </OutlineButton>
+              <OutlineButton onClick={verify} disabled={!selected || !artifact || Boolean(busy)}>
+                <BadgeCheck size={14} /> {busy === "verify" ? "Checking…" : "Run operational checks"}
+              </OutlineButton>
             </div>
             {!artifact && (
-              <p className="mt-2 text-[11px] text-muted-foreground">
+              <p className="cp-panel-note mt-4">
                 Operational checks compare the rendered artifact against the capture, so render first.
               </p>
             )}
           </>
         )}
 
-        {error && <p className="mt-3 text-xs text-destructive">{error}</p>}
+        <ErrorText>{error}</ErrorText>
 
         {report && (
-          <div className="mt-4 rounded-xl border border-border p-4">
-            <p className="x1-track text-[10px] font-bold text-muted-foreground">Pipeline result</p>
-            <div className="mt-2 flex flex-wrap gap-2">
-              {report.decision && <Badge>{report.decision}</Badge>}
-              {report.ok === false && <Badge variant="destructive">Failed</Badge>}
-              {report.summary?.operational_gate && (
-                <Badge variant="outline">Operational {report.summary.operational_gate}</Badge>
-              )}
-              {report.summary?.visual_gate && <Badge variant="outline">Visual {report.summary.visual_gate}</Badge>}
+          <div className="mt-5">
+            <div className="cp-panel-top">
+              <p className="cp-kicker">PIPELINE RESULT</p>
+              <div className="cp-admin-row-buttons">
+                {report.decision && <StatusPill>{report.decision}</StatusPill>}
+                {report.ok === false && <StatusPill>FAILED</StatusPill>}
+                {report.summary?.operational_gate && <StatusPill>OPERATIONAL {report.summary.operational_gate}</StatusPill>}
+                {report.summary?.visual_gate && <StatusPill>VISUAL {report.summary.visual_gate}</StatusPill>}
+              </div>
             </div>
             {report.summary && (
-              <p className="mt-2 text-xs text-muted-foreground">
+              <p className="cp-fine">
                 Operational {report.summary.operational_score ?? 0}% · overall {report.summary.overall_score ?? 0} ·{" "}
                 {report.summary.passed ?? 0} passed · {report.summary.failed ?? 0} failed
               </p>
             )}
             {report.pipeline && (
-              <ul className="mt-2 space-y-1 text-xs text-muted-foreground">
-                {Object.entries(report.pipeline).slice(0, 6).map(([key, value]) => (
-                  <li key={key}>
-                    <span className="x1-track text-[10px] font-bold">{key.replace(/_/g, " ")}</span>{" "}
-                    {Array.isArray(value)
-                      ? `${value.length} item${value.length === 1 ? "" : "s"}`
-                      : value && typeof value === "object"
-                      ? `${Object.keys(value).length} fields`
-                      : String(value ?? "—")}
-                  </li>
-                ))}
+              <ul className="cp-admin-stat-row">
+                {Object.entries(report.pipeline)
+                  .slice(0, 6)
+                  .map(([key, value]) => (
+                    <li key={key}>
+                      <span className="cp-kicker">{key.replace(/_/g, " ")}</span>
+                      <span>
+                        {Array.isArray(value)
+                          ? `${value.length} item${value.length === 1 ? "" : "s"}`
+                          : value && typeof value === "object"
+                          ? `${Object.keys(value).length} fields`
+                          : String(value ?? "—")}
+                      </span>
+                    </li>
+                  ))}
               </ul>
             )}
-            {report.error && <p className="mt-2 text-xs text-destructive">{report.error}</p>}
-            {(report.blockers || report.open_defects || []).slice?.(0, 5).map?.((item, i) => (
-              <p key={i} className="mt-1 text-xs text-muted-foreground">• {typeof item === "string" ? item : item.label || item.id}</p>
-            ))}
+            {report.error && <p className="cp-admin-error">{report.error}</p>}
           </div>
         )}
-      </Card>
+      </Panel>
 
       <ArtifactFrame html={artifact} />
 
-      <Card className="p-5">
-        <p className="x1-track text-xs font-bold text-muted-foreground">Captured sources</p>
-        {projects !== null && projects.length > 0 && (
-          <ul className="mt-3 divide-y divide-border">
+      <Panel kicker="CAPTURED SOURCES">
+        {projects !== null && projects.length > 0 ? (
+          <div className="cp-asset-list">
             {projects.slice(0, 8).map((p) => (
-              <li key={p.id} className="flex flex-wrap items-center justify-between gap-2 py-2.5">
-                <span className="min-w-0 flex-1 truncate text-xs text-foreground">
-                  {p.name} <span className="text-muted-foreground">· {p.source_label || p.source_url || p.source_type}</span>
-                </span>
-                <span className="flex items-center gap-2 text-[10px] text-muted-foreground">
-                  <Badge variant="outline">{p.status}</Badge>
-                  {when(p.created_date)}
-                </span>
-              </li>
+              <div key={p.id}>
+                <span className="cp-lead-avatar">{String(p.source_type || "site").slice(0, 3).toUpperCase()}</span>
+                <div>
+                  <h3>{p.name}</h3>
+                  <p className="cp-fine">{p.source_label || p.source_url || p.source_type}</p>
+                  <p className="cp-fine">{when(p.created_date)}</p>
+                </div>
+                <StatusPill>{p.status}</StatusPill>
+              </div>
             ))}
-          </ul>
+          </div>
+        ) : (
+          <p className="cp-empty">Nothing captured yet.</p>
         )}
-      </Card>
+      </Panel>
     </div>
   );
 }

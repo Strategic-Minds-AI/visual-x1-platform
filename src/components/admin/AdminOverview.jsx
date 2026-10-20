@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { ArrowUpRight } from "lucide-react";
-import { Card } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import { ArrowUpRight, Activity } from "lucide-react";
+import { Panel, Metric, StatusPill, ErrorText } from "@/components/admin/adminUi";
 import { countRecords, pipelineError, readRecords, when } from "@/lib/adminPipelines";
 
 // Live command deck: real counts across the operating system, the newest runs and
@@ -33,59 +32,65 @@ export default function AdminOverview({ onNavigate }) {
 
   const metrics = counts
     ? [
-        ["Chain runs", counts.chains, "prompt"],
-        ["Captured sources", counts.clones, "clone"],
-        ["Production batches", counts.batches, "factory"],
-        ["Client intakes", counts.intakes, "clients"],
-        ["Brand assets", counts.assets, "assets"],
-        ["Deployments", counts.deployments, "releases"],
+        ["Chain Runs", counts.chains, "prompt", "Orchestrated runs recorded"],
+        ["Captured Sources", counts.clones, "clone", "Ingested sources on file"],
+        ["Production Batches", counts.batches, "factory", "Website factory batches"],
+        ["Client Intakes", counts.intakes, "clients", "Onboarding submissions"],
+        ["Brand Assets", counts.assets, "assets", "Generated brand artwork"],
+        ["Deployments", counts.deployments, "releases", "Recorded releases"],
       ]
     : [];
 
   return (
-    <div className="space-y-4">
-      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-        {counts === null ? (
-          <Card className="p-5">
-            <p className="text-xs text-muted-foreground">Reading live records…</p>
-          </Card>
-        ) : (
-          metrics.map(([label, value, section]) => (
-            <Card key={label} className="p-5">
-              <button onClick={() => onNavigate(section)} className="w-full text-left">
-                <p className="x1-track text-[10px] font-bold text-muted-foreground">{label}</p>
-                <p className="mt-2 font-heading text-2xl font-extrabold text-foreground">{value}</p>
-                <span className="mt-1 inline-flex items-center gap-1 text-[10px] text-primary">
-                  Open <ArrowUpRight className="h-3 w-3" />
-                </span>
-              </button>
-            </Card>
-          ))
-        )}
-      </div>
+    <div className="cp-admin-stack">
+      {counts === null ? (
+        <Panel kicker="COMMAND DECK">
+          <p className="cp-fine">Reading live records…</p>
+        </Panel>
+      ) : (
+        <div className="cp-metrics">
+          {metrics.map(([label, value, section, foot], index) => (
+            <Metric
+              key={label}
+              label={label}
+              value={String(value)}
+              foot={foot}
+              icon={index === 0 ? Activity : undefined}
+              accent={index === 0}
+              onClick={() => onNavigate(section)}
+            />
+          ))}
+        </div>
+      )}
 
-      {error && <p className="text-xs text-destructive">{error}</p>}
+      <ErrorText>{error}</ErrorText>
 
-      <Card className="p-5">
-        <p className="x1-track text-xs font-bold text-muted-foreground">Newest chain runs</p>
+      <Panel
+        kicker="NEWEST CHAIN RUNS"
+        aside={<span className="cp-fine">Live runs · open a record to inspect</span>}
+      >
         {runs.length === 0 ? (
-          <p className="mt-3 text-xs text-muted-foreground">
-            No runs yet. Open the prompt system and run a chain to see it recorded here.
+          <p className="cp-empty">
+            No runs yet. Open the Prompt System and run a chain to see it recorded here.
           </p>
         ) : (
-          <ul className="mt-3 divide-y divide-border">
+          <div className="cp-asset-list">
             {runs.map((run) => (
-              <li key={run.id} className="flex flex-wrap items-center justify-between gap-2 py-2.5">
-                <span className="min-w-0 flex-1 truncate text-xs text-foreground">{run.request}</span>
-                <span className="flex items-center gap-2 text-[10px] text-muted-foreground">
-                  <Badge variant="outline">{run.decision || run.status}</Badge>
-                  {when(run.created_date)}
-                </span>
-              </li>
+              <div key={run.id}>
+                <span className="cp-lead-avatar">RUN</span>
+                <div>
+                  <h3>{run.request}</h3>
+                  <p className="cp-fine">{when(run.created_date)}</p>
+                </div>
+                <StatusPill>{run.decision || run.status}</StatusPill>
+              </div>
             ))}
-          </ul>
+          </div>
         )}
-      </Card>
+        <button className="cp-text-link mt-4" onClick={() => onNavigate("prompt")}>
+          OPEN PROMPT SYSTEM <ArrowUpRight size={13} />
+        </button>
+      </Panel>
     </div>
   );
 }

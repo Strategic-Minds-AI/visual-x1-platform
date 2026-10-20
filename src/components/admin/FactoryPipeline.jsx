@@ -1,11 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Factory, RefreshCw } from "lucide-react";
-import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import ArtifactFrame from "@/components/admin/ArtifactFrame";
+import { Panel, PrimaryButton, LinkButton, ErrorText, StatusPill } from "@/components/admin/adminUi";
 import { pipelineError, readRecords, runPipeline, when } from "@/lib/adminPipelines";
 
 // Technology 3 of 3: the website factory. One sentence becomes a production batch
@@ -56,23 +52,25 @@ export default function FactoryPipeline() {
   };
 
   return (
-    <div className="space-y-4">
-      <Card className="p-5">
-        <div className="flex items-center gap-2">
-          <Factory className="h-4 w-4 text-primary" />
-          <span className="x1-track text-xs font-bold text-muted-foreground">Website Factory</span>
-        </div>
-
-        <Textarea
-          className="mt-4"
+    <div className="cp-admin-stack">
+      <Panel kicker="WEBSITE FACTORY" title="One sentence into a production batch">
+        <textarea
+          className="cp-field"
           rows={3}
           value={sentence}
           onChange={(e) => setSentence(e.target.value)}
           placeholder="One sentence describing the business and what the site must achieve."
         />
-        <div className="mt-3 grid gap-3 sm:grid-cols-3">
-          <Input value={industry} onChange={(e) => setIndustry(e.target.value)} placeholder="Industry" />
-          <Input
+        <div className="cp-admin-grid">
+          <input
+            className="cp-field"
+            value={industry}
+            onChange={(e) => setIndustry(e.target.value)}
+            placeholder="Industry"
+            aria-label="Industry"
+          />
+          <input
+            className="cp-field"
             type="number"
             min="1"
             value={variants}
@@ -80,7 +78,8 @@ export default function FactoryPipeline() {
             aria-label="SEO variants"
             placeholder="SEO variants"
           />
-          <Input
+          <input
+            className="cp-field"
             type="number"
             min="0"
             value={backlinks}
@@ -90,57 +89,54 @@ export default function FactoryPipeline() {
           />
         </div>
 
-        <Button className="mt-4" onClick={launch} disabled={sentence.trim().length < 10 || busy}>
-          <Factory /> {busy ? "Building batch…" : "Launch production batch"}
-        </Button>
+        <div className="cp-admin-actions">
+          <PrimaryButton onClick={launch} disabled={sentence.trim().length < 10 || busy}>
+            <Factory size={14} /> {busy ? "Building batch…" : "Launch production batch"}
+          </PrimaryButton>
+        </div>
 
-        {error && <p className="mt-3 text-xs text-destructive">{error}</p>}
+        <ErrorText>{error}</ErrorText>
 
         {result && (
-          <div className="mt-4 flex flex-wrap items-center gap-2 rounded-xl border border-border p-4 text-xs">
-            <Badge>{result.batch_id ? "Batch created" : "No batch"}</Badge>
-            {result.quality_score !== undefined && <Badge variant="outline">QA {result.quality_score}</Badge>}
-            <span className="text-muted-foreground">
-              {(artifact.length || 0).toLocaleString()} characters rendered
-            </span>
+          <div className="cp-panel-top mt-5">
+            <p className="cp-kicker">BATCH RESULT</p>
+            <div className="cp-admin-row-buttons">
+              <StatusPill>{result.batch_id ? "BATCH CREATED" : "NO BATCH"}</StatusPill>
+              {result.quality_score !== undefined && <StatusPill>QA {result.quality_score}</StatusPill>}
+              <span className="cp-fine">{(artifact.length || 0).toLocaleString()} characters rendered</span>
+            </div>
           </div>
         )}
-      </Card>
+      </Panel>
 
       <ArtifactFrame html={artifact} />
 
-      <Card className="p-5">
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <p className="x1-track text-xs font-bold text-muted-foreground">Live production batches</p>
-          <Button variant="ghost" onClick={loadBatches}>
-            <RefreshCw /> Refresh
-          </Button>
-        </div>
+      <Panel
+        kicker="LIVE PRODUCTION BATCHES"
+        aside={<LinkButton onClick={loadBatches}><RefreshCw size={13} /> REFRESH</LinkButton>}
+      >
         {batches === null ? (
-          <p className="mt-3 text-xs text-muted-foreground">Loading batches…</p>
+          <p className="cp-empty">Loading batches…</p>
         ) : batches.length === 0 ? (
-          <p className="mt-3 text-xs text-muted-foreground">No production batches yet. Launch one above.</p>
+          <p className="cp-empty">No production batches yet. Launch one above.</p>
         ) : (
-          <ul className="mt-3 divide-y divide-border">
+          <div className="cp-asset-list">
             {batches.map((batch) => (
-              <li key={batch.id} className="flex flex-wrap items-center justify-between gap-2 py-3">
-                <span className="min-w-0 flex-1">
-                  <span className="block truncate text-xs text-foreground">{batch.sentence}</span>
-                  <span className="text-[10px] text-muted-foreground">
-                    {batch.industry || "General"} · QA {batch.quality_score || 0} · {when(batch.created_date)}
-                  </span>
-                </span>
-                <span className="flex items-center gap-2">
-                  <Badge variant="outline">{batch.status}</Badge>
-                  <Badge variant={batch.visual_approval === "approved" ? "default" : "secondary"}>
-                    {batch.visual_approval}
-                  </Badge>
-                </span>
-              </li>
+              <div key={batch.id}>
+                <span className="cp-lead-avatar">BATCH</span>
+                <div>
+                  <h3>{batch.sentence}</h3>
+                  <p className="cp-fine">
+                    {batch.industry || "General"} · QA {batch.quality_score || 0} · {batch.status}
+                  </p>
+                  <p className="cp-fine">{when(batch.created_date)}</p>
+                </div>
+                <StatusPill>{batch.visual_approval}</StatusPill>
+              </div>
             ))}
-          </ul>
+          </div>
         )}
-      </Card>
+      </Panel>
     </div>
   );
 }

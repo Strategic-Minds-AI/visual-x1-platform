@@ -1,11 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { ArrowRight, FileCode2, Play, Sparkles } from "lucide-react";
-import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
+import { Play, Sparkles } from "lucide-react";
 import ArtifactFrame from "@/components/admin/ArtifactFrame";
+import { Panel, PrimaryButton, OutlineButton, LinkButton, ErrorText, StatusPill } from "@/components/admin/adminUi";
 import { pipelineError, readRecords, runPipeline, when } from "@/lib/adminPipelines";
 
 const CATEGORIES = ["general", "technical", "content", "ecommerce", "local", "ai_native"];
@@ -82,98 +78,109 @@ export default function PromptPipeline() {
   };
 
   return (
-    <div className="space-y-4">
-      <Card className="p-5">
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <div className="flex items-center gap-2">
-            <Sparkles className="h-4 w-4 text-primary" />
-            <span className="x1-track text-xs font-bold text-muted-foreground">Prompt System</span>
+    <div className="cp-admin-stack">
+      <Panel
+        kicker="PROMPT SYSTEM"
+        title="Brief, chain, artifact"
+        aside={
+          <div className="cp-quote-fields cp-admin-inline-field">
+            <select value={category} onChange={(e) => setCategory(e.target.value)} aria-label="Prompt domain">
+              {CATEGORIES.map((c) => (
+                <option key={c} value={c}>
+                  {c}
+                </option>
+              ))}
+            </select>
           </div>
-          <select
-            value={category}
-            onChange={(e) => setCategory(e.target.value)}
-            aria-label="Prompt domain"
-            className="rounded-full border border-border bg-secondary px-3 py-1.5 text-xs text-foreground"
-          >
-            {CATEGORIES.map((c) => (
-              <option key={c} value={c}>{c}</option>
-            ))}
-          </select>
-        </div>
-
-        <Textarea
-          className="mt-4"
+        }
+      >
+        <textarea
+          className="cp-field"
           rows={3}
           value={request}
           onChange={(e) => setRequest(e.target.value)}
           placeholder="Describe what to build. Module A reads this as the mission brief."
         />
 
-        <div className="mt-4 flex flex-wrap gap-2">
-          <Button onClick={draft} disabled={request.trim().length < 8 || Boolean(busy)}>
-            {busy === "draft" ? "Drafting…" : "1 · Draft the prompt"}
-          </Button>
-          <Button variant="outline" onClick={execute} disabled={(prompt || request).trim().length < 8 || Boolean(busy)}>
-            <Play /> {busy === "run" ? "Running chain…" : "2 · Run the chain"}
-          </Button>
-          <Button variant="outline" onClick={render} disabled={!(run || prompt) || Boolean(busy)}>
-            <FileCode2 /> {busy === "render" ? "Rendering…" : "3 · Render artifact"}
-          </Button>
+        <div className="cp-admin-actions">
+          <OutlineButton onClick={draft} disabled={request.trim().length < 8 || Boolean(busy)}>
+            <Sparkles size={14} /> {busy === "draft" ? "Drafting…" : "1 · Draft the prompt"}
+          </OutlineButton>
+          <PrimaryButton onClick={execute} disabled={(prompt || request).trim().length < 8 || Boolean(busy)}>
+            <Play size={14} /> {busy === "run" ? "Running chain…" : "2 · Run the chain"}
+          </PrimaryButton>
+          <OutlineButton onClick={render} disabled={!(run || prompt) || Boolean(busy)}>
+            {busy === "render" ? "Rendering…" : "3 · Render artifact"}
+          </OutlineButton>
         </div>
 
-        {error && <p className="mt-3 text-xs text-destructive">{error}</p>}
+        <ErrorText>{error}</ErrorText>
 
         {prompt && (
-          <div className="mt-4">
-            <p className="x1-track text-[10px] font-bold text-muted-foreground">Advanced prompt</p>
-            <pre className="mt-2 max-h-52 overflow-auto whitespace-pre-wrap rounded-xl bg-secondary/70 p-4 text-xs leading-relaxed text-foreground">
-              {prompt}
-            </pre>
+          <div className="mt-5">
+            <p className="cp-kicker mb-2">ADVANCED PROMPT</p>
+            <pre className="cp-admin-pre">{prompt}</pre>
           </div>
         )}
 
         {run?.run && (
-          <div className="mt-4 space-y-2 rounded-xl border border-border p-4">
-            <div className="flex flex-wrap items-center gap-2">
-              <Badge>{run.run.decision || run.run.status}</Badge>
-              <span className="text-xs text-muted-foreground">
-                {run.mission_id} · {run.run.completed_count || 0}/{run.run.stage_count || 0} stages · repairs{" "}
-                {run.run.repair_cycles_used || 0}
-              </span>
+          <div className="mt-5">
+            <div className="cp-panel-top">
+              <p className="cp-kicker">CHAIN RESULT</p>
+              <StatusPill>{run.run.decision || run.run.status}</StatusPill>
             </div>
-            {run.run.decision_reason && <p className="text-xs text-muted-foreground">{run.run.decision_reason}</p>}
-            <p className="text-xs text-muted-foreground">
-              Artifact: {run.artifact?.artifact_type || "none"} · {(run.artifact?.length || 0).toLocaleString()} characters
-            </p>
+            {run.run.decision_reason && <p className="cp-fine">{run.run.decision_reason}</p>}
+            <ul className="cp-admin-stat-row">
+              <li>
+                <span className="cp-kicker">MISSION</span>
+                <span>{run.mission_id}</span>
+              </li>
+              <li>
+                <span className="cp-kicker">STAGES</span>
+                <span>
+                  {run.run.completed_count || 0} of {run.run.stage_count || 0}
+                </span>
+              </li>
+              <li>
+                <span className="cp-kicker">REPAIR CYCLES USED</span>
+                <span>{run.run.repair_cycles_used || 0}</span>
+              </li>
+              <li>
+                <span className="cp-kicker">ARTIFACT</span>
+                <span>
+                  {run.artifact?.artifact_type || "none"} · {(run.artifact?.length || 0).toLocaleString()} characters
+                </span>
+              </li>
+            </ul>
           </div>
         )}
-      </Card>
+      </Panel>
 
       <ArtifactFrame html={artifact} />
 
-      <Card className="p-5">
-        <p className="x1-track text-xs font-bold text-muted-foreground">Recent chain runs</p>
+      <Panel
+        kicker="RECENT CHAIN RUNS"
+        aside={<LinkButton onClick={loadRuns}>REFRESH</LinkButton>}
+      >
         {runs === null ? (
-          <p className="mt-3 text-xs text-muted-foreground">Loading live runs…</p>
+          <p className="cp-empty">Loading live runs…</p>
         ) : runs.length === 0 ? (
-          <p className="mt-3 text-xs text-muted-foreground">No chain runs recorded for this account yet.</p>
+          <p className="cp-empty">No chain runs recorded for this account yet.</p>
         ) : (
-          <ul className="mt-3 divide-y divide-border">
+          <div className="cp-asset-list">
             {runs.map((item) => (
-              <li key={item.id} className="flex flex-wrap items-center justify-between gap-2 py-2.5">
-                <span className="min-w-0 flex-1 truncate text-xs text-foreground">{item.request}</span>
-                <span className="flex items-center gap-2 text-[10px] text-muted-foreground">
-                  <Badge variant="outline">{item.decision || item.status}</Badge>
-                  {when(item.created_date)}
-                </span>
-              </li>
+              <div key={item.id}>
+                <span className="cp-lead-avatar">RUN</span>
+                <div>
+                  <h3>{item.request}</h3>
+                  <p className="cp-fine">{when(item.created_date)}</p>
+                </div>
+                <StatusPill>{item.decision || item.status}</StatusPill>
+              </div>
             ))}
-          </ul>
+          </div>
         )}
-        <Button variant="ghost" className="mt-3" onClick={loadRuns}>
-          Refresh <ArrowRight />
-        </Button>
-      </Card>
+      </Panel>
     </div>
   );
 }
