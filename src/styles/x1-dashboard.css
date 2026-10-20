@@ -1,0 +1,551 @@
+/* The Visual Editor's project dashboard.
+ *
+ * Opened from the editor's top bar, it takes the editor screen and keeps the split: its
+ * menu down the left, the selected section's page beside it, the composer column and the
+ * project untouched. Everything here is the console's own palette and control language,
+ * scoped under .cp-site so it reads as part of the operator console.
+ */
+
+/* ── the Dashboard button ────────────────────────────────────────────────────
+   The largest control on the top bar, sitting immediately right of the canvas views
+   where the reference places it. It is bigger than the view pills on purpose: it is
+   the way into everything this project can be managed by. */
+.cp-site .ve-dash-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  height: 38px;
+  padding: 0 20px;
+  border-radius: 100px;
+  border: 1px solid rgba(66, 168, 227, .4);
+  background: rgba(8, 23, 40, .72);
+  color: #d7fbff;
+  font: inherit;
+  font-size: 11px;
+  font-weight: 850;
+  letter-spacing: .15em;
+  text-transform: uppercase;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: border-color 180ms ease, background 180ms ease, box-shadow 180ms ease;
+}
+
+.cp-site .ve-dash-btn:hover {
+  border-color: var(--smai-cyan, #02cfff);
+  box-shadow: 0 0 22px rgba(12, 179, 255, .26);
+}
+
+.cp-site .ve-dash-btn.is-open {
+  border-color: var(--smai-cyan, #02cfff);
+  background: linear-gradient(115deg, rgba(2, 207, 255, .3), rgba(18, 140, 255, .24));
+  box-shadow: 0 0 24px rgba(12, 179, 255, .32);
+}
+
+/* ── the dashboard: its menu, then the selected section's page ──────────────── */
+.cp-site .ve-dash {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  overflow: hidden;
+}
+
+.cp-site .ve-dash-nav {
+  width: 244px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  border-right: 1px solid rgba(91, 175, 230, .16);
+  background: rgba(3, 11, 22, .34);
+}
+
+.cp-site .ve-dash-brand {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 12px 12px 8px;
+}
+
+.cp-site .ve-dash-title {
+  font-size: 9px;
+  font-weight: 850;
+  letter-spacing: .18em;
+  color: #9ec9dd;
+}
+
+.cp-site .ve-dash-search {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin: 0 12px 9px;
+  height: 33px;
+  padding: 0 11px;
+  border: 1px solid rgba(66, 168, 227, .3);
+  border-radius: 10px;
+  background: rgba(6, 17, 31, .6);
+  color: #8fb0c4;
+}
+
+.cp-site .ve-dash-search input {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  outline: none;
+  background: transparent;
+  color: #d9f6ff;
+  font: inherit;
+  font-size: 12px;
+}
+
+.cp-site .ve-dash-search input::placeholder {
+  color: #7d9db2;
+}
+
+.cp-site .ve-dash-list {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 0 8px 10px;
+}
+
+.cp-site .ve-dash-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 9px 11px;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  background: transparent;
+  color: #bcd7e6;
+  font: inherit;
+  font-size: 12.5px;
+  font-weight: 700;
+  text-align: left;
+  cursor: pointer;
+  transition: background 160ms ease, color 160ms ease, border-color 160ms ease;
+}
+
+.cp-site .ve-dash-item:hover {
+  background: rgba(12, 81, 113, .34);
+  color: #eaf9ff;
+}
+
+.cp-site .ve-dash-item.is-active {
+  background: linear-gradient(95deg, rgba(6, 104, 152, .42), rgba(11, 56, 84, .28));
+  border-color: rgba(64, 192, 254, .45);
+  color: #d7fbff;
+}
+
+.cp-site .ve-dash-item span {
+  flex: 1;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.cp-site .ve-dash-item em {
+  flex-shrink: 0;
+  font-style: normal;
+  font-size: 8px;
+  font-weight: 850;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: #02050d;
+  background: linear-gradient(115deg, var(--smai-cyan, #02cfff), #7cc4ff);
+  border-radius: 100px;
+  padding: 2px 7px;
+}
+
+.cp-site .ve-dash-none {
+  margin: 6px 11px;
+  font-size: 11.5px;
+  color: #86a5b8;
+}
+
+.cp-site .ve-dash-scope {
+  margin: 0;
+  padding: 11px 12px 13px;
+  border-top: 1px solid rgba(91, 175, 230, .14);
+  font-size: 9.5px;
+  line-height: 1.6;
+  letter-spacing: .04em;
+  color: #86a5b8;
+}
+
+.cp-site .ve-dash-body {
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 17px 19px 28px;
+}
+
+/* ── what a section is made of: a title, measured facts, and rows of records ─── */
+.cp-site .ve-sec {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.cp-site .ve-sec-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.cp-site .ve-sec-title {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 800;
+  color: #eaf9ff;
+}
+
+.cp-site .ve-sec-note {
+  margin: 5px 0 0;
+  font-size: 11.5px;
+  line-height: 1.7;
+  color: #9bbdd0;
+  max-width: 74ch;
+}
+
+.cp-site .ve-sec-actions {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  flex-wrap: wrap;
+}
+
+.cp-site .ve-metrics {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(158px, 1fr));
+  gap: 10px;
+}
+
+.cp-site .ve-metric {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 12px 14px;
+  border: 1px solid rgba(64, 192, 254, .2);
+  border-radius: 13px;
+  background: rgba(3, 11, 22, .5);
+}
+
+.cp-site .ve-metric em {
+  font-style: normal;
+  font-size: 9px;
+  font-weight: 850;
+  letter-spacing: .14em;
+  color: #7fa5b1;
+}
+
+.cp-site .ve-metric strong {
+  font-size: 21px;
+  font-weight: 800;
+  color: #d7fbff;
+}
+
+.cp-site .ve-metric small {
+  font-size: 10.5px;
+  line-height: 1.55;
+  color: #8fb0c4;
+}
+
+.cp-site .ve-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.cp-site .ve-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 13px;
+  border: 1px solid rgba(64, 192, 254, .18);
+  border-radius: 12px;
+  background: rgba(6, 23, 38, .5);
+}
+
+.cp-site .ve-row-main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.cp-site .ve-row-name {
+  font-size: 12.5px;
+  font-weight: 730;
+  color: #eaf9ff;
+  overflow-wrap: anywhere;
+}
+
+.cp-site .ve-row-detail {
+  font-size: 11px;
+  line-height: 1.6;
+  color: #9bbdd0;
+  overflow-wrap: anywhere;
+}
+
+.cp-site .ve-row-meta {
+  flex-shrink: 0;
+  font-size: 10px;
+  color: #7fa5b1;
+  white-space: nowrap;
+}
+
+.cp-site .ve-note {
+  margin: 0;
+  font-size: 11.5px;
+  line-height: 1.75;
+  color: #9bbdd0;
+  max-width: 88ch;
+}
+
+.cp-site .ve-fail {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin: 0;
+  font-size: 11.5px;
+  color: #ff9d9d;
+}
+
+.cp-site .ve-loading {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin: 0;
+  font-size: 11.5px;
+  color: #8fb0c4;
+}
+
+.cp-site .ve-copy {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 10px;
+  border: 1px solid rgba(64, 192, 254, .4);
+  border-radius: 9px;
+  background: rgba(12, 39, 61, .6);
+  color: #cfe6f4;
+  font: inherit;
+  font-size: 9px;
+  font-weight: 850;
+  letter-spacing: .1em;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.cp-site .ve-copy:hover {
+  border-color: var(--smai-cyan, #02cfff);
+  color: #d7fbff;
+}
+
+.cp-site .ve-code {
+  margin: 0;
+  padding: 11px 13px;
+  border: 1px solid rgba(64, 192, 254, .2);
+  border-radius: 12px;
+  background: rgba(2, 7, 15, .72);
+  color: #cfe6f4;
+  font: 11px/1.7 ui-monospace, SFMono-Regular, Menlo, monospace;
+  white-space: pre-wrap;
+  word-break: break-word;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.cp-site .ve-linkout {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+  font-size: 9.5px;
+  font-weight: 850;
+  letter-spacing: .1em;
+  color: #8fe4ff;
+  text-decoration: none;
+}
+
+.cp-site .ve-linkout:hover {
+  color: #d7fbff;
+}
+
+.cp-site .ve-badge {
+  flex-shrink: 0;
+  padding: 3px 8px;
+  border: 1px solid rgba(64, 192, 254, .35);
+  border-radius: 100px;
+  font-size: 9px;
+  font-weight: 850;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: #8fe4ff;
+}
+
+.cp-site .ve-badge.is-off {
+  border-color: rgba(158, 182, 202, .3);
+  color: #8fb0c4;
+}
+
+.cp-site .ve-badge.is-warn {
+  border-color: rgba(255, 157, 157, .42);
+  color: #ff9d9d;
+}
+
+.cp-site .ve-fields {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 10px;
+}
+
+.cp-site .ve-fields-row .ve-field {
+  min-width: 190px;
+}
+
+.cp-site .ve-field {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  flex: 1;
+  min-width: 150px;
+}
+
+.cp-site .ve-field > span {
+  font-size: 9px;
+  font-weight: 850;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: #79adc0;
+}
+
+.cp-site .ve-field input,
+.cp-site .ve-field select,
+.cp-site .ve-field textarea {
+  width: 100%;
+  padding: 9px 11px;
+  border: 1px solid rgba(79, 175, 232, .36);
+  border-radius: 10px;
+  background: #061a2b;
+  color: #d9f6ff;
+  font: inherit;
+  font-size: 12px;
+}
+
+.cp-site .ve-field textarea {
+  min-height: 96px;
+  resize: vertical;
+}
+
+.cp-site .ve-field input::placeholder,
+.cp-site .ve-field textarea::placeholder {
+  color: #7d9db2;
+}
+
+.cp-site .ve-field input:focus-visible,
+.cp-site .ve-field select:focus-visible,
+.cp-site .ve-field textarea:focus-visible {
+  outline: 2px solid #9afac1;
+  outline-offset: 2px;
+}
+
+.cp-site .ve-check {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 12px;
+  color: #cfe6f4;
+  cursor: pointer;
+}
+
+.cp-site .ve-check input {
+  width: 16px;
+  height: 16px;
+  accent-color: #02cfff;
+}
+
+.cp-site .ve-meter {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  flex-shrink: 0;
+  font-size: 11px;
+  color: #cfe6f4;
+}
+
+.cp-site .ve-meter-track {
+  display: block;
+  width: 92px;
+  height: 6px;
+  border-radius: 100px;
+  background: rgba(64, 192, 254, .16);
+  overflow: hidden;
+}
+
+.cp-site .ve-meter-track i {
+  display: block;
+  height: 100%;
+  background: linear-gradient(90deg, #02cfff, #7cc4ff);
+}
+
+/* A handset: the menu turns into a strip above the page, so a section keeps the whole
+   width for its records. */
+@media (max-width: 900px) {
+  .cp-site .ve-dash {
+    flex-direction: column;
+  }
+  .cp-site .ve-dash-nav {
+    width: 100%;
+    border-right: 0;
+    border-bottom: 1px solid rgba(91, 175, 230, .16);
+  }
+  .cp-site .ve-dash-list {
+    flex-direction: row;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding-bottom: 8px;
+  }
+  .cp-site .ve-dash-item {
+    width: auto;
+    flex-shrink: 0;
+  }
+  .cp-site .ve-dash-item span {
+    overflow: visible;
+  }
+  .cp-site .ve-dash-scope {
+    display: none;
+  }
+  .cp-site .ve-dash-body {
+    padding: 14px 14px 22px;
+  }
+}
+
+@media (max-width: 700px) {
+  .cp-site .ve-dash-btn {
+    height: 34px;
+    padding: 0 13px;
+    font-size: 10px;
+    gap: 7px;
+  }
+  .cp-site .ve-row {
+    flex-wrap: wrap;
+  }
+  .cp-site .ve-row-meta {
+    white-space: normal;
+  }
+}

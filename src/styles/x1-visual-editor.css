@@ -856,8 +856,8 @@
     padding: 0 9px;
     gap: 7px;
   }
-  .cp-site .ve-taskbar-tray .ve-devices,
-  .cp-site .ve-taskbar-tray .ve-icon-btn {
+  .cp-site .ve-taskbar-tools .ve-devices,
+  .cp-site .ve-taskbar-tools .ve-icon-btn {
     display: none;
   }
   .cp-site .ve-taskbar-tools .ve-pill-label {
@@ -1249,3 +1249,7 @@
     padding: 18px;
   }
 }
+
+/* The project dashboard's own styles — the Dashboard button, the menu, the section
+   panels and their controls — live in src/styles/x1-dashboard.css, imported by the
+   dashboard itself. */

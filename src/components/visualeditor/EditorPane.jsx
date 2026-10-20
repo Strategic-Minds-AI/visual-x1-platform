@@ -16,6 +16,8 @@ import EditorVercelMenu from "@/components/visualeditor/EditorVercelMenu";
 import useEditorTools from "@/hooks/useEditorTools";
 import useVercelEditor from "@/hooks/useVercelEditor";
 import useGithubEditor from "@/hooks/useGithubEditor";
+import ProjectDashboard from "@/components/visualeditor/dashboard/ProjectDashboard";
+import useProjectSettings, { useAutoVerify, useDeviceSetting } from "@/hooks/useProjectSettings";
 import { MOBILE_TABS } from "@/components/visualeditor/editorNav";
 
 const STATUS = (engine, sending) => {
@@ -61,6 +63,14 @@ export default function EditorPane({
   const [mobilePane, setMobilePane] = useState("composer");
   const [refreshTick, setRefreshTick] = useState(0);
   const [sending, setSending] = useState(false);
+
+  // This project's own dashboard, and its own settings — the device the canvas opens
+  // in and the check that runs after each build both come from here.
+  const [dashboardOpen, setDashboardOpen] = useState(false);
+  const [dashboardSection, setDashboardSection] = useState("overview");
+  const settings = useProjectSettings(projectName);
+  useDeviceSetting(settings, setDevice, !initial?.device);
+  useAutoVerify(engine.previewHtml, settings.settings.autoVerify, tools.runTest);
 
   const busy =
     sending || engine.loading.render || engine.loading.convert || engine.loading.simulate || engine.loading.chain;
@@ -205,6 +215,10 @@ export default function EditorPane({
         projectName={projectName}
         panelCollapsed={panelCollapsed}
         onTogglePanel={() => setPanelCollapsed((v) => !v)}
+        canvasView={canvasView}
+        onCanvas={pickCanvas}
+        dashboardOpen={dashboardOpen}
+        onToggleDashboard={() => setDashboardOpen((v) => !v)}
       />
 
       <div className="ve-split" data-pane={mobilePane}>
@@ -244,7 +258,31 @@ export default function EditorPane({
           {/* Every editor tool sits directly over the editor screen, in one bar. */}
           <EditorToolbar {...toolbar} />
 
-          {canvasView === "preview" && (
+          {/* The project's dashboard takes the editor screen, beside its own menu: the
+              chat panel and this project stay exactly where they were. */}
+          {dashboardOpen && (
+            <ProjectDashboard
+              ctx={{
+                projectName,
+                engine,
+                tools,
+                vercel,
+                github,
+                settings,
+                setDevice,
+                tabs,
+                openChain: () => {
+                  pickCanvas("chain");
+                  engine.handleAddToChain();
+                },
+              }}
+              section={dashboardSection}
+              onSection={setDashboardSection}
+              onClose={() => setDashboardOpen(false)}
+            />
+          )}
+
+          {!dashboardOpen && canvasView === "preview" && (
             <EditorCanvas
               device={device}
               previewHtml={engine.previewHtml}
@@ -253,12 +291,12 @@ export default function EditorPane({
               onPick={tools.handlePicked}
             />
           )}
-          {canvasView === "simulator" && (
+          {!dashboardOpen && canvasView === "simulator" && (
             <div className="ve-scroll-soft">
               <SimulatorResults result={engine.simulatorResult} onUseEnhanced={engine.useEnhanced} />
             </div>
           )}
-          {canvasView === "chain" && (
+          {!dashboardOpen && canvasView === "chain" && (
             <div className="ve-scroll-soft">
               <PromptChainBuilder
                 chain={engine.chain}
@@ -291,8 +329,6 @@ export default function EditorPane({
       </nav>
 
       <EditorTaskbar
-        canvasView={canvasView}
-        onCanvas={pickCanvas}
         device={device}
         onDevice={setDevice}
         onRefresh={() => setRefreshTick((t) => t + 1)}

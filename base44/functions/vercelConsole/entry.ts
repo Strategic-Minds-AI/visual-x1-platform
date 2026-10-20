@@ -209,6 +209,25 @@ export default async function (req) {
       });
     }
 
+    if (action === 'domains') {
+      if (!projectRef) return Response.json({ ok: false, error: 'Which project?' }, { status: 400 });
+      const p = await call(`/v9/projects/${encodeURIComponent(projectRef)}`, { team });
+      const d = await call(`/v9/projects/${encodeURIComponent(p.id)}/domains`, { team, query: { limit: 50 } });
+      const domains = (d.domains || []).map((x) => ({
+        name: x.name || '',
+        verified: Boolean(x.verified),
+        redirect: x.redirect || '',
+        git_branch: x.gitBranch || null,
+        created_at: x.createdAt ? new Date(x.createdAt).toISOString() : null
+      }));
+      return Response.json({
+        ok: true,
+        project: projectSummary(p),
+        domains,
+        method: 'Read from Vercel for the selected project.'
+      });
+    }
+
     return Response.json({ ok: false, error: `Unknown action: ${action}` }, { status: 400 });
   } catch (error) {
     return Response.json({

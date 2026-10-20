@@ -1,7 +1,6 @@
 import React from "react";
 import { Monitor, RefreshCw, Smartphone, Tablet } from "lucide-react";
 import EditorSearch from "@/components/visualeditor/EditorSearch";
-import { CANVAS_VIEWS } from "@/components/visualeditor/editorNav";
 
 const DEVICES = [
   { id: "desktop", label: "Desktop preview", Icon: Monitor },
@@ -10,14 +9,13 @@ const DEVICES = [
 ];
 
 /**
- * The editor's bottom bar, in the shape of a desktop's own: the canvas views pinned
- * on the left (Preview, Simulator, Chain), the search in the middle, and the canvas
- * tools over a state tray on the right. It stays at the foot of the workspace, so a
- * tool is never further than the bottom edge of the screen it is used on.
+ * The editor's bottom bar, in the shape of a desktop's own: the device frames and the
+ * refresh on the left, the search in the middle, and the state tray on the right. The
+ * canvas views and the project dashboard live on the top bar, where the reference
+ * places them. The bar stays at the foot of the workspace, so a tool is never further
+ * than the bottom edge of the screen it is used on.
  */
 export default function EditorTaskbar({
-  canvasView,
-  onCanvas,
   device,
   onDevice,
   onRefresh,
@@ -31,28 +29,6 @@ export default function EditorTaskbar({
   return (
     <footer className="ve-taskbar">
       <div className="ve-taskbar-tools">
-        <div className="ve-pill-group" role="group" aria-label="Canvas view">
-          {CANVAS_VIEWS.map(({ id, label, Icon }) => (
-            <button
-              key={id}
-              type="button"
-              onClick={() => onCanvas(id)}
-              className={`ve-pill${canvasView === id ? " selected" : ""}`}
-              aria-pressed={canvasView === id}
-              title={label}
-            >
-              <Icon size={14} />
-              <span className="ve-pill-label">{label.toUpperCase()}</span>
-            </button>
-          ))}
-        </div>
-      </div>
-
-      <div className="ve-taskbar-search">
-        <EditorSearch tabs={tabs} onBuild={onBuild} onAsk={onAsk} onSelectTab={onSelectTab} />
-      </div>
-
-      <div className="ve-taskbar-tray">
         <div className="ve-devices" role="group" aria-label="Preview device">
           {DEVICES.map(({ id, label, Icon }) => (
             <button
@@ -71,6 +47,13 @@ export default function EditorTaskbar({
         <button className="ve-icon-btn" onClick={onRefresh} title="Refresh the canvas" aria-label="Refresh the canvas">
           <RefreshCw size={15} />
         </button>
+      </div>
+
+      <div className="ve-taskbar-search">
+        <EditorSearch tabs={tabs} onBuild={onBuild} onAsk={onAsk} onSelectTab={onSelectTab} />
+      </div>
+
+      <div className="ve-taskbar-tray">
         <span className={`ve-status${busy ? " is-busy" : ""}`}>
           <i />
           {status}
