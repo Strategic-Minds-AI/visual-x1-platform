@@ -8,6 +8,8 @@ import QAPanel from "@/components/system/QAPanel";
 import CommunicationBus from "@/components/system/CommunicationBus";
 import MemoryPanel from "@/components/system/MemoryPanel";
 import AgentRoster from "@/components/system/AgentRoster";
+import SecretsVault from "@/components/system/SecretsVault";
+import QARefinementPanel from "@/components/system/QARefinementPanel";
 
 export default function SystemControl() {
   return (
@@ -24,8 +26,8 @@ export default function SystemControl() {
                 <Cpu className="w-4.5 h-4.5 text-primary-foreground" />
               </div>
               <div>
-                <h1 className="font-heading text-lg font-semibold leading-none">X1 System Control</h1>
-                <p className="text-xs text-muted-foreground">Converged operating system</p>
+                <h1 className="font-heading text-lg font-semibold leading-none">Visual X — System Control</h1>
+                <p className="text-xs text-muted-foreground">Autonomous quality operating system</p>
               </div>
             </div>
             <Badge variant="outline" className="text-xs ml-2">Self-Operational</Badge>
@@ -49,6 +51,12 @@ export default function SystemControl() {
         <div className="grid gap-6 lg:grid-cols-2">
           <GuardianPanel />
           <QAPanel />
+        </div>
+
+        {/* Secrets Vault + QA Feedback Loop */}
+        <div className="grid gap-6 lg:grid-cols-2">
+          <SecretsVault />
+          <QARefinementPanel />
         </div>
 
         {/* Communication Bus — full width */}

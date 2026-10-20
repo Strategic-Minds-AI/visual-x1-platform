@@ -1,0 +1,69 @@
+{
+  "name": "IndustryCategory",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Category name (e.g., E-commerce, SaaS, Healthcare)"
+    },
+    "slug": {
+      "type": "string",
+      "description": "URL-safe unique identifier"
+    },
+    "parent_slug": {
+      "type": "string",
+      "description": "Slug of the parent category (empty for top-level industries)"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "industry",
+        "sub_industry",
+        "site_type"
+      ],
+      "default": "industry",
+      "description": "Level in the taxonomy"
+    },
+    "icon": {
+      "type": "string",
+      "description": "Lucide icon name for this category"
+    },
+    "description": {
+      "type": "string",
+      "description": "What this category covers"
+    },
+    "benchmark_count": {
+      "type": "number",
+      "default": 0,
+      "description": "Number of benchmark references in this category"
+    },
+    "display_order": {
+      "type": "number",
+      "default": 0,
+      "description": "Sort order for display"
+    }
+  },
+  "required": [
+    "name",
+    "slug",
+    "type"
+  ],
+  "rls": {
+    "read": {},
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

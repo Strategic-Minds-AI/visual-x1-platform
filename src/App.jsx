@@ -16,6 +16,7 @@ import PromptLab from './pages/PromptLab';
 import SystemControl from './pages/SystemControl';
 import KanbanBoard from './pages/KanbanBoard';
 import AnalyticsDashboard from './pages/AnalyticsDashboard';
+import BenchmarkLibrary from './pages/BenchmarkLibrary';
 import Login from '@/pages/Login';
 import Register from '@/pages/Register';
 import ForgotPassword from '@/pages/ForgotPassword';
@@ -65,6 +66,7 @@ const AuthenticatedApp = () => {
         <Route path="/system-control" element={<SystemControl />} />
         <Route path="/kanban" element={<KanbanBoard />} />
         <Route path="/analytics" element={<AnalyticsDashboard />} />
+        <Route path="/benchmarks" element={<BenchmarkLibrary />} />
       </Route>
       <Route path="*" element={<PageNotFound />} />
     </Routes>

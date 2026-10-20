@@ -1,0 +1,112 @@
+{
+  "name": "QualityScorecard",
+  "type": "object",
+  "properties": {
+    "project_id": {
+      "type": "string",
+      "description": "ID of the project being scored"
+    },
+    "benchmark_id": {
+      "type": "string",
+      "description": "ID of the benchmark reference used for comparison"
+    },
+    "visual_parity": {
+      "type": "number",
+      "default": 0,
+      "description": "Visual parity and design quality score (0-25, weight 25%)"
+    },
+    "functionality": {
+      "type": "number",
+      "default": 0,
+      "description": "Functionality and user journeys score (0-20, weight 20%)"
+    },
+    "accessibility": {
+      "type": "number",
+      "default": 0,
+      "description": "Accessibility WCAG 2.2 AA score (0-15, weight 15%)"
+    },
+    "responsive_ux": {
+      "type": "number",
+      "default": 0,
+      "description": "Responsive UX across mobile/tablet/desktop score (0-10, weight 10%)"
+    },
+    "performance": {
+      "type": "number",
+      "default": 0,
+      "description": "Performance and Core Web Vitals score (0-10, weight 10%)"
+    },
+    "security": {
+      "type": "number",
+      "default": 0,
+      "description": "Security and privacy score (0-10, weight 10%)"
+    },
+    "content_trust_seo": {
+      "type": "number",
+      "default": 0,
+      "description": "Content, trust, and SEO score (0-5, weight 5%)"
+    },
+    "reliability": {
+      "type": "number",
+      "default": 0,
+      "description": "Reliability and regression score (0-5, weight 5%)"
+    },
+    "total_score": {
+      "type": "number",
+      "default": 0,
+      "description": "Composite score 0-100 (target: 95+)"
+    },
+    "decision": {
+      "type": "string",
+      "enum": [
+        "pass",
+        "repair",
+        "block"
+      ],
+      "default": "block",
+      "description": "Quality gate decision: pass (95+ and all hard gates), repair (gaps remain), block (unsafe or missing evidence)"
+    },
+    "evidence": {
+      "type": "string",
+      "description": "JSON object of evidence (screenshots, test results, metrics)"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Reviewer notes and context"
+    },
+    "repair_round": {
+      "type": "number",
+      "default": 0,
+      "description": "Which repair round this scorecard represents (max 3)"
+    }
+  },
+  "required": [
+    "project_id",
+    "total_score",
+    "decision"
+  ],
+  "rls": {
+    "read": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "create": {},
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

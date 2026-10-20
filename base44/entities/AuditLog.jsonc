@@ -1,0 +1,69 @@
+{
+  "name": "AuditLog",
+  "type": "object",
+  "properties": {
+    "entity_type": {
+      "type": "string",
+      "description": "What was accessed (secret, benchmark, scorecard, deployment)"
+    },
+    "entity_id": {
+      "type": "string",
+      "description": "ID of the entity that was accessed"
+    },
+    "action": {
+      "type": "string",
+      "enum": [
+        "view",
+        "create",
+        "update",
+        "delete",
+        "rotate",
+        "export",
+        "deploy",
+        "validate"
+      ],
+      "default": "view",
+      "description": "What action was performed"
+    },
+    "user_email": {
+      "type": "string",
+      "description": "Email of the user who performed the action"
+    },
+    "details": {
+      "type": "string",
+      "description": "Additional context about the action"
+    },
+    "severity": {
+      "type": "string",
+      "enum": [
+        "info",
+        "warning",
+        "critical"
+      ],
+      "default": "info",
+      "description": "Severity level of the audit event"
+    }
+  },
+  "required": [
+    "entity_type",
+    "action"
+  ],
+  "rls": {
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "create": {},
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

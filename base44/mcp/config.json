@@ -44,6 +44,54 @@
         },
         "handler": "agentChat",
         "annotations": { "read_only_hint": false, "destructive_hint": false, "idempotent_hint": false }
+      },
+      {
+        "name": "qa_feedback_loop",
+        "title": "QA Feedback Loop",
+        "description": "Generates prompt refinement suggestions from audit findings and sends them back to the Prompt Lab. The system learns from each audit to improve its own prompt generation. Call when the QA agent has completed an audit and wants to refine the prompts.",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "project_id": { "type": "string", "description": "ID of the project to refine" },
+            "prompt_version_id": { "type": "string", "description": "ID of the current prompt version to refine" },
+            "audit_source": { "type": "string", "enum": ["qa_audit", "security_audit", "simulation", "benchmark_comparison", "manual"], "description": "Where the audit findings came from" },
+            "findings": { "type": "object", "description": "The audit findings to generate refinements from" },
+            "severity": { "type": "string", "enum": ["critical", "high", "medium", "low"], "description": "Priority of the refinement" }
+          },
+          "required": ["project_id", "findings"]
+        },
+        "handler": "qaFeedbackLoop",
+        "annotations": { "read_only_hint": false, "destructive_hint": false, "idempotent_hint": false }
+      },
+      {
+        "name": "score_benchmark",
+        "title": "Score Against Benchmark",
+        "description": "Scores a project against an industry benchmark reference using the Visual X 100-point scorecard (visual parity 25%, functionality 20%, accessibility 15%, responsive 10%, performance 10%, security 10%, content/SEO 5%, reliability 5%). Target: 95+. Call when the user wants to validate quality against a benchmark.",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "project_id": { "type": "string", "description": "ID of the project to score" },
+            "benchmark_id": { "type": "string", "description": "ID of the benchmark reference to compare against" },
+            "repair_round": { "type": "number", "description": "Which repair round (max 3)" }
+          },
+          "required": ["project_id"]
+        },
+        "handler": "scoreBenchmark",
+        "annotations": { "read_only_hint": false, "destructive_hint": false, "idempotent_hint": true }
+      },
+      {
+        "name": "trigger_post_deployment_qa",
+        "title": "Trigger Post-Deployment QA",
+        "description": "Automatically triggers testing and validation phases after a deployment goes live. Runs QA audit, security audit, and benchmark scoring, then creates QA refinement suggestions if issues are found. Call when a deployment task is completed.",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "deployment_id": { "type": "string", "description": "ID of the deployment that just went live" }
+          },
+          "required": ["deployment_id"]
+        },
+        "handler": "triggerPostDeploymentQA",
+        "annotations": { "read_only_hint": false, "destructive_hint": false, "idempotent_hint": true }
       }
     ]
   }

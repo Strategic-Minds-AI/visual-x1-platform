@@ -1,0 +1,98 @@
+{
+  "name": "BenchmarkReference",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Name of the benchmark reference site (e.g., Shopify, Linear, Zillow)"
+    },
+    "url": {
+      "type": "string",
+      "description": "URL of the reference site"
+    },
+    "industry": {
+      "type": "string",
+      "description": "Primary industry (e.g., E-commerce, SaaS, Real Estate)"
+    },
+    "sub_industry": {
+      "type": "string",
+      "description": "Sub-industry category (e.g., Fashion Retail, B2B Software, Luxury Property)"
+    },
+    "site_type": {
+      "type": "string",
+      "enum": [
+        "ecommerce",
+        "saas_dashboard",
+        "marketing_site",
+        "real_estate",
+        "restaurant",
+        "healthcare",
+        "education",
+        "finance",
+        "media",
+        "portfolio",
+        "landing_page",
+        "marketplace",
+        "social",
+        "ai_product",
+        "other"
+      ],
+      "default": "marketing_site",
+      "description": "Type of website or system"
+    },
+    "desktop_screenshot_url": {
+      "type": "string",
+      "description": "Desktop screenshot image URL"
+    },
+    "mobile_screenshot_url": {
+      "type": "string",
+      "description": "Mobile screenshot image URL"
+    },
+    "ux_score": {
+      "type": "number",
+      "description": "Baymard-style UX score 0-100"
+    },
+    "description": {
+      "type": "string",
+      "description": "Why this site is a benchmark and what patterns it exemplifies"
+    },
+    "key_patterns": {
+      "type": "string",
+      "description": "JSON array of reusable design and interaction patterns observed"
+    },
+    "rank": {
+      "type": "number",
+      "default": 1,
+      "description": "Rank within its industry (1 = top reference)"
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether this benchmark is currently used"
+    }
+  },
+  "required": [
+    "name",
+    "url",
+    "industry",
+    "site_type"
+  ],
+  "rls": {
+    "read": {},
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

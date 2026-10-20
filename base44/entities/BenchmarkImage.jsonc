@@ -1,0 +1,68 @@
+{
+  "name": "BenchmarkImage",
+  "type": "object",
+  "properties": {
+    "industry": {
+      "type": "string",
+      "description": "Industry this benchmark image represents"
+    },
+    "site_name": {
+      "type": "string",
+      "description": "Name of the reference site or design concept"
+    },
+    "image_url": {
+      "type": "string",
+      "description": "URL of the generated benchmark image"
+    },
+    "image_type": {
+      "type": "string",
+      "enum": [
+        "desktop",
+        "mobile",
+        "component",
+        "layout",
+        "hero",
+        "navigation"
+      ],
+      "default": "desktop",
+      "description": "What aspect of the site this image captures"
+    },
+    "quality_score": {
+      "type": "number",
+      "default": 0,
+      "description": "Visual quality score 0-100"
+    },
+    "description": {
+      "type": "string",
+      "description": "What this benchmark image demonstrates"
+    },
+    "tags": {
+      "type": "string",
+      "description": "Comma-separated tags for filtering"
+    }
+  },
+  "required": [
+    "industry",
+    "site_name",
+    "image_url",
+    "image_type"
+  ],
+  "rls": {
+    "read": {},
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

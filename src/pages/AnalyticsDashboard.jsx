@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ChevronLeft, BarChart3, Activity, CheckCircle2, TrendingUp, Users } from "lucide-react";
 import { Link } from "react-router-dom";
 import { BarChart, Bar, PieChart, Pie, Cell, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
+import AgentPerformanceCharts from "@/components/analytics/AgentPerformanceCharts";
 
 const STATUS_COLORS = {
   open: "#0ea5e9", assigned: "#8b5cf6", in_progress: "#f59e0b",
@@ -187,6 +188,12 @@ export default function AnalyticsDashboard() {
             </CardContent>
           </Card>
         )}
+
+        {/* Agent Performance Over Time */}
+        <div>
+          <h2 className="font-heading font-semibold mb-3 flex items-center gap-2"><TrendingUp className="w-4 h-4" /> Agent Performance Tracking</h2>
+          <AgentPerformanceCharts />
+        </div>
       </main>
     </div>
   );

@@ -1,0 +1,107 @@
+{
+  "name": "QARefinement",
+  "type": "object",
+  "properties": {
+    "project_id": {
+      "type": "string",
+      "description": "ID of the project this refinement relates to"
+    },
+    "prompt_version_id": {
+      "type": "string",
+      "description": "ID of the prompt version being refined"
+    },
+    "audit_source": {
+      "type": "string",
+      "enum": [
+        "qa_audit",
+        "security_audit",
+        "simulation",
+        "benchmark_comparison",
+        "manual"
+      ],
+      "default": "qa_audit",
+      "description": "Where the refinement suggestion originated"
+    },
+    "findings": {
+      "type": "string",
+      "description": "JSON array of findings from the audit"
+    },
+    "suggestions": {
+      "type": "string",
+      "description": "JSON array of specific prompt refinement suggestions"
+    },
+    "refined_prompt": {
+      "type": "string",
+      "description": "The AI-generated improved prompt text"
+    },
+    "severity": {
+      "type": "string",
+      "enum": [
+        "critical",
+        "high",
+        "medium",
+        "low"
+      ],
+      "default": "medium",
+      "description": "Priority of the refinement"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "applied",
+        "rejected",
+        "superseded"
+      ],
+      "default": "pending",
+      "description": "Whether the refinement has been applied to the Prompt Lab"
+    },
+    "applied_prompt_version_id": {
+      "type": "string",
+      "description": "ID of the new prompt version created when this refinement was applied"
+    },
+    "learning_note": {
+      "type": "string",
+      "description": "What the system learned from this refinement for future prompt generation"
+    }
+  },
+  "required": [
+    "project_id",
+    "findings",
+    "suggestions",
+    "severity",
+    "status"
+  ],
+  "rls": {
+    "read": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "create": {},
+    "update": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

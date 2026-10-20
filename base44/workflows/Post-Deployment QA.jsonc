@@ -1,0 +1,70 @@
+{
+  "name": "Post-Deployment QA Trigger",
+  "description": "Automatically triggers testing and validation phases when a deployment goes live \u2014 runs QA audit, security audit, and benchmark scoring, then creates QA refinement suggestions if issues are found",
+  "trigger": {
+    "config": {
+      "trigger_type": "entity",
+      "entity_name": "Deployment",
+      "events": [
+        "update"
+      ]
+    },
+    "condition": "${ .trigger.data.status == \"live\" and .trigger.old_data.status != \"live\" }"
+  },
+  "definition": {
+    "document": {
+      "dsl": "1.0.0",
+      "name": "post_deployment_qa",
+      "version": "1.0",
+      "namespace": "base44"
+    },
+    "do": [
+      {
+        "trigger_qa": {
+          "call": "invoke_backend_function",
+          "with": {
+            "function_name": "triggerPostDeploymentQA",
+            "args": {
+              "deployment_id": "${ .trigger.entity_id }"
+            }
+          },
+          "then": "check_result",
+          "x-base44": {
+            "title": "Trigger Post-Deployment QA",
+            "description": "Run QA audit, security audit, and benchmark scoring"
+          }
+        }
+      },
+      {
+        "check_result": {
+          "switch": [
+            {
+              "when": "${ .trigger_qa.scorecard.decision == \"pass\" }",
+              "then": "end",
+              "x-base44": {
+                "title": "Quality Gate Passed",
+                "description": "Score 95+ \u2014 deployment approved"
+              }
+            },
+            {
+              "when": "${ .trigger_qa.scorecard.decision == \"repair\" }",
+              "then": "end",
+              "x-base44": {
+                "title": "Repair Needed",
+                "description": "Gaps found \u2014 QA refinement sent to Prompt Lab"
+              }
+            },
+            {
+              "when": "${ true }",
+              "then": "end",
+              "x-base44": {
+                "title": "Blocked",
+                "description": "Critical issues \u2014 deployment blocked"
+              }
+            }
+          ]
+        }
+      }
+    ]
+  }
+}
