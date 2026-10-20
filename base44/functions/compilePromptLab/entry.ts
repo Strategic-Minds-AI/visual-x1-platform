@@ -70,6 +70,22 @@ Pattern metadata for context:
 - Compatible add-on patterns: ${pattern_metadata?.compatible_patterns?.join(', ') || 'none specified'}`
       : 'No specific pattern selected. Produce a general-purpose but highly detailed specification.';
 
+    // Fetch benchmark references to use as quality targets
+    let benchmarkContext = '';
+    try {
+      const benchmarkPage = await base44.entities.BenchmarkReference.filter(
+        { is_active: true },
+        { sort: '-ux_score', limit: 5, fields: ['name', 'url', 'industry', 'sub_industry', 'ux_score', 'key_patterns', 'description'] }
+      );
+      const benchmarkItems = benchmarkPage.items || benchmarkPage;
+      if (benchmarkItems.length > 0) {
+        benchmarkContext = `\n\nBENCHMARK QUALITY TARGETS (top ${benchmarkItems.length} highest-rated sites — the output MUST match or exceed this quality bar):\n` +
+          benchmarkItems.map(b =>
+            `- ${b.name} (${b.url}) — UX Score: ${b.ux_score}/100 [${b.industry}${b.sub_industry ? '/' + b.sub_industry : ''}]\n  Key Patterns: ${b.key_patterns}\n  Why it works: ${b.description}`
+          ).join('\n');
+      }
+    } catch (e) { /* benchmarks optional */ }
+
     const metaPrompt = `You are an elite prompt engineer and product architect for the Strategic Minds AI Prompt Lab.
 
 Your job: take a one-sentence idea and a selected system pattern, and produce TWO outputs:
@@ -78,6 +94,8 @@ Your job: take a one-sentence idea and a selected system pattern, and produce TW
 
 SELECTED PATTERN:
 ${patternContext}
+
+${benchmarkContext}
 
 ONE-SENTENCE IDEA:
 """${idea}"""

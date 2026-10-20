@@ -1,0 +1,48 @@
+{
+  "definition": {
+    "document": {
+      "dsl": "1.0.0",
+      "name": "benchmark_image_backfill",
+      "version": "1.0",
+      "namespace": "base44"
+    },
+    "do": [
+      {
+        "backfill_images": {
+          "call": "invoke_backend_function",
+          "with": {
+            "function_name": "generateBenchmarkImages",
+            "args": {
+              "all": true,
+              "limit": 5
+            }
+          },
+          "then": "end",
+          "x-base44": {
+            "title": "Backfill missing benchmark images",
+            "description": "Generates up to 5 images per run for benchmarks without screenshots"
+          }
+        }
+      }
+    ]
+  },
+  "name": "Benchmark Image Backfill",
+  "description": "Daily scheduled job that generates images for any benchmarks missing visual screenshots",
+  "trigger": {
+    "condition": null,
+    "config": {
+      "trigger_type": "scheduled",
+      "events": [],
+      "schedule_mode": "recurring",
+      "cron_expression": "0 2 * * *",
+      "one_time_date": null,
+      "timezone": "America/New_York",
+      "interval_value": null,
+      "interval_unit": null,
+      "interval_anchor": null,
+      "ends_type": "never",
+      "ends_on_date": null,
+      "ends_after_count": null
+    }
+  }
+}

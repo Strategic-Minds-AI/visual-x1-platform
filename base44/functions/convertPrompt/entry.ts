@@ -59,7 +59,31 @@ export default async function(req) {
       ? `The prompt should be optimized for this domain: ${category}. Tailor the instructions, constraints, and success criteria to ${category} best practices.`
       : 'The prompt should be general-purpose but highly detailed and production-quality.';
 
-    const metaPrompt = `You are an elite prompt engineer. Convert the following minimal request into a highly advanced, production-quality prompt that another AI system can execute to produce excellent results.
+    // Fetch benchmark references for the category to use as quality targets
+    let benchmarkContext = '';
+    try {
+      let benchmarkQuery = { is_active: true };
+      if (category && category !== 'general') {
+        benchmarkQuery = { is_active: true, $or: [
+          { industry: { $regex: category, $options: 'i' } },
+          { sub_industry: { $regex: category, $options: 'i' } },
+          { site_type: { $regex: category, $options: 'i' } }
+        ]};
+      }
+      const benchmarkPage = await base44.entities.BenchmarkReference.filter(
+        benchmarkQuery,
+        { sort: '-ux_score', limit: 5, fields: ['name', 'url', 'ux_score', 'key_patterns', 'description', 'sub_industry'] }
+      );
+      const benchmarkItems = benchmarkPage.items || benchmarkPage;
+      if (benchmarkItems.length > 0) {
+        benchmarkContext = `\n\nBENCHMARK QUALITY REFERENCES (top ${benchmarkItems.length} sites — the output MUST match or exceed this quality bar):\n` +
+          benchmarkItems.map(b =>
+            `- ${b.name} (${b.url}) — UX Score: ${b.ux_score}/100${b.sub_industry ? ` [${b.sub_industry}]` : ''}\n  Key Patterns: ${b.key_patterns}\n  Why it works: ${b.description}`
+          ).join('\n');
+      }
+    } catch (e) { /* benchmarks optional */ }
+
+    const metaPrompt = `You are an elite prompt engineer for the Visual X autonomous quality system. Convert the following minimal request into an ultra-high-performance, mandatory-quality prompt that another AI system can execute to produce world-class results.
 
 Rules for the output prompt:
 - It must be a single, self-contained prompt ready to paste into any AI coding or generation system.
@@ -69,6 +93,10 @@ Rules for the output prompt:
 - Be specific, actionable, and unambiguous — no vague language.
 - Include success criteria so the result can be objectively verified.
 - Add a final self-check step where the executing system verifies its own output before returning it.
+- MANDATORY: Reference the benchmark quality targets below. The output must match or exceed the UX scores, design patterns, and quality standards of these benchmarks.
+- Include specific design patterns from the benchmarks that should be implemented.
+- Set a minimum quality threshold of 95/100 across visual, functional, accessibility, performance, and security dimensions.
+${benchmarkContext}
 
 ${categoryContext}
 

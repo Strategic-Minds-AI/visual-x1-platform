@@ -1,0 +1,42 @@
+{
+  "definition": {
+    "document": {
+      "dsl": "1.0.0",
+      "name": "benchmark_image_auto_gen",
+      "version": "1.0",
+      "namespace": "base44"
+    },
+    "do": [
+      {
+        "generate_image": {
+          "call": "invoke_backend_function",
+          "with": {
+            "function_name": "generateBenchmarkImages",
+            "args": {
+              "benchmark_ids": [
+                "${ .trigger.entity_id }"
+              ]
+            }
+          },
+          "then": "end",
+          "x-base44": {
+            "title": "Generate benchmark image",
+            "description": "AI-generates a visual for the new benchmark"
+          }
+        }
+      }
+    ]
+  },
+  "name": "Benchmark Image Auto-Generation",
+  "description": "When a new benchmark reference is added, automatically generate a visual image for it using AI",
+  "trigger": {
+    "condition": null,
+    "config": {
+      "trigger_type": "entity",
+      "events": [
+        "create"
+      ],
+      "entity_name": "BenchmarkReference"
+    }
+  }
+}
