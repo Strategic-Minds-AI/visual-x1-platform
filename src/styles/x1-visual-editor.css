@@ -1,51 +1,96 @@
 /* Visual Editor workspace.
  *
- * The editor is the builder shell from the Xtreme AutoBuilder package (header
- * band, agent chat, prompt composer, artifact canvas, device frames, suggestion
- * chips), rendered as one section of the operator console: the same portal shell,
- * the same panel/pill/button classes from vendor/x1/CommercePortal.css, plus the
- * small set of layout and chat rules that stylesheet does not define. Every
- * colour is copied from that stylesheet or from the x1-brand-theme.css tokens, so
- * the editor cannot drift from the console it opens inside.
+ * The layout is the Xtreme AutoBuilder's own: one top bar, then a split pane
+ * with the composer column on the left (30%, 248–360px, its own header strip)
+ * and the artifact canvas on the right, full-bleed and headerless. Only the
+ * palette and control language are the operator console's — the portal shell
+ * classes, panel/pill/button styles and x1-brand-theme tokens from
+ * vendor/x1/CommercePortal.css — so the editor reads as part of the console.
  */
 .cp-site .ve-section {
   display: flex;
   flex-direction: column;
-  gap: 13px;
   height: calc(100vh - 228px);
   min-height: 620px;
 }
 
-/* ── the shell's header band ────────────────────────────────────────────── */
-.cp-site .ve-band {
+/* The workspace itself is one console panel: rounded, bordered, and holding the
+   whole split inside it. */
+.cp-site .cp-portal-panel.ve-shell {
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* ── top bar ────────────────────────────────────────────────────────────── */
+.cp-site .ve-topbar {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 14px;
-  flex-wrap: wrap;
-  padding: 13px 18px;
-  border: 1px solid rgba(65, 166, 228, .24);
-  border-radius: 18px;
-  background: linear-gradient(138deg, rgba(13, 33, 54, .93), rgba(6, 17, 31, .96));
+  gap: 10px;
+  padding: 9px 13px;
+  border-bottom: 1px solid rgba(91, 175, 230, .16);
+  flex-shrink: 0;
 }
 
-.cp-site .ve-band h3 {
-  font-size: 18px;
-  letter-spacing: -.035em;
-  margin: 4px 0 0;
-}
-
-.cp-site .ve-band-controls {
+.cp-site .ve-topbar-left,
+.cp-site .ve-topbar-center,
+.cp-site .ve-topbar-right {
   display: flex;
   align-items: center;
-  gap: 11px;
-  flex-wrap: wrap;
+  gap: 9px;
+  min-width: 0;
 }
 
+.cp-site .ve-mark {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  font-size: 10px;
+  font-weight: 850;
+  color: #02050d;
+  background: linear-gradient(120deg, var(--smai-cyan), var(--smai-green));
+}
+
+.cp-site .ve-project {
+  font-size: 12px;
+  font-weight: 780;
+  color: #eaf9ff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 190px;
+}
+
+.cp-site .ve-icon-btn {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 9px;
+  border: 1px solid transparent;
+  background: rgba(12, 39, 61, .5);
+  color: #9eb6ca;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: color 180ms ease, border-color 180ms ease;
+}
+
+.cp-site .ve-icon-btn:hover {
+  color: #d7fbff;
+  border-color: rgba(64, 192, 254, .4);
+}
+
+/* ── pill controls (segmented view + composer mode) ─────────────────────── */
 .cp-site .ve-pill-group {
   display: flex;
-  gap: 5px;
-  padding: 4px;
+  gap: 4px;
+  padding: 3px;
   border-radius: 100px;
   border: 1px solid rgba(66, 168, 227, .24);
   background: rgba(6, 17, 31, .6);
@@ -55,7 +100,7 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 7px 12px;
+  padding: 6px 11px;
   border-radius: 100px;
   border: 1px solid transparent;
   background: transparent;
@@ -79,31 +124,32 @@
   background: linear-gradient(95deg, rgba(6, 104, 152, .4), rgba(11, 56, 84, .25));
 }
 
-/* ── layout: chat column beside the canvas column ───────────────────────── */
-.cp-site .ve-grid {
-  display: grid;
-  grid-template-columns: minmax(320px, 372px) minmax(0, 1fr);
-  gap: 14px;
+/* ── split pane: composer left, canvas right ────────────────────────────── */
+.cp-site .ve-split {
   flex: 1;
   min-height: 0;
+  display: flex;
+  overflow: hidden;
 }
 
-.cp-site .ve-col {
+.cp-site .ve-chatcol {
+  width: 30%;
+  min-width: 248px;
+  max-width: 360px;
+  flex-shrink: 0;
   display: flex;
   flex-direction: column;
+  min-height: 0;
+  border-right: 1px solid rgba(91, 175, 230, .16);
+}
+
+.cp-site .ve-canvascol {
+  flex: 1;
   min-width: 0;
   min-height: 0;
-  overflow: hidden;
-}
-
-/* A portal panel used as a column: no padding of its own, children scroll. */
-.cp-site .cp-portal-panel.ve-panel {
-  padding: 0;
   display: flex;
   flex-direction: column;
-  min-height: 0;
   overflow: hidden;
-  flex: 1;
 }
 
 .cp-site .ve-panel-head {
@@ -111,26 +157,34 @@
   align-items: center;
   justify-content: space-between;
   gap: 10px;
-  padding: 13px 18px;
+  padding: 11px 14px;
   border-bottom: 1px solid rgba(91, 175, 230, .14);
   flex-shrink: 0;
+}
+
+.cp-site .ve-head-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  flex-wrap: wrap;
 }
 
 .cp-site .ve-scroll {
   flex: 1;
   min-height: 0;
   overflow-y: auto;
-  padding: 16px 18px;
+  padding: 14px;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 11px;
 }
 
 .cp-site .ve-scroll-soft {
   flex: 1;
   min-height: 0;
   overflow-y: auto;
-  padding: 18px;
+  padding: 16px;
 }
 
 /* ── chat ───────────────────────────────────────────────────────────────── */
@@ -138,20 +192,12 @@
   display: flex;
   align-items: center;
   gap: 9px;
-}
-
-.cp-site .ve-msg {
-  display: flex;
-  gap: 10px;
-}
-
-.cp-site .ve-msg.is-user {
-  flex-direction: row-reverse;
+  min-width: 0;
 }
 
 .cp-site .ve-avatar {
-  width: 26px;
-  height: 26px;
+  width: 28px;
+  height: 28px;
   border-radius: 50%;
   display: grid;
   place-items: center;
@@ -161,16 +207,36 @@
 }
 
 .cp-site .ve-avatar.is-user {
+  width: 26px;
+  height: 26px;
   background: rgba(246, 251, 255, .88);
   font-size: 8px;
   font-weight: 850;
   letter-spacing: .06em;
 }
 
+.cp-site .ve-name {
+  font-size: 9px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  font-weight: 830;
+  color: #79adc0;
+  margin: 0;
+}
+
+.cp-site .ve-msg {
+  display: flex;
+  gap: 9px;
+}
+
+.cp-site .ve-msg.is-user {
+  flex-direction: row-reverse;
+}
+
 .cp-site .ve-bubble {
   max-width: 92%;
   border-radius: 14px;
-  padding: 10px 13px;
+  padding: 9px 12px;
   font-size: 12px;
   line-height: 1.7;
   color: #d9f6ff;
@@ -204,18 +270,27 @@
   color: #cfe6f4;
 }
 
-.cp-site .ve-name {
+/* ── composer ───────────────────────────────────────────────────────────── */
+.cp-site .ve-composer {
+  border-top: 1px solid rgba(91, 175, 230, .14);
+  padding: 11px 13px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.cp-site .ve-suggest-label {
   font-size: 9px;
-  letter-spacing: .14em;
-  text-transform: uppercase;
+  letter-spacing: .16em;
   font-weight: 830;
-  color: #79adc0;
+  color: #71a3c0;
   margin: 0;
 }
 
 .cp-site .ve-chips {
   display: flex;
-  gap: 7px;
+  gap: 6px;
   overflow-x: auto;
   padding-bottom: 2px;
 }
@@ -224,8 +299,8 @@
   flex-shrink: 0;
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  padding: 7px 12px;
+  gap: 5px;
+  padding: 6px 11px;
   border-radius: 100px;
   border: 1px solid rgba(66, 168, 227, .34);
   background: rgba(12, 39, 61, .5);
@@ -243,43 +318,95 @@
   background: rgba(2, 207, 255, .1);
 }
 
-.cp-site .ve-composer {
-  border-top: 1px solid rgba(91, 175, 230, .14);
-  padding: 12px 18px 16px;
+.cp-site .ve-input-row {
   display: flex;
-  flex-direction: column;
-  gap: 9px;
+  align-items: flex-end;
+  gap: 7px;
+}
+
+.cp-site .ve-input-row .cp-field {
+  min-height: 44px;
+}
+
+.cp-site .ve-send {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
   flex-shrink: 0;
+  border-radius: 12px;
+  border: 1px solid rgba(64, 192, 254, .4);
+  background: linear-gradient(115deg, var(--smai-cyan), var(--smai-blue));
+  color: #02050d;
+  cursor: pointer;
+}
+
+.cp-site .ve-send:disabled {
+  opacity: .45;
+  cursor: not-allowed;
 }
 
 .cp-site .ve-actions {
   display: flex;
   flex-wrap: wrap;
-  gap: 7px;
+  gap: 6px;
 }
 
-.cp-site .ve-actions .cp-green-button,
 .cp-site .ve-actions .cp-outline,
-.cp-site .ve-panel-head .cp-outline {
-  min-height: 32px;
-  padding: 6px 13px;
+.cp-site .ve-actions .cp-green-button,
+.cp-site .ve-panel-head .cp-outline,
+.cp-site .ve-panel-head .cp-green-button {
+  min-height: 30px;
+  padding: 5px 11px;
   font-size: 9px;
 }
 
-.cp-site .ve-actions button:disabled {
+.cp-site .ve-actions button:disabled,
+.cp-site .ve-panel-head button:disabled {
   opacity: .45;
   cursor: not-allowed;
 }
 
-/* ── canvas ─────────────────────────────────────────────────────────────── */
-.cp-site .ve-canvas {
+/* ── canvas: preview frame, headerless apart from its own state strip ───── */
+.cp-site .ve-frame-area {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.cp-site .ve-frame-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 8px 12px;
+  border-bottom: 1px solid rgba(91, 175, 230, .16);
+  flex-shrink: 0;
+}
+
+.cp-site .ve-frame-project {
+  font-size: 10px;
+  letter-spacing: .06em;
+  font-weight: 780;
+  color: #a9c9d9;
+  background: rgba(12, 39, 61, .5);
+  border-radius: 100px;
+  padding: 5px 11px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 210px;
+}
+
+.cp-site .ve-frame-body {
   flex: 1;
   min-height: 0;
   overflow: auto;
   display: flex;
-  align-items: stretch;
+  align-items: flex-start;
   justify-content: center;
-  padding: 16px;
+  padding: 14px;
 }
 
 .cp-site .ve-frame {
@@ -306,21 +433,21 @@
   flex: 1;
   display: block;
   width: 100%;
-  min-height: 360px;
+  min-height: 380px;
   border: 0;
   background: #fff;
 }
 
 .cp-site .ve-devices {
   display: flex;
-  gap: 6px;
+  gap: 5px;
 }
 
 .cp-site .ve-devices button {
   display: grid;
   place-items: center;
-  width: 30px;
-  height: 30px;
+  width: 28px;
+  height: 28px;
   border-radius: 9px;
   border: 1px solid transparent;
   background: rgba(12, 39, 61, .5);
@@ -338,10 +465,10 @@
 .cp-site .ve-status {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: 7px;
   font-size: 9px;
-  font-weight: 820;
-  letter-spacing: .08em;
+  font-weight: 830;
+  letter-spacing: .1em;
   color: #9dffd0;
   white-space: nowrap;
 }
@@ -370,7 +497,7 @@
   color: #86a5b8;
   font-size: 11px;
   line-height: 1.85;
-  max-width: 340px;
+  max-width: 320px;
 }
 
 .cp-site .ve-empty svg {
@@ -378,26 +505,76 @@
   margin-bottom: 10px;
 }
 
-/* ── responsive ─────────────────────────────────────────────────────────── */
-@media (max-width: 1080px) {
-  /* Stacked, with a fixed height per panel so each one still scrolls inside
-     itself instead of stretching the console page. */
-  .cp-site .ve-section {
-    height: auto;
-    min-height: 0;
-    gap: 11px;
+/* ── narrow screens: single pane plus the package's bottom nav ──────────── */
+.cp-site .ve-mobile-nav {
+  display: none;
+}
+
+@media (max-width: 1100px) {
+  .cp-site .ve-chatcol {
+    min-width: 238px;
   }
-  .cp-site .ve-grid {
-    grid-template-columns: 1fr;
-    grid-template-rows: 50vh 62vh;
+  .cp-site .ve-project {
+    max-width: 130px;
+  }
+  .cp-site .ve-pill-label {
+    display: none;
+  }
+  .cp-site .ve-frame-project {
+    max-width: 120px;
   }
 }
 
 @media (max-width: 700px) {
-  .cp-site .ve-grid {
-    grid-template-rows: 46vh 58vh;
+  .cp-site .ve-section {
+    height: auto;
+    min-height: 0;
   }
-  .cp-site .ve-band {
-    padding: 12px 14px;
+  .cp-site .ve-project {
+    display: none;
+  }
+  .cp-site .ve-split {
+    display: block;
+    min-height: 520px;
+  }
+  .cp-site .ve-split[data-pane="composer"] .ve-canvascol {
+    display: none;
+  }
+  .cp-site .ve-split[data-pane="canvas"] .ve-chatcol {
+    display: none;
+  }
+  .cp-site .ve-chatcol,
+  .cp-site .ve-canvascol {
+    width: 100%;
+    max-width: none;
+    height: 520px;
+    border-right: 0;
+  }
+  .cp-site .ve-mobile-nav {
+    display: flex;
+    border-top: 1px solid rgba(91, 175, 230, .16);
+    padding: 7px 9px;
+    gap: 6px;
+  }
+  .cp-site .ve-mobile-nav button {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding: 7px 4px;
+    border-radius: 12px;
+    border: 1px solid transparent;
+    background: transparent;
+    color: #9eb6ca;
+    font-size: 8px;
+    font-weight: 830;
+    letter-spacing: .12em;
+    cursor: pointer;
+  }
+  .cp-site .ve-mobile-nav button.selected {
+    color: #d7fbff;
+    border-color: rgba(64, 192, 254, .45);
+    background: rgba(6, 104, 152, .28);
   }
 }

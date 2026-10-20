@@ -1,6 +1,7 @@
-import { MessageSquare, Sparkles, Eye, Shield, Link2 } from "lucide-react";
+import { Eye, Link2, MessageSquare, Shield, Sparkles } from "lucide-react";
 
-// The editor's two axes, in one place: the left composer column and the canvas.
+// The editor's controls, in one place: the composer column's two modes, the
+// canvas's three views, the request suggestions, and the narrow-screen panes.
 export const COMPOSER_MODES = [
   { id: "chat", label: "Chat", Icon: MessageSquare },
   { id: "prompt", label: "Prompt System", Icon: Sparkles },
@@ -12,7 +13,7 @@ export const CANVAS_VIEWS = [
   { id: "chain", label: "Chain", Icon: Link2 },
 ];
 
-// Ported from the package's chat panel: each chip loads its request and renders.
+// Ported from the package's chat panel: each chip loads its request and builds.
 export const SUGGESTIONS = [
   "Build a landing page",
   "Create a blog",
@@ -20,4 +21,10 @@ export const SUGGESTIONS = [
   "Build a portfolio site",
   "Create a dashboard app",
   "Build a business website",
+];
+
+export const MOBILE_TABS = [
+  { id: "chat", label: "Chat", Icon: MessageSquare },
+  { id: "prompt", label: "Prompts", Icon: Sparkles },
+  { id: "canvas", label: "Canvas", Icon: Eye },
 ];

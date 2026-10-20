@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { base44 } from "@/api/base44Client";
 import useEditorEngine from "@/hooks/useEditorEngine";
-import EditorBand from "@/components/visualeditor/EditorBand";
+import EditorTopBar from "@/components/visualeditor/EditorTopBar";
 import EditorChat from "@/components/visualeditor/EditorChat";
 import EditorCanvas from "@/components/visualeditor/EditorCanvas";
-import PromptPipeline from "@/components/admin/PromptPipeline";
+import PromptSystemPanel from "@/components/visualeditor/PromptSystemPanel";
 import SimulatorResults from "@/components/editor/SimulatorResults";
 import PromptChainBuilder from "@/components/editor/PromptChainBuilder";
+import { MOBILE_TABS } from "@/components/visualeditor/editorNav";
+import "@/styles/x1-visual-editor.css";
 
 const STATUS = (engine, sending) => {
   if (sending) return "THINKING";
@@ -19,17 +21,21 @@ const STATUS = (engine, sending) => {
 
 /**
  * The Visual Editor, as a section of the operator console. It keeps the builder
- * shell's layout — header band, composer column, artifact canvas, device frames —
- * while running on this app's own backend: the autonomy agent for conversation,
- * the render pipeline for builds, the prompt system's convert/simulate/chain for
- * everything else. The prompt system is one of the two composer panels, so a
- * prompt module and the canvas it produces live in the same workspace.
+ * shell's layout — one header bar, then the composer column beside a full-bleed
+ * artifact canvas, and a single pane with bottom tabs on phones — while running on
+ * this app's own backend: the autonomy agent for conversation, the render pipeline
+ * for builds, the prompt system's convert/simulate/chain for everything else. The
+ * prompt system is the composer column's second mode, so a module and the canvas
+ * it produces share one workspace.
  */
 export default function VisualEditorWorkspace() {
   const engine = useEditorEngine();
   const [leftMode, setLeftMode] = useState("chat");
   const [canvasView, setCanvasView] = useState("preview");
   const [device, setDevice] = useState("desktop");
+  const [panelCollapsed, setPanelCollapsed] = useState(false);
+  const [mobilePane, setMobilePane] = useState("composer");
+  const [refreshTick, setRefreshTick] = useState(0);
   const [sending, setSending] = useState(false);
   const [projectName, setProjectName] = useState("Untitled build");
 
@@ -48,6 +54,16 @@ export default function VisualEditorWorkspace() {
   const busy =
     sending || engine.loading.render || engine.loading.convert || engine.loading.simulate || engine.loading.chain;
   const status = STATUS(engine, sending);
+
+  const pickCanvas = (id) => {
+    setCanvasView(id);
+    setMobilePane("canvas");
+  };
+  const pickComposer = (id) => {
+    setLeftMode(id);
+    setMobilePane("composer");
+    setPanelCollapsed(false);
+  };
 
   // "Ask agent" routes the request to the app's own autonomy chat, which reads and
   // writes app records and calls the pipeline functions.
@@ -86,57 +102,63 @@ export default function VisualEditorWorkspace() {
 
   // Build = render the request (or a suggestion chip's request) into a real artifact.
   const render = (overridePrompt) => {
-    setCanvasView("preview");
+    pickCanvas("preview");
     if (overridePrompt) engine.setInput(overridePrompt);
     engine.handleRender(overridePrompt);
   };
 
   return (
     <div className="ve-section">
-      <EditorBand
-        projectName={projectName}
-        leftMode={leftMode}
-        canvasView={canvasView}
-        device={device}
-        status={status}
-        busy={busy}
-        onComposer={setLeftMode}
-        onCanvas={setCanvasView}
-        onDevice={setDevice}
-      />
+      <section className="cp-portal-panel ve-shell">
+        <EditorTopBar
+          projectName={projectName}
+          canvasView={canvasView}
+          device={device}
+          panelCollapsed={panelCollapsed}
+          onCanvas={pickCanvas}
+          onDevice={setDevice}
+          onRefresh={() => setRefreshTick((t) => t + 1)}
+          onTogglePanel={() => setPanelCollapsed((v) => !v)}
+        />
 
-      <div className="ve-grid">
-        <div className="ve-col">
-          <section className="cp-portal-panel ve-panel">
-            {leftMode === "chat" ? (
-              <EditorChat
-                engine={engine}
-                busy={busy}
-                status={status}
-                onSend={send}
-                onRender={render}
-                onConvert={engine.handleConvert}
-                onSimulate={() => {
-                  setCanvasView("simulator");
-                  engine.handleSimulate();
-                }}
-                onAddToChain={engine.handleAddToChain}
-                onExecuteChain={() => {
-                  setCanvasView("chain");
-                  engine.handleExecuteChain();
-                }}
+        <div className="ve-split" data-pane={mobilePane}>
+          {!panelCollapsed && (
+            <div className="ve-chatcol">
+              {leftMode === "chat" ? (
+                <EditorChat
+                  engine={engine}
+                  busy={busy}
+                  status={status}
+                  leftMode={leftMode}
+                  onComposer={pickComposer}
+                  onSend={send}
+                  onRender={render}
+                  onConvert={engine.handleConvert}
+                  onSimulate={() => {
+                    pickCanvas("simulator");
+                    engine.handleSimulate();
+                  }}
+                  onAddToChain={() => {
+                    pickCanvas("chain");
+                    engine.handleAddToChain();
+                  }}
+                />
+              ) : (
+                <PromptSystemPanel leftMode={leftMode} onComposer={pickComposer} />
+              )}
+            </div>
+          )}
+
+          <div className="ve-canvascol">
+            {canvasView === "preview" && (
+              <EditorCanvas
+                device={device}
+                previewHtml={engine.previewHtml}
+                projectName={projectName}
+                isRunning={engine.loading.render || engine.loading.chain}
+                refreshTick={refreshTick}
               />
-            ) : (
-              <div className="ve-scroll-soft">
-                <PromptPipeline />
-              </div>
             )}
-          </section>
-        </div>
-
-        <div className="ve-col">
-          <section className="cp-portal-panel ve-panel">
-            {canvasView === "preview" && <EditorCanvas device={device} previewHtml={engine.previewHtml} />}
             {canvasView === "simulator" && (
               <div className="ve-scroll-soft">
                 <SimulatorResults result={engine.simulatorResult} onUseEnhanced={engine.useEnhanced} />
@@ -153,9 +175,28 @@ export default function VisualEditorWorkspace() {
                 />
               </div>
             )}
-          </section>
+          </div>
         </div>
-      </div>
+
+        <nav className="ve-mobile-nav" aria-label="Editor panes">
+          {MOBILE_TABS.map(({ id, label, Icon }) => {
+            const active =
+              id === "canvas" ? mobilePane === "canvas" : mobilePane === "composer" && leftMode === id;
+            return (
+              <button
+                key={id}
+                type="button"
+                onClick={() => (id === "canvas" ? pickCanvas(canvasView) : pickComposer(id))}
+                className={active ? "selected" : ""}
+                aria-pressed={active}
+              >
+                <Icon size={17} />
+                {label.toUpperCase()}
+              </button>
+            );
+          })}
+        </nav>
+      </section>
     </div>
   );
 }

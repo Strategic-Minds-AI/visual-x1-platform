@@ -1,13 +1,12 @@
 import React, { useEffect, useRef } from "react";
-import { Loader2, Sparkles } from "lucide-react";
+import { Loader2, Sparkles, Zap } from "lucide-react";
 import ChatBubble from "@/components/visualeditor/ChatBubble";
 import EditorComposer from "@/components/visualeditor/EditorComposer";
+import ComposerModeSwitch from "@/components/visualeditor/ComposerModeSwitch";
 
-// The package's chat panel: agent head, message stream, suggestion chips and
-// composer — wired to this app's own chat and prompt-system actions.
-export default function EditorChat({
-  engine, busy, status, onSend, onRender, onConvert, onSimulate, onAddToChain, onExecuteChain,
-}) {
+// The package's chat panel: an agent header strip carrying the build control, the
+// message stream, then the composer. Wired to this app's own agent and pipelines.
+export default function EditorChat({ engine, busy, status, leftMode, onComposer, onSend, onRender, onConvert, onSimulate, onAddToChain }) {
   const endRef = useRef(null);
 
   useEffect(() => {
@@ -19,12 +18,28 @@ export default function EditorChat({
       <div className="ve-panel-head">
         <div className="ve-agent">
           <span className="ve-avatar" aria-hidden="true">
-            <Sparkles size={13} />
+            <Sparkles size={14} />
           </span>
           <div>
-            <p className="cp-kicker">EDITOR AGENT</p>
-            <p className="ve-name">{status}</p>
+            <p className="ve-name">EDITOR AGENT</p>
+            <span className={`ve-status${busy ? " is-busy" : ""}`}>
+              <i />
+              {status}
+            </span>
           </div>
+        </div>
+
+        <div className="ve-head-actions">
+          <ComposerModeSwitch leftMode={leftMode} onChange={onComposer} />
+          <button
+            className="cp-green-button"
+            type="button"
+            onClick={() => onRender()}
+            disabled={!engine.input.trim() || engine.loading.render}
+          >
+            {engine.loading.render ? <Loader2 size={13} className="animate-spin" /> : <Zap size={13} />}
+            BUILD
+          </button>
         </div>
       </div>
 
@@ -50,13 +65,11 @@ export default function EditorChat({
         setInput={engine.setInput}
         loading={engine.loading}
         busy={busy}
-        canChain={engine.chain.length > 0}
         onSend={onSend}
         onRender={onRender}
         onConvert={onConvert}
         onSimulate={onSimulate}
         onAddToChain={onAddToChain}
-        onExecuteChain={onExecuteChain}
       />
     </>
   );
