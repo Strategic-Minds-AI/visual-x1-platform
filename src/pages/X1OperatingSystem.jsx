@@ -2,6 +2,7 @@ import React from "react";
 import { Radar } from "lucide-react";
 import X1BrandHeader from "@/components/x1/X1BrandHeader";
 import X1StatusStrip from "@/components/x1/X1StatusStrip";
+import X1DataPlane from "@/components/x1/X1DataPlane";
 import X1ParityLedger from "@/components/x1/X1ParityLedger";
 import X1EmbedPanel from "@/components/x1/X1EmbedPanel";
 
@@ -20,6 +21,7 @@ export default function X1OperatingSystem() {
 
         <X1BrandHeader />
         <X1StatusStrip />
+        <X1DataPlane />
         <X1EmbedPanel />
         <X1ParityLedger />
 

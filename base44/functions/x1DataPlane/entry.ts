@@ -1,16 +1,21 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.54';
 
-// A read-only window into X1's Supabase data plane, through the Supabase Management API.
+// A read-only window into X1's Supabase data planes, through the Supabase Management API.
 //
 // X1's own server talks to PostgREST with the project's service_role key. That key bypasses
 // RLS for every tenant, so it is deliberately never fetched and never used here: this
-// function only calls the read-only SQL endpoint, and only with SQL that is defined below —
-// never with SQL supplied by the caller.
+// function only calls the read-only SQL endpoint, and only with SQL defined below — never
+// with SQL supplied by the caller.
 //
 // `select` only. There is no insert, update, delete or DDL path in this function.
 
 const API_BASE = 'https://api.supabase.com/v1';
-const X1_DOCUMENTED_REF = 'uvdkzsbjackpjvpoxtyk'; // X1's staging project, named in X1's own docs
+
+const TARGETS = {
+  stage: { label: 'X1 AI Hub Staging', name: /^X1 AI Hub Staging$/i, fallback_ref: 'uvdkzsbjackpjvpoxtyk' },
+  production: { label: 'X1 AI Hub', name: /^X1 AI Hub$/i, fallback_ref: 'vgsmyhqqtkkluhypxyua' }
+};
+
 const X1_TABLES = [
   'x1_tenants',
   'x1_tenant_memberships',
@@ -22,7 +27,7 @@ const X1_TABLES = [
   'apex_output_events'
 ];
 const X1_ROUTINES = ['x1_worker_status_summary', 'x1_enqueue_work'];
-const SCOPES = ['projects', 'probe', 'inventory'];
+const SCOPES = ['projects', 'inventory'];
 
 const headers = (token) => ({ authorization: `Bearer ${token}`, 'content-type': 'application/json' });
 
@@ -40,20 +45,57 @@ const readSql = async (token, ref, query) => {
   } catch {
     parsed = null;
   }
-  const rows = Array.isArray(parsed)
-    ? parsed
-    : parsed && Array.isArray(parsed.result)
-      ? parsed.result
-      : parsed && Array.isArray(parsed.rows)
-        ? parsed.rows
-        : parsed && Array.isArray(parsed.data)
-          ? parsed.data
-          : [];
+  const rows = Array.isArray(parsed) ? parsed : parsed && Array.isArray(parsed.result) ? parsed.result : [];
+  return { ok: res.ok, status: res.status, rows, preview: res.ok ? undefined : text.slice(0, 200) };
+};
+
+const inventoryFor = async (token, ref) => {
+  const tables = await readSql(
+    token,
+    ref,
+    "select table_name from information_schema.tables where table_schema='public' and table_type='BASE TABLE' order by table_name"
+  );
+  if (!tables.ok) return { ref, error: `Table listing failed (${tables.status})`, preview: tables.preview };
+
+  const names = tables.rows.map((r) => r.table_name).filter(Boolean);
+  const present = X1_TABLES.filter((t) => names.includes(t));
+
+  const [counts, policies, policyCount, routines] = await Promise.allSettled([
+    present.length
+      ? readSql(
+          token,
+          ref,
+          present.map((t) => `select '${t}' as table_name, count(*)::int8 as exact_rows from public."${t}"`).join(' union all ')
+        )
+      : Promise.resolve({ ok: true, status: 200, rows: [] }),
+    readSql(
+      token,
+      ref,
+      `select tablename, policyname, cmd from pg_policies where schemaname='public' and tablename in (${X1_TABLES.map((t) => `'${t}'`).join(',')}) order by tablename, policyname`
+    ),
+    readSql(token, ref, "select count(*)::int8 as policy_count from pg_policies where schemaname='public'"),
+    readSql(
+      token,
+      ref,
+      `select routine_name from information_schema.routines where routine_schema='public' and routine_name in (${X1_ROUTINES.map((r) => `'${r}'`).join(',')}) order by routine_name`
+    )
+  ]);
+
+  const val = (s) => (s.status === 'fulfilled' ? s.value : { ok: false, status: 0, rows: [], preview: String(s.reason).slice(0, 200) });
+
   return {
-    status: res.status,
-    rows,
-    shape: parsed && !Array.isArray(parsed) ? Object.keys(parsed) : 'array',
-    preview: res.ok && rows.length === 0 ? text.slice(0, 300) : res.ok ? undefined : text.slice(0, 300)
+    ref,
+    table_count: names.length,
+    tables: names,
+    x1_tables_present: present,
+    x1_tables_missing: X1_TABLES.filter((t) => !present.includes(t)),
+    exact_row_counts: val(counts).rows,
+    x1_table_policies: val(policies).rows,
+    policy_count: val(policyCount).rows[0]?.policy_count ?? null,
+    x1_routines_present: val(routines).rows.map((r) => r.routine_name),
+    unreadable: [counts, policies, policyCount, routines]
+      .map((s, i) => (s.status === 'fulfilled' && s.value.ok ? null : ['counts', 'policies', 'policy_count', 'routines'][i]))
+      .filter(Boolean)
   };
 };
 
@@ -86,77 +128,41 @@ export default async function (req) {
       ? listData.map((p) => ({ ref: p.ref, name: p.name, region: p.region, status: p.status, created_at: p.created_at }))
       : [];
 
+    const resolve = (key) => {
+      const target = TARGETS[key];
+      const byName = projects.find((p) => target.name.test((p.name || '').trim()));
+      if (byName) return { ref: byName.ref, name: byName.name, resolved_by: 'name' };
+      const byRef = projects.find((p) => p.ref === target.fallback_ref);
+      if (byRef) return { ref: byRef.ref, name: byRef.name, resolved_by: 'documented ref' };
+      return null;
+    };
+
     if (scope === 'projects') {
       return Response.json({
         ok: listRes.ok,
         read_at: new Date().toISOString(),
         project_list_status: listRes.status,
-        projects,
-        x1_documented_ref: X1_DOCUMENTED_REF,
-        x1_ref_present: projects.some((p) => p.ref === X1_DOCUMENTED_REF),
+        projects: projects.map((p) => ({
+          ...p,
+          plane: Object.keys(TARGETS).find((k) => TARGETS[k].name.test((p.name || '').trim())) || null
+        })),
         note: listRes.ok ? undefined : listText.slice(0, 300)
       });
     }
 
-    const ref = X1_DOCUMENTED_REF;
-
-    if (scope === 'probe') {
-      const probe = await readSql(accessToken, ref, 'select 1 as ok');
-      return Response.json({
-        ok: probe.status === 200 || probe.status === 201,
-        ref,
-        probe_status: probe.status,
-        response_shape: probe.shape,
-        rows: probe.rows,
-        preview: probe.preview
-      });
+    const planes = {};
+    for (const key of Object.keys(TARGETS)) {
+      const found = resolve(key);
+      planes[key] = found
+        ? { label: TARGETS[key].label, ...found, ...(await inventoryFor(accessToken, found.ref)) }
+        : { label: TARGETS[key].label, error: 'No matching project in this Supabase account.' };
     }
-
-    const tables = await readSql(
-      accessToken,
-      ref,
-      "select table_name from information_schema.tables where table_schema='public' and table_type='BASE TABLE' order by table_name"
-    );
-    const names = tables.rows.map((r) => r.table_name).filter(Boolean);
-    const present = X1_TABLES.filter((t) => names.includes(t));
-
-    const counts = present.length
-      ? await readSql(
-          accessToken,
-          ref,
-          present.map((t) => `select '${t}' as table_name, count(*)::int8 as exact_rows from public."${t}"`).join(' union all ')
-        )
-      : { status: 0, rows: [] };
-
-    const policies = await readSql(
-      accessToken,
-      ref,
-      "select tablename, policyname, cmd, roles::text as roles from pg_policies where schemaname='public' order by tablename, policyname"
-    );
-    const routines = await readSql(
-      accessToken,
-      ref,
-      `select routine_name from information_schema.routines where routine_schema='public' and routine_name in (${X1_ROUTINES.map((r) => `'${r}'`).join(',')}) order by routine_name`
-    );
-
-    const steps = { tables, counts, policies, routines };
 
     return Response.json({
       ok: true,
       read_at: new Date().toISOString(),
-      ref,
       access: 'Read-only SQL through the Supabase Management API. The service_role key was not requested and is not used.',
-      table_count: names.length,
-      tables: names,
-      x1_tables_present: present,
-      x1_tables_missing: X1_TABLES.filter((t) => !present.includes(t)),
-      exact_row_counts: counts.rows,
-      policies: policies.rows,
-      x1_routines_present: routines.rows.map((r) => r.routine_name),
-      step_status: { tables: tables.status, counts: counts.status, policies: policies.status, routines: routines.status },
-      errors: Object.entries(steps)
-        .filter(([, s]) => s.status >= 400)
-        .map(([name, s]) => ({ step: name, status: s.status, preview: s.preview }))
+      planes
     });
   } catch (error) {
     return Response.json({ error: error.message }, { status: 500 });
