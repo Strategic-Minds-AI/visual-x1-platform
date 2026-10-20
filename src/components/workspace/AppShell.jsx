@@ -19,6 +19,7 @@ const RAIL = [
   { to: "/x1-home", label: "X1 Home", Icon: Star },
   { to: "/x1", label: "X1 Operating System", Icon: Radar },
   { to: "/x1-experience", label: "X1 Live App", Icon: Globe },
+  { to: "/visual-x", label: "Visual X Module", Icon: Wand2 },
   { to: "/clone-ingest", label: "Clone & Ingest", Icon: Copy },
   { to: "/delivery", label: "Delivery", Icon: Rocket },
   { to: "/visual-editor", label: "Visual Editor", Icon: Code2 },
@@ -63,6 +64,8 @@ const TOP_GROUPS = [
       { to: "/system-audit", label: "System Audit", Icon: ShieldCheck },
       { to: "/system-control", label: "System Control", Icon: Cpu },
       { to: "/benchmarks", label: "Benchmark Library", Icon: Gauge },
+      { to: "/visual-x", label: "Visual X Module", Icon: Wand2 },
+      { to: "/admin/parity", label: "Clone Parity Ledger", Icon: ListChecks },
     ],
   },
   {

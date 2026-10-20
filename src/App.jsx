@@ -40,6 +40,8 @@ import X1OperatingSystem from './pages/X1OperatingSystem';
 import X1Module from './pages/X1Module';
 import X1Experience from './pages/X1Experience';
 import X1Home from './pages/X1Home';
+import V2Experience from './pages/V2Experience';
+import X1CloneLedger from './pages/X1CloneLedger';
 import BuilderMap from './pages/BuilderMap';
 import AppShell from '@/components/workspace/AppShell';
 import Login from '@/pages/Login';
@@ -115,10 +117,23 @@ const AuthenticatedApp = () => {
         <Route path="/system-benchmarks" element={<SystemBenchmarks />} />
         <Route path="/system-audit" element={<SystemAudit />} />
         <Route path="/prompt-system" element={<PromptSystem />} />
+        {/* X1 administrative workspaces, at X1's own route paths. */}
+        <Route path="/admin" element={<Navigate to="/v2/b" replace />} />
+        <Route path="/admin/studio" element={<VisualEditor />} />
+        <Route path="/admin/visual-editor" element={<VisualEditor />} />
+        <Route path="/admin/coding-kanban" element={<KanbanBoard />} />
+        <Route path="/admin/prompt-lab" element={<PromptLab />} />
+        <Route path="/admin/intelligence" element={<AnalyticsDashboard />} />
+        <Route path="/admin/agent" element={<AgentActivity />} />
+        <Route path="/admin/launch-studio" element={<WebsiteFactory />} />
+        <Route path="/admin/parity" element={<X1CloneLedger />} />
+        {/* Visual X installed as one native X1 module. */}
+        <Route path="/visual-x" element={<VisualEditor />} />
         </Route>
       </Route>
-      <Route element={<ProtectedRoute unauthenticatedElement={<Navigate to="/login?returnTo=/x1-home" replace />} />}>
+      <Route element={<ProtectedRoute unauthenticatedElement={<Navigate to="/login?returnTo=/v2/b" replace />} />}>
         <Route path="/x1-home" element={<X1Home />} />
+        <Route path="/v2/:variant" element={<V2Experience />} />
       </Route>
       <Route element={<ProtectedRoute unauthenticatedElement={<Navigate to="/login?returnTo=/x1-module" replace />} />}>
         <Route path="/x1-module" element={<X1Module />} />
