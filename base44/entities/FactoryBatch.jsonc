@@ -1,0 +1,118 @@
+{
+  "name": "FactoryBatch",
+  "type": "object",
+  "properties": {
+    "sentence": {
+      "type": "string",
+      "description": "The one-sentence input that started the production run"
+    },
+    "industry": {
+      "type": "string",
+      "description": "Target industry for this batch"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "planning",
+        "generating",
+        "qa_testing",
+        "scoring",
+        "refining",
+        "ready",
+        "needs_refinement",
+        "failed"
+      ],
+      "default": "planning"
+    },
+    "current_step": {
+      "type": "string",
+      "description": "Current pipeline step (initializing, fetching_benchmarks, converting_prompt, compiling_spec, running_qa, scoring, refining, complete, error)"
+    },
+    "prompt_result": {
+      "type": "string",
+      "description": "JSON of the converted prompt with site type, audience, keywords"
+    },
+    "spec_result": {
+      "type": "string",
+      "description": "JSON of the compiled product specification"
+    },
+    "qa_result": {
+      "type": "string",
+      "description": "JSON of the QA audit scores and findings"
+    },
+    "refinement_suggestions": {
+      "type": "string",
+      "description": "JSON of QA feedback loop suggestions for improvement"
+    },
+    "quality_score": {
+      "type": "number",
+      "default": 0,
+      "description": "Composite quality score 0-100 (target: 95+)"
+    },
+    "repair_round": {
+      "type": "number",
+      "default": 0,
+      "description": "Current repair round (max 3)"
+    },
+    "target_variant_count": {
+      "type": "number",
+      "default": 100,
+      "description": "How many SEO variants to generate"
+    },
+    "target_backlink_count": {
+      "type": "number",
+      "default": 50,
+      "description": "How many backlink sites to create"
+    },
+    "created_variants": {
+      "type": "number",
+      "default": 0,
+      "description": "Number of SEO variants actually created"
+    },
+    "created_backlinks": {
+      "type": "number",
+      "default": 0,
+      "description": "Number of backlink sites actually created"
+    },
+    "error_message": {
+      "type": "string",
+      "description": "Error details if the pipeline failed"
+    }
+  },
+  "required": [
+    "sentence",
+    "status"
+  ],
+  "rls": {
+    "read": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "create": {},
+    "update": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

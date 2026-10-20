@@ -1,0 +1,87 @@
+{
+  "name": "SEOVariant",
+  "type": "object",
+  "properties": {
+    "batch_id": {
+      "type": "string",
+      "description": "ID of the parent factory batch"
+    },
+    "variant_number": {
+      "type": "number",
+      "default": 1,
+      "description": "Sequential variant number within the batch"
+    },
+    "target_keyword": {
+      "type": "string",
+      "description": "Primary SEO keyword this variant targets"
+    },
+    "target_location": {
+      "type": "string",
+      "description": "Geographic location this variant targets (city, state)"
+    },
+    "content": {
+      "type": "string",
+      "description": "The generated variant content or prompt"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "generated",
+        "deployed",
+        "failed"
+      ],
+      "default": "pending"
+    },
+    "google_score": {
+      "type": "number",
+      "default": 0,
+      "description": "Google SEO readiness score 0-100"
+    },
+    "url": {
+      "type": "string",
+      "description": "Deployed URL of this variant"
+    },
+    "funnel_type": {
+      "type": "string",
+      "description": "Lead funnel type used on this variant"
+    }
+  },
+  "required": [
+    "batch_id",
+    "target_keyword",
+    "status"
+  ],
+  "rls": {
+    "read": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "create": {},
+    "update": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

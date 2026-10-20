@@ -1,0 +1,96 @@
+{
+  "name": "BacklinkSite",
+  "type": "object",
+  "properties": {
+    "batch_id": {
+      "type": "string",
+      "description": "ID of the parent factory batch"
+    },
+    "industry": {
+      "type": "string",
+      "description": "Service industry this backlink site targets"
+    },
+    "site_type": {
+      "type": "string",
+      "enum": [
+        "directory",
+        "blog_post",
+        "landing_page",
+        "local_page",
+        "review_site",
+        "comparison_page"
+      ],
+      "default": "directory",
+      "description": "Type of backlink website"
+    },
+    "target_keyword": {
+      "type": "string",
+      "description": "Primary keyword for this backlink site"
+    },
+    "target_location": {
+      "type": "string",
+      "description": "Geographic location targeted"
+    },
+    "content": {
+      "type": "string",
+      "description": "Generated content for the backlink page"
+    },
+    "backlink_url": {
+      "type": "string",
+      "description": "URL this site links back to (the main site)"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "created",
+        "deployed",
+        "failed"
+      ],
+      "default": "pending"
+    },
+    "domain_authority": {
+      "type": "number",
+      "default": 0,
+      "description": "Target domain authority score"
+    }
+  },
+  "required": [
+    "batch_id",
+    "industry",
+    "target_keyword",
+    "status"
+  ],
+  "rls": {
+    "read": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "create": {},
+    "update": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

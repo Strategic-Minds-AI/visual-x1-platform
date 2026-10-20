@@ -17,6 +17,7 @@ import SystemControl from './pages/SystemControl';
 import KanbanBoard from './pages/KanbanBoard';
 import AnalyticsDashboard from './pages/AnalyticsDashboard';
 import BenchmarkLibrary from './pages/BenchmarkLibrary';
+import WebsiteFactory from './pages/WebsiteFactory';
 import Login from '@/pages/Login';
 import Register from '@/pages/Register';
 import ForgotPassword from '@/pages/ForgotPassword';
@@ -67,6 +68,7 @@ const AuthenticatedApp = () => {
         <Route path="/kanban" element={<KanbanBoard />} />
         <Route path="/analytics" element={<AnalyticsDashboard />} />
         <Route path="/benchmarks" element={<BenchmarkLibrary />} />
+        <Route path="/factory" element={<WebsiteFactory />} />
       </Route>
       <Route path="*" element={<PageNotFound />} />
     </Routes>

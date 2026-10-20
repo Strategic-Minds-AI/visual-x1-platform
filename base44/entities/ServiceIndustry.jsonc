@@ -1,0 +1,92 @@
+{
+  "name": "ServiceIndustry",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Industry name (e.g., Emergency Plumbing, Epoxy Flooring)"
+    },
+    "slug": {
+      "type": "string",
+      "description": "URL-safe unique identifier"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "emergency",
+        "service",
+        "need"
+      ],
+      "default": "service",
+      "description": "Urgency category: emergency (24/7 urgent), service (scheduled), need (considered purchase)"
+    },
+    "parent_industry": {
+      "type": "string",
+      "description": "Broader industry group (e.g., Plumbing, Flooring, Restoration)"
+    },
+    "keywords": {
+      "type": "string",
+      "description": "Comma-separated target SEO keywords"
+    },
+    "avg_cpc": {
+      "type": "number",
+      "description": "Average cost-per-click for Google Ads in this industry"
+    },
+    "lead_value": {
+      "type": "number",
+      "description": "Average lead value in USD"
+    },
+    "urgency_level": {
+      "type": "string",
+      "enum": [
+        "emergency",
+        "high",
+        "medium",
+        "low"
+      ],
+      "default": "medium"
+    },
+    "funnel_type": {
+      "type": "string",
+      "enum": [
+        "click_to_call",
+        "quote_request",
+        "booking",
+        "emergency_contact",
+        "consultation"
+      ],
+      "default": "quote_request"
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true
+    },
+    "display_order": {
+      "type": "number",
+      "default": 0
+    }
+  },
+  "required": [
+    "name",
+    "slug",
+    "category"
+  ],
+  "rls": {
+    "read": {},
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}
