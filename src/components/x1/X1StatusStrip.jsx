@@ -27,7 +27,7 @@ const detail = (body) => {
   }
 };
 
-const tone = (status) => (status === 200 ? "border-emerald-200 bg-emerald-50 text-emerald-700" : "border-amber-200 bg-amber-50 text-amber-700");
+const tone = (entry) => { let verified = false; try { const parsed = JSON.parse(entry.body || "{}"); verified = entry.status === 200 && typeof parsed.status === "string" && (parsed.status === "LIVE_DATA_VERIFIED" || parsed.status.endsWith("_READ_VERIFIED") || parsed.status === "WORKER_STATUS_VERIFIED"); } catch {} return verified ? "border-emerald-200 bg-emerald-50 text-emerald-700" : "border-amber-200 bg-amber-50 text-amber-700"; };
 
 export default function X1StatusStrip() {
   const [reading, setReading] = useState(true);
@@ -66,7 +66,7 @@ export default function X1StatusStrip() {
       </CardHeader>
       <CardContent className="space-y-3">
         <p className="text-xs text-muted-foreground">
-          Read now from X1's own endpoints. Whatever X1 answers is what is shown, including a refusal.
+          X1 reports current service and tenant status. Configuration alone is not proof of live connectivity.
         </p>
         {error && <p className="text-xs text-rose-600">{error}</p>}
         {state && (
@@ -74,7 +74,7 @@ export default function X1StatusStrip() {
             <div className="space-y-1.5">
               {state.endpoints.map((e) => (
                 <div key={e.name} className="flex flex-wrap items-center gap-2 rounded-lg border border-border px-2.5 py-2">
-                  <Badge variant="outline" className={cn("text-[10px] border shrink-0", tone(e.status))}>
+                  <Badge variant="outline" className={cn("text-[10px] border shrink-0", tone(e))}>
                     {e.status || "no answer"}
                   </Badge>
                   <span className="text-xs font-medium">{e.name}</span>
