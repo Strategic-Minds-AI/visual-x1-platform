@@ -5,6 +5,8 @@ import EditorTabStrip from "@/components/visualeditor/EditorTabStrip";
 import EditorPane from "@/components/visualeditor/EditorPane";
 import { DEFAULT_TITLE } from "@/lib/editorTabs";
 import "@/styles/x1-visual-editor.css";
+import { Activity } from "lucide-react";
+import SandboxOpsDrawer from "@/components/visualeditor/SandboxOpsDrawer";
 
 /**
  * The Visual Editor, as a section of the operator console: a browser-style strip of
@@ -23,6 +25,7 @@ import "@/styles/x1-visual-editor.css";
  */
 export default function VisualEditorWorkspace({ rail, railOpen = false }) {
   const tabs = useEditorTabs();
+  const [sandboxOpen, setSandboxOpen] = useState(false);
 
   // The live project names a tab the operator has not named by working in it yet;
   // every tab after that carries its own name, so two projects never share one.
@@ -51,6 +54,9 @@ export default function VisualEditorWorkspace({ rail, railOpen = false }) {
           onSelect={tabs.selectTab}
           onClose={tabs.closeTab}
         />
+
+        <button className="x1-ops-launch" type="button" aria-label="Open X1 autonomous coding sandbox" onClick={() => setSandboxOpen(true)}><Activity size={14} /> AGENT SANDBOX</button>
+        <SandboxOpsDrawer open={sandboxOpen} onClose={() => setSandboxOpen(false)} />
 
         <EditorPane
           key={tabs.active.id}
