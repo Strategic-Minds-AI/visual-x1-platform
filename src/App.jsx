@@ -31,6 +31,9 @@ import SystemCapabilities from './pages/SystemCapabilities';
 import SystemBenchmarks from './pages/SystemBenchmarks';
 import SystemAudit from './pages/SystemAudit';
 import PromptSystem from './pages/PromptSystem';
+import Workspace from './pages/Workspace';
+import CloneIngest from './pages/CloneIngest';
+import AppShell from '@/components/workspace/AppShell';
 import Login from '@/pages/Login';
 import Register from '@/pages/Register';
 import ForgotPassword from '@/pages/ForgotPassword';
@@ -71,7 +74,10 @@ const AuthenticatedApp = () => {
       <Route path="/reset-password" element={<ResetPassword />} />
       <Route path="/oauth/consent" element={<OAuthConsent />} />
       <Route element={<ProtectedRoute unauthenticatedElement={<Navigate to="/login" replace />} />}>
-        <Route path="/" element={<Dashboard />} />
+        <Route element={<AppShell />}>
+        <Route path="/" element={<Workspace />} />
+        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/clone-ingest" element={<CloneIngest />} />
         <Route path="/job-board" element={<JobBoard />} />
         <Route path="/prompt-studio" element={<PromptStudio />} />
         <Route path="/visual-editor" element={<VisualEditor />} />
@@ -95,6 +101,7 @@ const AuthenticatedApp = () => {
         <Route path="/system-benchmarks" element={<SystemBenchmarks />} />
         <Route path="/system-audit" element={<SystemAudit />} />
         <Route path="/prompt-system" element={<PromptSystem />} />
+        </Route>
       </Route>
       <Route path="*" element={<PageNotFound />} />
     </Routes>

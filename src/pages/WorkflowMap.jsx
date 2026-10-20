@@ -112,7 +112,7 @@ export default function WorkflowMap() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-background">
+      <div className="min-h-full bg-background">
         <PlatformNav />
         <div className="flex items-center justify-center py-24"><Loader2 className="w-5 h-5 animate-spin text-muted-foreground" /></div>
       </div>
@@ -120,7 +120,7 @@ export default function WorkflowMap() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-full bg-background">
       <PlatformNav />
       <main className="max-w-7xl mx-auto px-4 py-8 space-y-5">
         {error && (

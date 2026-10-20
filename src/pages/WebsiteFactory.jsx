@@ -87,7 +87,7 @@ export default function WebsiteFactory() {
   };
 
   return (
-    <div className="h-screen flex flex-col bg-background overflow-hidden">
+    <div className="h-full flex flex-col bg-background overflow-hidden">
       {/* Compact Header */}
       <header className="border-b border-border bg-card shrink-0 px-4 py-2 flex items-center gap-3">
         <Link to="/" className="flex items-center gap-1 text-muted-foreground hover:text-foreground transition text-sm">

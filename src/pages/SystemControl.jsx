@@ -13,7 +13,7 @@ import QARefinementPanel from "@/components/system/QARefinementPanel";
 
 export default function SystemControl() {
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-full bg-background">
       <header className="border-b border-border bg-card sticky top-0 z-10">
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">

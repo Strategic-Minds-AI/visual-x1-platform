@@ -113,7 +113,7 @@ export default function BacklinkHealth() {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-full bg-background">
       <header className="border-b border-border bg-card px-6 py-3 flex items-center gap-3 sticky top-0 z-10">
         <Link to="/" className="flex items-center gap-1 text-muted-foreground hover:text-foreground transition text-sm">
           <ChevronLeft className="w-4 h-4" /> Dashboard

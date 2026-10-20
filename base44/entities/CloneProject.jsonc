@@ -1,0 +1,203 @@
+{
+  "name": "CloneProject",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "What is being cloned, as the operator named it"
+    },
+    "source_type": {
+      "type": "string",
+      "enum": [
+        "url",
+        "markup",
+        "file"
+      ],
+      "default": "url",
+      "description": "Where the source came from"
+    },
+    "source_url": {
+      "type": "string",
+      "description": "Source URL when the clone was captured from a live page"
+    },
+    "source_label": {
+      "type": "string",
+      "description": "Human label for the source (page title, file name, or system name)"
+    },
+    "industry": {
+      "type": "string"
+    },
+    "capture_json": {
+      "type": "string",
+      "description": "JSON of the deterministic capture signature: http status, byte size, title, meta, headings, nav links, sections, forms, images, stylesheet and script counts, colors, fonts"
+    },
+    "capture_text": {
+      "type": "string",
+      "description": "Truncated visible text of the source, used for content parity checks"
+    },
+    "spec_json": {
+      "type": "string",
+      "description": "JSON of the extracted build specification: regions, components, tokens, interactions, content slots"
+    },
+    "build_prompt": {
+      "type": "string",
+      "description": "The region-by-region prompt used to reproduce the source"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "captured",
+        "capture_failed",
+        "spec_ready",
+        "rendered",
+        "verifying",
+        "gate_failed",
+        "verified",
+        "rejected"
+      ],
+      "default": "captured"
+    },
+    "operational_checks_json": {
+      "type": "string",
+      "description": "JSON array of deterministic operational checks, each with id, label, required, result (PASS/FAIL/NOT RUN), expected, found and evidence"
+    },
+    "operational_gate": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "passed",
+        "failed"
+      ],
+      "default": "pending",
+      "description": "Passes only when every required operational check is PASS"
+    },
+    "visual_check_json": {
+      "type": "string",
+      "description": "JSON of the visual comparison: per-region findings, defect list, verdict and the model that produced it"
+    },
+    "visual_gate": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "passed",
+        "failed",
+        "not_run"
+      ],
+      "default": "not_run",
+      "description": "Passes only when the visual comparison reports zero open defects"
+    },
+    "reference_image_uri": {
+      "type": "string",
+      "description": "Private file URI of the source screenshot used as visual reference"
+    },
+    "clone_image_uri": {
+      "type": "string",
+      "description": "Private file URI of the rendered clone screenshot"
+    },
+    "qa_json": {
+      "type": "string",
+      "description": "JSON of the QA agent pass: claims, defects, severity, evidence and confidence"
+    },
+    "validation_json": {
+      "type": "string",
+      "description": "JSON of the independent validating agent pass: per-claim PASS/FAIL/NOT RUN, decision and what it could not verify"
+    },
+    "operational_score": {
+      "type": "number",
+      "default": 0,
+      "description": "Percent of required operational checks passed"
+    },
+    "visual_score": {
+      "type": "number",
+      "default": 0,
+      "description": "Visual parity score 0-100 from the comparison"
+    },
+    "overall_score": {
+      "type": "number",
+      "default": 0,
+      "description": "Combined score. A score never authorizes acceptance on its own; both gates must pass."
+    },
+    "rendered_html_length": {
+      "type": "number",
+      "default": 0
+    },
+    "human_approved": {
+      "type": "boolean",
+      "default": false,
+      "description": "Final mandatory human acceptance of visual and operational parity"
+    },
+    "approved_by": {
+      "type": "string"
+    },
+    "approved_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "defects_json": {
+      "type": "string",
+      "description": "JSON array of open defects blocking acceptance"
+    },
+    "evidence_notes": {
+      "type": "string",
+      "description": "JSON array of sources, limitations and what could not be verified"
+    },
+    "receipt_id": {
+      "type": "string",
+      "description": "ValidationReceipt written for the last verification pass"
+    },
+    "generated_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "name",
+    "source_type",
+    "status"
+  ],
+  "rls": {
+    "create": {
+      "$or": [
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "user"
+          }
+        }
+      ]
+    },
+    "read": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "update": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

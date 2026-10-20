@@ -31,7 +31,7 @@ export default function SystemCapabilities() {
   const visible = SYSTEM_CAPABILITIES.filter((c) => domain === "all" || c.domain === domain);
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-full bg-background">
       <PlatformNav />
       <main className="max-w-6xl mx-auto px-4 py-8 space-y-5">
         <header className="rounded-xl border border-border bg-card p-5">

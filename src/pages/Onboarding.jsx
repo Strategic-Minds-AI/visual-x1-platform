@@ -134,7 +134,7 @@ export default function Onboarding() {
 
   if (running) {
     return (
-      <div className="min-h-screen bg-background">
+      <div className="min-h-full bg-background">
         <PlatformNav />
         <main className="max-w-2xl mx-auto px-4 py-16">
           <div className="rounded-xl border border-border bg-card p-6 space-y-5">
@@ -175,7 +175,7 @@ export default function Onboarding() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-full bg-background">
       <PlatformNav />
       <main className="max-w-6xl mx-auto px-4 py-8">
         <div className="grid gap-8 lg:grid-cols-[240px_1fr] items-start">

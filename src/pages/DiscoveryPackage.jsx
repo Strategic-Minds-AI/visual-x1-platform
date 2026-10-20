@@ -124,7 +124,7 @@ export default function DiscoveryPackage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-background">
+      <div className="min-h-full bg-background">
         <PlatformNav />
         <div className="flex items-center justify-center py-24">
           <Loader2 className="w-5 h-5 animate-spin text-muted-foreground" />
@@ -135,7 +135,7 @@ export default function DiscoveryPackage() {
 
   if (!reportParam || !report) {
     return (
-      <div className="min-h-screen bg-background">
+      <div className="min-h-full bg-background">
         <PlatformNav />
         <main className="max-w-4xl mx-auto px-4 py-8 space-y-5">
           <div className="flex items-start justify-between gap-3 flex-wrap">
@@ -196,7 +196,7 @@ export default function DiscoveryPackage() {
   const normalization = parse(report.normalization_json, {});
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-full bg-background">
       <PlatformNav />
       <main className="max-w-5xl mx-auto px-4 py-8 space-y-5">
         {error && (

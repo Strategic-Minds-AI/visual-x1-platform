@@ -174,7 +174,7 @@ export default function PromptLab() {
   };
 
   return (
-    <div className="h-screen flex flex-col bg-background">
+    <div className="h-full flex flex-col bg-background">
       <header className="border-b border-border bg-card shrink-0">
         <div className="px-6 py-3 flex items-center gap-3">
           <Link to="/" className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition">

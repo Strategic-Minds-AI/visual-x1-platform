@@ -57,7 +57,7 @@ export default function PromptSystem() {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-full bg-background">
       <PlatformNav />
       <div className="max-w-7xl mx-auto px-4 py-6 space-y-5">
         <div>
