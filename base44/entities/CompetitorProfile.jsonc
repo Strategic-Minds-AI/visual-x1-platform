@@ -1,0 +1,146 @@
+{
+  "name": "CompetitorProfile",
+  "type": "object",
+  "properties": {
+    "intake_id": {
+      "type": "string",
+      "description": "ClientIntake this competitor was found for"
+    },
+    "report_id": {
+      "type": "string",
+      "description": "DiscoveryReport this competitor belongs to"
+    },
+    "name": {
+      "type": "string"
+    },
+    "url": {
+      "type": "string"
+    },
+    "city": {
+      "type": "string"
+    },
+    "state": {
+      "type": "string"
+    },
+    "distance_miles": {
+      "type": "number",
+      "description": "Modeled distance from the client's service area"
+    },
+    "rank": {
+      "type": "number",
+      "default": 1,
+      "description": "Competitive rank found in discovery (1 = strongest)"
+    },
+    "positioning": {
+      "type": "string",
+      "description": "How the competitor positions itself in the market"
+    },
+    "price_signals_json": {
+      "type": "string",
+      "description": "JSON array of observed price and offer signals"
+    },
+    "review_rating": {
+      "type": "number",
+      "description": "Public review rating found during discovery"
+    },
+    "review_count": {
+      "type": "number",
+      "description": "Public review count found during discovery"
+    },
+    "strengths_json": {
+      "type": "string",
+      "description": "JSON array of observed strengths"
+    },
+    "weaknesses_json": {
+      "type": "string",
+      "description": "JSON array of observed weaknesses"
+    },
+    "negative_themes_json": {
+      "type": "string",
+      "description": "JSON array of complaint and negative-review themes"
+    },
+    "scores_json": {
+      "type": "string",
+      "description": "JSON of the rubric scores and their probabilities"
+    },
+    "visual_score": {
+      "type": "number",
+      "default": 0,
+      "description": "Frontend visual professionalism 0-100"
+    },
+    "trust_score": {
+      "type": "number",
+      "default": 0,
+      "description": "Trust and social proof 0-100"
+    },
+    "offer_score": {
+      "type": "number",
+      "default": 0,
+      "description": "Offer and pricing clarity 0-100"
+    },
+    "conversion_score": {
+      "type": "number",
+      "default": 0,
+      "description": "Conversion readiness 0-100"
+    },
+    "content_score": {
+      "type": "number",
+      "default": 0,
+      "description": "Content depth and search surface 0-100"
+    },
+    "composite_score": {
+      "type": "number",
+      "default": 0,
+      "description": "Weighted composite competitor strength 0-100"
+    },
+    "verdict": {
+      "type": "string",
+      "description": "One-line assessment of the threat this competitor poses"
+    },
+    "source_urls_json": {
+      "type": "string",
+      "description": "JSON array of sources this profile was built from"
+    },
+    "skip_trace_json": {
+      "type": "string",
+      "description": "JSON of the public skip-trace fields found (contact surfaces, hours, licenses)"
+    }
+  },
+  "required": [
+    "intake_id",
+    "name",
+    "url"
+  ],
+  "rls": {
+    "create": {},
+    "read": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "update": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

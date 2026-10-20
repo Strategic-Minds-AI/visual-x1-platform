@@ -1,0 +1,151 @@
+{
+  "name": "DiscoveryReport",
+  "type": "object",
+  "properties": {
+    "intake_id": {
+      "type": "string",
+      "description": "ClientIntake this report belongs to"
+    },
+    "client_name": {
+      "type": "string"
+    },
+    "company_name": {
+      "type": "string"
+    },
+    "industry": {
+      "type": "string"
+    },
+    "website_url": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "generated",
+        "approved",
+        "rejected"
+      ],
+      "default": "generated",
+      "description": "Approval gate state for the client-facing discovery package"
+    },
+    "summary": {
+      "type": "string",
+      "description": "Executive summary of the discovery"
+    },
+    "business_snapshot_json": {
+      "type": "string",
+      "description": "JSON of the public-surface snapshot of the client business"
+    },
+    "industry_intelligence_json": {
+      "type": "string",
+      "description": "JSON of industry services, products and demand"
+    },
+    "pricing_json": {
+      "type": "string",
+      "description": "JSON of observed price ranges for the industry"
+    },
+    "customer_json": {
+      "type": "string",
+      "description": "JSON of ideal customer, buying power and habits"
+    },
+    "complaint_themes_json": {
+      "type": "string",
+      "description": "JSON of the negative themes found across competitors"
+    },
+    "visual_audit_json": {
+      "type": "string",
+      "description": "JSON of the visual and professionalism audit of competitors"
+    },
+    "niches_json": {
+      "type": "string",
+      "description": "JSON of niches and open areas competitors are not covering"
+    },
+    "counter_strategy_json": {
+      "type": "string",
+      "description": "JSON of the counter strategy derived from the competitor gaps"
+    },
+    "dominant_benchmark_json": {
+      "type": "string",
+      "description": "JSON of the per-dimension benchmark target required to beat the field"
+    },
+    "competitor_ids_json": {
+      "type": "string",
+      "description": "JSON array of CompetitorProfile ids"
+    },
+    "normalization_json": {
+      "type": "string",
+      "description": "JSON of the normalized, machine-readable document sections"
+    },
+    "proposal_json": {
+      "type": "string",
+      "description": "JSON of the multi-option strategy proposal (short, mid and long horizon)"
+    },
+    "prediction_json": {
+      "type": "string",
+      "description": "JSON of the modeled time, traffic, lead and revenue ranges"
+    },
+    "confidence": {
+      "type": "number",
+      "default": 0,
+      "description": "Model confidence 0-1 based on how much input was real"
+    },
+    "evidence_notes": {
+      "type": "string",
+      "description": "JSON array of sources and evidence notes from the research"
+    },
+    "approval_notes": {
+      "type": "string"
+    },
+    "approved_by": {
+      "type": "string"
+    },
+    "approved_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "generated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "engine_version": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "intake_id",
+    "company_name",
+    "status"
+  ],
+  "rls": {
+    "create": {},
+    "read": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "update": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

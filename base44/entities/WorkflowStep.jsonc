@@ -1,0 +1,117 @@
+{
+  "name": "WorkflowStep",
+  "type": "object",
+  "properties": {
+    "intake_id": {
+      "type": "string",
+      "description": "ClientIntake this project checklist measures"
+    },
+    "project_label": {
+      "type": "string",
+      "description": "Client or project name shown on the workflow map"
+    },
+    "phase": {
+      "type": "string",
+      "description": "Phase this step belongs to"
+    },
+    "phase_order": {
+      "type": "number",
+      "default": 1
+    },
+    "step_order": {
+      "type": "number",
+      "default": 1,
+      "description": "Global step order across the whole workflow"
+    },
+    "title": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string",
+      "description": "What has to happen for this step to be complete"
+    },
+    "owner_agent": {
+      "type": "string",
+      "description": "Agent or role accountable for the step"
+    },
+    "is_gate": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether this step is an approval gate with a client-facing rendering"
+    },
+    "gate_type": {
+      "type": "string",
+      "enum": [
+        "none",
+        "internal",
+        "client",
+        "payment"
+      ],
+      "default": "none"
+    },
+    "evidence_required": {
+      "type": "string",
+      "description": "What evidence must exist before the step can pass its gate"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "not_started",
+        "in_progress",
+        "blocked",
+        "ready_for_gate",
+        "approved"
+      ],
+      "default": "not_started"
+    },
+    "evidence": {
+      "type": "string",
+      "description": "Evidence attached when the step was completed"
+    },
+    "notes": {
+      "type": "string"
+    },
+    "completed_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "intake_id",
+    "phase",
+    "step_order",
+    "status"
+  ],
+  "rls": {
+    "create": {},
+    "read": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "update": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

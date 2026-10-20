@@ -24,6 +24,12 @@ import TemplateEngine from './pages/TemplateEngine';
 import BacklinkHealth from './pages/BacklinkHealth';
 import VariationTracker from './pages/VariationTracker';
 import SeoSimulator from './pages/SeoSimulator';
+import Onboarding from './pages/Onboarding';
+import DiscoveryPackage from './pages/DiscoveryPackage';
+import WorkflowMap from './pages/WorkflowMap';
+import SystemCapabilities from './pages/SystemCapabilities';
+import SystemBenchmarks from './pages/SystemBenchmarks';
+import SystemAudit from './pages/SystemAudit';
 import Login from '@/pages/Login';
 import Register from '@/pages/Register';
 import ForgotPassword from '@/pages/ForgotPassword';
@@ -81,6 +87,12 @@ const AuthenticatedApp = () => {
         <Route path="/backlink-health" element={<BacklinkHealth />} />
         <Route path="/variations" element={<VariationTracker />} />
         <Route path="/seo-simulator" element={<SeoSimulator />} />
+        <Route path="/onboarding" element={<Onboarding />} />
+        <Route path="/discovery" element={<DiscoveryPackage />} />
+        <Route path="/workflow-map" element={<WorkflowMap />} />
+        <Route path="/system-capabilities" element={<SystemCapabilities />} />
+        <Route path="/system-benchmarks" element={<SystemBenchmarks />} />
+        <Route path="/system-audit" element={<SystemAudit />} />
       </Route>
       <Route path="*" element={<PageNotFound />} />
     </Routes>

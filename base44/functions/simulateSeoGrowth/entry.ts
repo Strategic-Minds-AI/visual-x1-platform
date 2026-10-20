@@ -25,6 +25,23 @@ const INDUSTRY_BENCHMARKS = {
 };
 
 const COST_BY_TIER = { free: 0, low: 20, medium: 140, high: 450 };
+
+// Simulation modes. A higher mode assumes more work runs in parallel and shows a wider band —
+// it never changes the inputs you entered, and it is not a better forecast.
+const MODES = {
+  simple: { label: 'Simple', intensity: 0.85, scenarios: 1, range_width: 0.35 },
+  moderate: { label: 'Moderate', intensity: 1.0, scenarios: 3, range_width: 0.45 },
+  pro: { label: 'Pro', intensity: 1.12, scenarios: 4, range_width: 0.55 },
+  elite: { label: 'Elite', intensity: 1.24, scenarios: 5, range_width: 0.62 },
+  god: { label: 'God Mode', intensity: 1.38, scenarios: 6, range_width: 0.72 },
+};
+const SCENARIO_NAMES = ['Conservative', 'Cautious', 'Expected', 'Accelerated', 'Aggressive', 'Maximum push'];
+const HORIZONS = [
+  { id: '3m', label: '3 months', months: 3 },
+  { id: '6m', label: '6 months', months: 6 },
+  { id: '12m', label: '12 months', months: 12 },
+  { id: '24m', label: '24 months', months: 24 },
+];
 const CATEGORIES = ['technical', 'content', 'aeo', 'geo', 'local', 'programmatic', 'authority', 'paid', 'social', 'engagement', 'offline', 'measurement', 'ai_native'];
 
 const clamp = (v, lo, hi) => Math.min(hi, Math.max(lo, v));
@@ -76,18 +93,25 @@ const buildScores = (p, cov) => {
   return { technical, content, authority, engagement, aeo, geo, overall, difficulty };
 };
 
-const buildDays = (p, strategies, scores) => {
+const buildDays = (p, strategies, scores, mode) => {
   const baseDays = 26 + scores.difficulty * 3.1;
   const velocity = decaySum(strategies.map((s) => num(s.velocity, 4)), 0.86);
   const scoreLift = (scores.content + scores.technical + scores.authority) / 3;
   let d = baseDays - velocity * 0.62 - scoreLift * 0.5;
   if (num(p.content_quality, 60) < 55) d += 18;
   if (num(p.domain_age_months) < 3) d += 30;
+  // Mode assumption: more parallel work shortens the modeled ramp. The band widens with it.
+  d = d * (2 - mode.intensity);
   const p50 = clamp(round(d), 21, 540);
-  return { p10: clamp(round(p50 * 0.68), 14, p50), p50, p90: clamp(round(p50 * 1.42), p50 + 7, 720) };
+  const spread = mode.range_width;
+  return {
+    p10: clamp(round(p50 * (1 - spread * 0.5)), 14, p50),
+    p50,
+    p90: clamp(round(p50 * (1 + spread * 0.8)), p50 + 7, 720),
+  };
 };
 
-const buildTimeline = (p, scores, centerDays, volumeFactor) => {
+const buildTimeline = (p, scores, centerDays, volumeFactor, months = 12) => {
   const searches = clamp((300 + scores.difficulty * 26) * volumeFactor, 200, 14000);
   const ctr = 0.085;
   const center = centerDays / 30;
@@ -95,7 +119,7 @@ const buildTimeline = (p, scores, centerDays, volumeFactor) => {
     0.015 + 0.05 * (num(p.funnel_strength, 60) / 100) + 0.02 * (scores.engagement / 100)
     + (p.promo === 'strong' ? 0.012 : p.promo === 'small' ? 0.006 : 0), 0.01, 0.14);
   const rows = [];
-  for (let m = 1; m <= 12; m++) {
+  for (let m = 1; m <= months; m++) {
     const share = 0.04 + 0.96 / (1 + Math.exp(-(m - center) / 1.35));
     const clicks = searches * ctr * share;
     const impressions = searches * (0.3 + 0.7 * share);
@@ -116,11 +140,58 @@ const buildTimeline = (p, scores, centerDays, volumeFactor) => {
 
 const sumOf = (rows, key) => rows.reduce((s, r) => s + r[key], 0);
 
-const simulate = (p, strategies, bench) => {
+// Scenario band: the same inputs read across the modeled spread, so a range is shown instead
+// of one number.
+const buildScenarios = (base, mode) => {
+  const rows = [];
+  for (let i = 0; i < mode.scenarios; i++) {
+    const offset = mode.scenarios <= 1 ? 0 : ((i / (mode.scenarios - 1)) - 0.5) * 2 * mode.range_width;
+    const factor = 1 + offset;
+    const nameIndex = mode.scenarios <= 1 ? 2 : round((i / (mode.scenarios - 1)) * (SCENARIO_NAMES.length - 1));
+    rows.push({
+      name: mode.scenarios <= 1 ? 'Single path' : SCENARIO_NAMES[nameIndex],
+      offset: round(offset * 100) / 100,
+      days_to_page1: clamp(round(base.days.p50 * (1 - offset * 0.25)), 14, 720),
+      sessions_12m: round(base.totals.sessions_12m * factor),
+      leads_12m: round(base.totals.leads_12m * factor),
+      revenue_12m: round(base.totals.revenue_12m * factor),
+      cost_12m: base.totals.cost_12m,
+      note: offset >= 0.15 ? 'Work lands early and compounds.' : offset <= -0.15 ? 'Slower ramp or softer demand than expected.' : 'Middle of the modeled band.',
+    });
+  }
+  return rows;
+};
+
+// The trace: every step the engine took to reach the numbers, with the actual values in it.
+const buildReasoning = (base, p, strategies, mode, bench) => {
+  const families = Object.entries(base.cov).filter(([, v]) => v > 0).sort((a, b) => b[1] - a[1]);
+  const steps = [
+    { step: 'Read the inputs', detail: `Industry "${p.industry || 'general'}", keyword "${p.target_keyword || 'not set'}", ${strategies.length} strategies enabled, mode ${mode.label}.` },
+    { step: 'Scored strategy coverage by family', detail: families.length ? families.slice(0, 4).map(([k, v]) => `${k} ${Math.round(v * 100) / 100}`).join(', ') : 'No family enabled, so coverage scores zero.' },
+    { step: 'Scored the site on six signals', detail: `technical ${round(base.scores.technical)}, content ${round(base.scores.content)}, authority ${round(base.scores.authority)}, engagement ${round(base.scores.engagement)}, AEO ${round(base.scores.aeo)}, GEO ${round(base.scores.geo)} — overall ${round(base.scores.overall)} at difficulty ${base.scores.difficulty}.` },
+    { step: 'Modeled the ranking ramp', detail: `Stacked velocity and the blended score put the expected page-1 date near ${base.days.p50} days, inside a ${base.days.p10}-${base.days.p90} day band.` },
+    { step: 'Applied the mode', detail: `${mode.label} assumes ${mode.intensity}x parallel work, widens the band to about ±${Math.round(mode.range_width * 80)}% and runs ${mode.scenarios} scenario(s).` },
+    { step: 'Applied market pressure', detail: `Industry constants for "${p.industry || 'general'}": $${bench.cpc.toFixed(2)} CPC, $${bench.lead_value} lead value, with $${num(p.monthly_ad_spend)}/month of paid spend included.` },
+    { step: 'Converted traffic into money', detail: `${base.totals.leads_12m} modeled leads and about $${base.totals.revenue_12m} of modeled value over 12 months against $${base.totals.cost_12m} of modeled cost.` },
+  ];
+  if (mode.scenarios > 1) steps.push({ step: 'Ran the scenario band', detail: `${mode.scenarios} scenarios from conservative to maximum push, so the spread is visible rather than one number.` });
+  return steps;
+};
+
+const ownerFor = (label) => {
+  const l = String(label || '').toLowerCase();
+  if (l.includes('article') || l.includes('content') || l.includes('social')) return 'CONTENT agent';
+  if (l.includes('video') || l.includes('image')) return 'BRAND agent';
+  if (l.includes('ad') || l.includes('spend') || l.includes('network')) return 'GROWTH agent';
+  if (l.includes('promo') || l.includes('offer')) return 'STRATEGY agent';
+  return 'STRATEGY agent';
+};
+
+const simulate = (p, strategies, bench, mode) => {
   const cov = {};
   CATEGORIES.forEach((c) => { cov[c] = coverageFor(strategies, c); });
   const scores = buildScores(p, cov);
-  const days = buildDays(p, strategies, scores);
+  const days = buildDays(p, strategies, scores, mode);
   const slow = buildTimeline(p, scores, days.p90, 0.72);
   const expected = buildTimeline(p, scores, days.p50, 1.0);
   const fast = buildTimeline(p, scores, days.p10, 1.28);
@@ -146,7 +217,49 @@ const simulate = (p, strategies, bench) => {
     expected: { sessions_12m: totals.sessions_12m, leads_12m: totals.leads_12m, revenue_12m: totals.revenue_12m },
     aggressive: { sessions_12m: round(sumOf(fast, 'sessions')), leads_12m: round(sumOf(fast, 'leads')), revenue_12m: round(sumOf(fast, 'revenue')) },
   };
-  return { cov, scores, days, timeline, totals, ranges };
+  // Time-based prediction report: the same engine projected to each horizon, with the band.
+  const long = buildTimeline(p, scores, days.p50, 1.0, 24);
+  const longSlow = buildTimeline(p, scores, days.p90, 0.72, 24);
+  const longFast = buildTimeline(p, scores, days.p10, 1.28, 24);
+  const horizons = HORIZONS.map((h) => {
+    const slice = (rows) => rows.slice(0, h.months);
+    const sessions = round(sumOf(slice(expected), 'sessions'));
+    const leads = round(sumOf(slice(expected), 'leads'));
+    const revenue = round(sumOf(slice(expected), 'revenue'));
+    const spend = round(totals.cost_12m / 12 * h.months);
+    const lowLeads = round(sumOf(slice(slow), 'leads'));
+    const highLeads = round(sumOf(slice(fast), 'leads'));
+    const lowRevenue = round(sumOf(slice(longSlow), 'revenue'));
+    const highRevenue = round(sumOf(slice(longFast), 'revenue'));
+    return {
+      id: h.id,
+      label: h.label,
+      months: h.months,
+      sessions,
+      impressions: round(sumOf(slice(expected), 'impressions')),
+      leads,
+      lead_range: { low: lowLeads, high: highLeads },
+      revenue,
+      revenue_range: { low: h.months === 24 ? lowRevenue : round(sumOf(slice(slow), 'revenue')), high: h.months === 24 ? highRevenue : round(sumOf(slice(fast), 'revenue')) },
+      spend,
+      cost_per_lead: leads > 0 ? Math.round(spend / leads) : null,
+      revenue_per_dollar: spend > 0 ? Math.round((revenue / spend) * 100) / 100 : null,
+      break_even_month: (() => {
+        const rows = slice(expected);
+        let cumulative = 0;
+        const monthlySpend = spend / h.months;
+        for (const row of rows) {
+          cumulative += row.revenue - monthlySpend;
+          if (cumulative >= 0) return row.month;
+        }
+        return null;
+      })(),
+      note: h.months > 12 ? 'Projected past the 12-month model; compounding slows, so read the band, not the point estimate.' : 'Inside the modeled window.',
+    };
+  });
+  const scenarios = buildScenarios({ days, totals }, mode);
+  const reasoning = buildReasoning({ cov, scores, days, totals }, p, strategies, mode, bench);
+  return { cov, scores, days, timeline, totals, ranges, horizons, scenarios, reasoning };
 };
 
 const gapList = (p, strategies) => {
@@ -175,7 +288,11 @@ export default async function (req) {
     const strategies = (Array.isArray(body.strategies) ? body.strategies : []).slice(0, 120);
     const bench = benchmarkFor(p.industry);
 
-    const base = simulate(p, strategies, bench);
+    const MODE_IDS = Object.keys(MODES);
+    const modeId = MODE_IDS.includes(String(body.mode)) ? String(body.mode) : 'moderate';
+    const mode = MODES[modeId];
+
+    const base = simulate(p, strategies, bench, mode);
     const deltas = [];
 
     // Lever 1 — paid spend, with the organic halo when paid and organic run together.
@@ -200,7 +317,7 @@ export default async function (req) {
     const lever = (key, label, detail, mutate) => {
       const altProfile = { ...p };
       mutate(altProfile);
-      const alt = simulate(altProfile, strategies, bench);
+      const alt = simulate(altProfile, strategies, bench, mode);
       const daysSaved = Math.max(0, base.days.p50 - alt.days.p50);
       const extraSessions = alt.totals.sessions_12m - base.totals.sessions_12m;
       const extraLeads = alt.totals.leads_12m - base.totals.leads_12m;
@@ -238,7 +355,7 @@ export default async function (req) {
       .sort((a, b) => num(b.impact, 5) - num(a.impact, 5))
       .slice(0, 4)
       .map((s) => {
-        const alt = simulate(p, [...strategies, s], bench);
+        const alt = simulate(p, [...strategies, s], bench, mode);
         const daysSaved = Math.max(0, base.days.p50 - alt.days.p50);
         const extraSessions = alt.totals.sessions_12m - base.totals.sessions_12m;
         return {
@@ -281,6 +398,28 @@ export default async function (req) {
       strategy_count: strategies.length,
       deltas,
       leverage: { best_moves: bestMoves, disabled_critical: disabledCritical },
+      mode: {
+        id: modeId,
+        label: mode.label,
+        intensity: mode.intensity,
+        scenarios: mode.scenarios,
+        range_width: mode.range_width,
+        what_it_changes: `${mode.label} assumes ${mode.intensity}x parallel work, a band of about ±${Math.round(mode.range_width * 80)}% and ${mode.scenarios} scenario(s). Inputs are unchanged.`,
+      },
+      scenarios: base.scenarios,
+      prediction_horizons: base.horizons,
+      reasoning: [
+        ...base.reasoning,
+        { step: 'Listed what is missing', detail: gaps.length ? `${gaps.length} input gap(s) are holding the model back: ${gaps.slice(0, 3).join(' ')}` : 'No input gaps were detected, so nothing in the model is running on a default.' },
+      ],
+      recommendation: {
+        who: ownerFor(bestMoves[0]?.label),
+        what: bestMoves.length ? bestMoves.map((m) => m.label).join(' · ') : 'Turn on the highest-impact strategy families that are switched off, then re-run.',
+        when: `Start this week. At these settings the model puts page 1 around ${base.days.p50} days out (${base.days.p10}-${base.days.p90} day band).`,
+        where: `${p.city || 'the target market'} — organic search and the ${p.funnel_type || 'lead'} funnel, with social and offline feeding branded search.`,
+        why: `It produces the largest modeled movement of anything on the board: about ${base.totals.leads_12m} leads and $${base.totals.revenue_12m} of modeled value over 12 months against $${base.totals.cost_12m} of modeled cost${gaps.length ? `, with ${gaps.length} known input gap(s) still to close` : ''}.`,
+        why_not_others: disabledCritical.length ? `The strategies left switched off would each add less than the moves above: ${disabledCritical.slice(0, 2).map((d) => d.label).join('; ')}.` : 'Everything else on the board is already switched on, so the remaining leverage is in the inputs themselves.',
+      },
       confidence: Math.round(confidence * 100) / 100,
       data_gaps: gaps,
       assumptions: [
@@ -290,6 +429,7 @@ export default async function (req) {
         'Lead rate is modeled from funnel strength, promo and engagement score; it is not a measured conversion rate.',
         'Stacked strategies score with diminishing returns (0.9 per extra tactic in a family), so similar tactics add less each time.',
         'Domain age under 3 months adds a 30-day ramp penalty; low content quality adds 18 days.',
+        `Mode "${mode.label}" assumes ${mode.intensity}x parallel work, which shortens the modeled ramp and widens the band to about ±${Math.round(mode.range_width * 80)}%. It does not change your inputs and it is not a better forecast.`,
         'Every figure is a modeled planning estimate. No ranking, traffic or revenue outcome is guaranteed or predicted.',
       ],
       disclaimer: 'Illustrative simulation from declared assumptions and your own inputs. Recalibrate with first-party data (Analytics, Search Console, your real close rate) before committing spend.',

@@ -8,7 +8,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogTrigger } from "@/components/ui/dialog";
-import { Bot, Briefcase, Brain, ListTodo, Zap, RefreshCw, Plus, Send, BookOpen, MessageSquare, Wand2, Layers, Activity, Code, Sparkles, Cpu, Rocket } from "lucide-react";
+import { Bot, Briefcase, Brain, ListTodo, Zap, RefreshCw, Plus, Send, BookOpen, MessageSquare, Wand2, Layers, Activity, Code, Sparkles, Cpu, Rocket, Users, Search, ListChecks, Gauge, ShieldCheck } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const CONNECTOR_ID = "69db201897e4e8f9ae073be7";
@@ -209,6 +209,26 @@ export default function Dashboard() {
               Sign out
             </Button>
           </div>
+        </div>
+
+        {/* Client workflow strip */}
+        <div className="max-w-7xl mx-auto px-6 pb-3 flex items-center gap-1 overflow-x-auto">
+          {[
+            { to: "/onboarding", label: "Client Onboarding", Icon: Users },
+            { to: "/discovery", label: "Discovery Packages", Icon: Search },
+            { to: "/workflow-map", label: "Workflow Map", Icon: ListChecks },
+            { to: "/system-capabilities", label: "Capabilities", Icon: Layers },
+            { to: "/system-benchmarks", label: "Benchmarks", Icon: Gauge },
+            { to: "/system-audit", label: "System Audit", Icon: ShieldCheck },
+          ].map(({ to, label, Icon }) => (
+            <Link
+              key={to}
+              to={to}
+              className="flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground hover:bg-muted rounded-md px-2.5 py-1.5 transition whitespace-nowrap"
+            >
+              <Icon className="w-3.5 h-3.5" /> {label}
+            </Link>
+          ))}
         </div>
       </header>
 

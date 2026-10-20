@@ -1,0 +1,177 @@
+{
+  "name": "ClientIntake",
+  "type": "object",
+  "properties": {
+    "full_name": {
+      "type": "string",
+      "description": "Client contact full name"
+    },
+    "email": {
+      "type": "string",
+      "description": "Client email address"
+    },
+    "phone": {
+      "type": "string",
+      "description": "Client phone number"
+    },
+    "company_name": {
+      "type": "string",
+      "description": "Business name"
+    },
+    "address": {
+      "type": "string",
+      "description": "Street address"
+    },
+    "city": {
+      "type": "string"
+    },
+    "state": {
+      "type": "string"
+    },
+    "postal_code": {
+      "type": "string"
+    },
+    "industry": {
+      "type": "string",
+      "description": "Industry the business operates in"
+    },
+    "business_stage": {
+      "type": "string",
+      "enum": [
+        "new_business",
+        "existing_business",
+        "remain_and_grow",
+        "re_enter_market",
+        "enhance_platform"
+      ],
+      "default": "existing_business",
+      "description": "Whether this is a new business, an existing one, a re-entry, or an enhancement of what exists"
+    },
+    "website_url": {
+      "type": "string",
+      "description": "Existing website URL if one exists"
+    },
+    "primary_services": {
+      "type": "string",
+      "description": "Services the business sells"
+    },
+    "service_area": {
+      "type": "string",
+      "description": "Area the business serves"
+    },
+    "seed_sentence": {
+      "type": "string",
+      "description": "The one-sentence outcome the client wants"
+    },
+    "vision_statement": {
+      "type": "string",
+      "description": "AI-expanded vision statement"
+    },
+    "vision_json": {
+      "type": "string",
+      "description": "JSON of the structured vision (industry focus, financial focus, autonomy, risk, horizon)"
+    },
+    "pain_points": {
+      "type": "string",
+      "description": "What the client does not like about the business today"
+    },
+    "desired_outcomes": {
+      "type": "string",
+      "description": "What they want to get more out of the business or platform"
+    },
+    "ideal_system_vision": {
+      "type": "string",
+      "description": "Their idea or version of a website operating AI system"
+    },
+    "selected_tools": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Tool ids the client selected to automate or enhance"
+    },
+    "custom_tools": {
+      "type": "string",
+      "description": "Write-in tools or processes the client added"
+    },
+    "goal_kind": {
+      "type": "string",
+      "enum": [
+        "money",
+        "leads",
+        "traffic",
+        "authority",
+        "automation"
+      ],
+      "default": "leads"
+    },
+    "goal_value": {
+      "type": "number",
+      "description": "Locked goal target value"
+    },
+    "goal_horizon": {
+      "type": "string",
+      "enum": [
+        "3m",
+        "6m",
+        "12m",
+        "24m"
+      ],
+      "default": "12m"
+    },
+    "monthly_budget": {
+      "type": "number",
+      "description": "Monthly marketing/operating budget the client is willing to commit"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "submitted",
+        "researching",
+        "researched",
+        "failed"
+      ],
+      "default": "draft"
+    },
+    "discovery_report_id": {
+      "type": "string",
+      "description": "Discovery report generated for this intake"
+    },
+    "submitted_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "full_name",
+    "company_name",
+    "industry",
+    "status"
+  ],
+  "rls": {
+    "create": {},
+    "read": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

@@ -9,6 +9,9 @@ import SimulationRanges from "@/components/simulator/SimulationRanges";
 import ScenarioDeltas from "@/components/simulator/ScenarioDeltas";
 import VersionCompare from "@/components/simulator/VersionCompare";
 import ContentJudgePanel from "@/components/simulator/ContentJudgePanel";
+import ModeSelector from "@/components/simulator/ModeSelector";
+import PredictionReport from "@/components/simulator/PredictionReport";
+import ReasoningSteps from "@/components/simulator/ReasoningSteps";
 
 const DEFAULT_PROFILE = {
   industry: "emergency plumbing",
@@ -54,6 +57,7 @@ export default function SeoSimulator() {
   const [error, setError] = useState(null);
   const [versions, setVersions] = useState([]);
   const [contentJudged, setContentJudged] = useState(false);
+  const [mode, setMode] = useState("moderate");
   const [loading, setLoading] = useState(true);
 
   const enabledStrategies = useMemo(
@@ -97,6 +101,7 @@ export default function SeoSimulator() {
           strategies: enabledStrategies.map(strategyPayload),
           catalog: strategies.map(strategyPayload),
           seed: 42,
+          mode,
         });
         if (res.data?.error) setError(res.data.error);
         else setResult(res.data);
@@ -107,7 +112,7 @@ export default function SeoSimulator() {
       }
     }, 600);
     return () => clearTimeout(timer);
-  }, [profile, enabledStrategies, strategies, contentJudged, loading]);
+  }, [profile, enabledStrategies, strategies, contentJudged, loading, mode]);
 
   const toggleStrategy = (id) =>
     setEnabledIds((ids) => (ids.includes(id) ? ids.filter((x) => x !== id) : [...ids, id]));
@@ -228,8 +233,11 @@ export default function SeoSimulator() {
           </div>
 
           <div className="space-y-5">
+            <ModeSelector modeId={mode} onChange={setMode} disabled={running} />
             <SimulationRanges result={result} />
+            <PredictionReport result={result} />
             <ScenarioDeltas result={result} />
+            <ReasoningSteps result={result} />
             <VersionCompare
               versions={versions}
               currentResult={result}

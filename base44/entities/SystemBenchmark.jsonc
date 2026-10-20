@@ -1,0 +1,115 @@
+{
+  "name": "SystemBenchmark",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "System or platform used as a benchmark"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "competitive_intel",
+        "market_research",
+        "scraping_data",
+        "browser_automation",
+        "simulation_prediction",
+        "audit_qa",
+        "onboarding",
+        "internal_package"
+      ],
+      "description": "Capability family this benchmark sets the bar for"
+    },
+    "vendor_type": {
+      "type": "string",
+      "enum": [
+        "external",
+        "internal"
+      ],
+      "default": "external"
+    },
+    "url": {
+      "type": "string"
+    },
+    "what_it_does": {
+      "type": "string",
+      "description": "The capability this system is the benchmark for"
+    },
+    "why_it_matters": {
+      "type": "string",
+      "description": "Why our system has to match or beat it"
+    },
+    "dimensions_json": {
+      "type": "string",
+      "description": "JSON of per-dimension documentation evidence scores (0-2)"
+    },
+    "evidence_total": {
+      "type": "number",
+      "default": 0,
+      "description": "Sum of the documentation evidence scores"
+    },
+    "evidence_max": {
+      "type": "number",
+      "default": 16,
+      "description": "Maximum possible evidence score in the matrix"
+    },
+    "method_note": {
+      "type": "string",
+      "description": "How the score was produced and what it does not claim"
+    },
+    "source_url": {
+      "type": "string",
+      "description": "Where the assessment came from"
+    },
+    "our_parity": {
+      "type": "number",
+      "default": 0,
+      "description": "Where Visual X stands against this benchmark 0-100"
+    },
+    "gap_note": {
+      "type": "string",
+      "description": "The specific gap that has to close"
+    },
+    "priority": {
+      "type": "string",
+      "enum": [
+        "critical",
+        "high",
+        "medium",
+        "low"
+      ],
+      "default": "high"
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true
+    },
+    "display_order": {
+      "type": "number",
+      "default": 0
+    }
+  },
+  "required": [
+    "name",
+    "category",
+    "what_it_does"
+  ],
+  "rls": {
+    "read": {},
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

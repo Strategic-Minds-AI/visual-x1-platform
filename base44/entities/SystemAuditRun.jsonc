@@ -1,0 +1,95 @@
+{
+  "name": "SystemAuditRun",
+  "type": "object",
+  "properties": {
+    "run_name": {
+      "type": "string"
+    },
+    "scope": {
+      "type": "string",
+      "description": "What was audited in this run"
+    },
+    "capabilities_json": {
+      "type": "string",
+      "description": "JSON of the capability descriptors that were scored"
+    },
+    "benchmarks_json": {
+      "type": "string",
+      "description": "JSON of the benchmark systems compared against"
+    },
+    "dimension_scores_json": {
+      "type": "string",
+      "description": "JSON of per-dimension scores, benchmarks, gaps and confidence"
+    },
+    "overall_score": {
+      "type": "number",
+      "default": 0,
+      "description": "Weighted overall system score 0-100"
+    },
+    "benchmark_ceiling": {
+      "type": "number",
+      "default": 0,
+      "description": "The benchmark bar the system is measured against 0-100"
+    },
+    "gaps_json": {
+      "type": "string",
+      "description": "JSON array of the gaps found, ordered by impact"
+    },
+    "suggestions_json": {
+      "type": "string",
+      "description": "JSON array of auto-suggested actions to close each gap"
+    },
+    "verdict": {
+      "type": "string",
+      "description": "QA verdict for this run"
+    },
+    "confidence": {
+      "type": "number",
+      "default": 0,
+      "description": "Confidence in the audit 0-1"
+    },
+    "model": {
+      "type": "string",
+      "description": "Scoring model used for the rubric"
+    },
+    "notes": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "run_name",
+    "scope"
+  ],
+  "rls": {
+    "create": {},
+    "read": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "update": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}
