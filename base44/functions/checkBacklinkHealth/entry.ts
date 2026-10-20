@@ -56,9 +56,10 @@ export default async function (req) {
       const fetched = await base44.asServiceRole.entities.BacklinkSite.filter({ id: { $in: ids } }, { limit: MAX_PER_RUN });
       sites = fetched.items || [];
     } else {
+      // Never-checked sites store a null timestamp, so match null (and missing) rather than $exists.
       const query = {
         $or: [
-          { last_checked_at: { $exists: false } },
+          { last_checked_at: null },
           { last_checked_at: { $lt: new Date(Date.now() - STALE_AFTER_MS).toISOString() } },
         ],
       };

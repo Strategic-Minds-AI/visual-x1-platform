@@ -23,7 +23,7 @@ export default function ApprovalQueue({ batches, selectedIds, onToggle, onDecide
     <div className="space-y-2">
       {batches.map((batch) => {
         const isSelected = selectedIds.includes(batch.id);
-        const atLimit = !isSelected && selectedIds.length >= 2;
+        const atLimit = !isSelected && selectedIds.length >= 4;
         return (
           <Card key={batch.id} className={isSelected ? "border-primary" : ""}>
             <CardContent className="py-3 flex items-start gap-3">
@@ -32,7 +32,7 @@ export default function ApprovalQueue({ batches, selectedIds, onToggle, onDecide
                 onClick={() => !atLimit && onToggle(batch.id)}
                 disabled={atLimit}
                 className={`mt-0.5 shrink-0 ${atLimit ? "opacity-30" : "text-primary"}`}
-                title={atLimit ? "Select up to 2 runs to compare" : "Select to compare side by side"}
+                title={atLimit ? "Select up to 4 runs to compare" : "Select to compare side by side"}
               >
                 {isSelected ? <CheckSquare className="w-4 h-4" /> : <Square className="w-4 h-4" />}
               </button>

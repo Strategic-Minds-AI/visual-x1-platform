@@ -47,6 +47,10 @@ export default function BatchPreviewPanel({ batch, onDecide }) {
               <span className={`text-xs font-bold ${batch.quality_score >= 95 ? "text-green-600" : batch.quality_score >= 70 ? "text-yellow-600" : "text-red-600"}`}>
                 {batch.quality_score || 0}/100
               </span>
+              {batch.spec_score ? <span className="text-xs text-muted-foreground">spec {batch.spec_score}</span> : null}
+              {batch.status ? (
+                <Badge variant="secondary" className="text-xs">{String(batch.status).replace(/_/g, " ")}</Badge>
+              ) : null}
             </div>
           </div>
           <Button size="sm" variant="ghost" className="h-7 px-2 shrink-0" onClick={renderPreview} disabled={rendering} title="Re-render preview">

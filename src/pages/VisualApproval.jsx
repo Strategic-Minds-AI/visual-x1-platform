@@ -65,7 +65,7 @@ export default function VisualApproval() {
   const toggle = (id) => {
     setSelectedIds((prev) => {
       if (prev.includes(id)) return prev.filter((x) => x !== id);
-      if (prev.length >= 2) return prev;
+      if (prev.length >= 4) return prev;
       return [...prev, id];
     });
   };
@@ -101,9 +101,14 @@ export default function VisualApproval() {
           <ShieldCheck className="w-5 h-5 text-primary" />
           <h1 className="font-heading text-lg font-semibold">Visual Approval Gate</h1>
         </div>
-        <Link to="/factory" className="ml-auto text-xs text-muted-foreground hover:text-foreground transition">
-          Back to Factory →
-        </Link>
+        <div className="ml-auto flex items-center gap-3">
+          <Link to="/variations" className="text-xs text-muted-foreground hover:text-foreground transition">
+            Variation testing →
+          </Link>
+          <Link to="/factory" className="text-xs text-muted-foreground hover:text-foreground transition">
+            Back to Factory →
+          </Link>
+        </div>
       </header>
 
       <div className="max-w-7xl mx-auto p-6 space-y-4">
@@ -121,12 +126,12 @@ export default function VisualApproval() {
           ))}
           <span className="text-xs text-muted-foreground ml-auto flex items-center gap-1">
             <Columns2 className="w-3.5 h-3.5" />
-            Select up to 2 runs to preview them side by side
+            Select up to 4 runs to preview them side by side
           </span>
         </div>
 
         {selectedBatches.length > 0 && (
-          <div className={`grid gap-4 ${selectedBatches.length === 2 ? "md:grid-cols-2" : ""}`}>
+          <div className={`grid gap-4 ${selectedBatches.length > 1 ? "md:grid-cols-2" : ""}`}>
             {selectedBatches.map((batch) => (
               <BatchPreviewPanel key={batch.id} batch={batch} onDecide={decide} />
             ))}

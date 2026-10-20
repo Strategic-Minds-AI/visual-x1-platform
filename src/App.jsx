@@ -21,6 +21,8 @@ import WebsiteFactory from './pages/WebsiteFactory';
 import OpportunityMatrix from './pages/OpportunityMatrix';
 import VisualApproval from './pages/VisualApproval';
 import TemplateEngine from './pages/TemplateEngine';
+import BacklinkHealth from './pages/BacklinkHealth';
+import VariationTracker from './pages/VariationTracker';
 import Login from '@/pages/Login';
 import Register from '@/pages/Register';
 import ForgotPassword from '@/pages/ForgotPassword';
@@ -75,6 +77,8 @@ const AuthenticatedApp = () => {
         <Route path="/opportunities" element={<OpportunityMatrix />} />
         <Route path="/visual-approval" element={<VisualApproval />} />
         <Route path="/template-engine" element={<TemplateEngine />} />
+        <Route path="/backlink-health" element={<BacklinkHealth />} />
+        <Route path="/variations" element={<VariationTracker />} />
       </Route>
       <Route path="*" element={<PageNotFound />} />
     </Routes>
