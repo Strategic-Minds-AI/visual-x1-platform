@@ -1,0 +1,194 @@
+{
+  "name": "ChainRun",
+  "type": "object",
+  "properties": {
+    "mission_id": {
+      "type": "string",
+      "description": "Stable mission identifier for this engineering run"
+    },
+    "request": {
+      "type": "string",
+      "description": "The short natural-language request that started the run"
+    },
+    "project_name": {
+      "type": "string"
+    },
+    "project_type": {
+      "type": "string",
+      "description": "Classified project type used for routing"
+    },
+    "route": {
+      "type": "string",
+      "description": "Workflow route the request was classified into"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "running",
+        "awaiting_review",
+        "passed",
+        "repair_required",
+        "blocked",
+        "failed"
+      ],
+      "default": "running"
+    },
+    "current_stage": {
+      "type": "string",
+      "description": "Node currently executing or the node it stopped on"
+    },
+    "node_states_json": {
+      "type": "string",
+      "description": "JSON array of per-node execution state: id, label, type, status, started_at, finished_at, duration_ms, retry_count, output_ref, error, evidence"
+    },
+    "completed_count": {
+      "type": "number",
+      "default": 0
+    },
+    "stage_count": {
+      "type": "number",
+      "default": 0
+    },
+    "brief_json": {
+      "type": "string",
+      "description": "JSON of the interpreted brief from the brief interpreter module"
+    },
+    "references_json": {
+      "type": "string",
+      "description": "JSON of the benchmark references selected, each with its provenance class"
+    },
+    "direction_json": {
+      "type": "string",
+      "description": "JSON of the creative direction"
+    },
+    "spec_json": {
+      "type": "string",
+      "description": "JSON of the implementation-ready specification"
+    },
+    "artifact_json": {
+      "type": "string",
+      "description": "JSON of the render record: artifact type, build prompt, html length, render engine. The HTML itself is returned to the caller and not stored."
+    },
+    "scorecard_json": {
+      "type": "string",
+      "description": "JSON of the weighted scorecard: per-dimension score, evidence, weighted total, threshold, gate results"
+    },
+    "validation_json": {
+      "type": "string",
+      "description": "JSON of the independent validation: findings, gate results, decision, confidence, limitations"
+    },
+    "repairs_json": {
+      "type": "string",
+      "description": "JSON array of repair cycles: tasks, applied changes, regression result"
+    },
+    "decision": {
+      "type": "string",
+      "enum": [
+        "PASS",
+        "REPAIR REQUIRED",
+        "BLOCKED",
+        "NOT RUN",
+        "AWAITING REVIEW"
+      ],
+      "description": "Release decision. A score alone never authorizes release."
+    },
+    "decision_reason": {
+      "type": "string"
+    },
+    "blockers_json": {
+      "type": "string",
+      "description": "JSON array of what stops further progress, each with the exact blocker"
+    },
+    "limitations_json": {
+      "type": "string",
+      "description": "JSON array of what could not be verified and why"
+    },
+    "gates_json": {
+      "type": "string",
+      "description": "JSON of the hard release gates and their actual result"
+    },
+    "repair_cycles_used": {
+      "type": "number",
+      "default": 0
+    },
+    "max_repair_cycles": {
+      "type": "number",
+      "default": 3
+    },
+    "receipt_id": {
+      "type": "string",
+      "description": "ValidationReceipt written for this run"
+    },
+    "revision": {
+      "type": "string",
+      "description": "Source revision or build marker the run was executed against"
+    },
+    "cost_json": {
+      "type": "string",
+      "description": "JSON of model calls, node durations and any integration usage observed"
+    },
+    "started_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "finished_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "resumable": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether the run can continue from its last verified node"
+    }
+  },
+  "required": [
+    "mission_id",
+    "request",
+    "status"
+  ],
+  "rls": {
+    "read": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "create": {
+      "$or": [
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "user"
+          }
+        }
+      ]
+    },
+    "update": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

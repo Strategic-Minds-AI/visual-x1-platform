@@ -4,6 +4,7 @@ import { LayoutDashboard } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const LINKS = [
+  { to: "/prompt-system", label: "Prompt System" },
   { to: "/onboarding", label: "Onboarding" },
   { to: "/discovery", label: "Discovery" },
   { to: "/workflow-map", label: "Workflow" },

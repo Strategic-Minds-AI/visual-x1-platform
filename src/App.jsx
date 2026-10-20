@@ -30,6 +30,7 @@ import WorkflowMap from './pages/WorkflowMap';
 import SystemCapabilities from './pages/SystemCapabilities';
 import SystemBenchmarks from './pages/SystemBenchmarks';
 import SystemAudit from './pages/SystemAudit';
+import PromptSystem from './pages/PromptSystem';
 import Login from '@/pages/Login';
 import Register from '@/pages/Register';
 import ForgotPassword from '@/pages/ForgotPassword';
@@ -93,6 +94,7 @@ const AuthenticatedApp = () => {
         <Route path="/system-capabilities" element={<SystemCapabilities />} />
         <Route path="/system-benchmarks" element={<SystemBenchmarks />} />
         <Route path="/system-audit" element={<SystemAudit />} />
+        <Route path="/prompt-system" element={<PromptSystem />} />
       </Route>
       <Route path="*" element={<PageNotFound />} />
     </Routes>
