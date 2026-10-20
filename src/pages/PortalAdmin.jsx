@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { LayoutDashboard, Sparkles, Download, Factory, ShieldCheck, Users, FolderOpen, Rocket, Menu, X, Code2 } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import AdminOverview from "@/components/admin/AdminOverview";
 import PromptPipeline from "@/components/admin/PromptPipeline";
+import VisualEditorWorkspace from "@/components/visualeditor/VisualEditorWorkspace";
 import ClonePipeline from "@/components/admin/ClonePipeline";
 import FactoryPipeline from "@/components/admin/FactoryPipeline";
 import ApprovalQueue from "@/components/admin/ApprovalQueue";
@@ -16,6 +17,7 @@ import { countRecords } from "@/lib/adminPipelines";
 const SECTIONS = [
   { id: "overview", label: "Command Deck", icon: LayoutDashboard },
   { id: "prompt", label: "Prompt System", icon: Sparkles },
+  { id: "visualeditor", label: "Visual Editor", icon: Code2 },
   { id: "clone", label: "Clone & Ingest", icon: Download },
   { id: "factory", label: "Website Factory", icon: Factory },
   { id: "approvals", label: "Release Gates", icon: ShieldCheck },
@@ -28,7 +30,11 @@ const SECTIONS = [
 // stylesheet, same panels, buttons and lists), reads live records only, and every
 // action calls the Visual X backend module that owns it.
 export default function PortalAdmin() {
-  const [section, setSection] = useState("overview");
+  // The section lives in the URL, so the console can be opened straight onto one
+  // panel — /visual-editor lands on the Visual Editor this way.
+  const [params, setParams] = useSearchParams();
+  const requested = params.get("section");
+  const section = SECTIONS.some((s) => s.id === requested) ? requested : "overview";
   const [navOpen, setNavOpen] = useState(false);
   const [pending, setPending] = useState(null);
 
@@ -48,7 +54,7 @@ export default function PortalAdmin() {
 
   const current = SECTIONS.find((s) => s.id === section) || SECTIONS[0];
   const go = (id) => {
-    setSection(id);
+    setParams({ section: id });
     setNavOpen(false);
   };
 
@@ -106,9 +112,6 @@ export default function PortalAdmin() {
               <span className="cp-demo-pill">
                 <span /> LIVE RECORDS
               </span>
-              <Link to="/visual-editor" className="cp-green-button">
-                <Code2 size={15} /> VISUAL EDITOR
-              </Link>
               <button className="cp-mobile-toggle" aria-label="Open navigation" onClick={() => setNavOpen(true)}>
                 <Menu size={20} />
               </button>
@@ -118,6 +121,7 @@ export default function PortalAdmin() {
           <div className="cp-portal-content">
             {section === "overview" && <AdminOverview onNavigate={go} />}
             {section === "prompt" && <PromptPipeline />}
+            {section === "visualeditor" && <VisualEditorWorkspace />}
             {section === "clone" && <ClonePipeline />}
             {section === "factory" && <FactoryPipeline />}
             {section === "approvals" && <ApprovalQueue />}

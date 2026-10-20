@@ -1,46 +1,85 @@
 /* Visual Editor workspace.
  *
- * The editor is the builder shell from the Xtreme AutoBuilder package (chat +
- * artifact canvas + device frames + suggestion chips), rendered in the operator
- * console's own language: the same portal shell and panel/pill/button classes
- * from vendor/x1/CommercePortal.css, plus the small set of layout and chat rules
- * that stylesheet does not define. Every colour is copied from that stylesheet or
- * from the x1-brand-theme.css tokens, so the editor cannot drift from the console
- * it is opened from.
+ * The editor is the builder shell from the Xtreme AutoBuilder package (header
+ * band, agent chat, prompt composer, artifact canvas, device frames, suggestion
+ * chips), rendered as one section of the operator console: the same portal shell,
+ * the same panel/pill/button classes from vendor/x1/CommercePortal.css, plus the
+ * small set of layout and chat rules that stylesheet does not define. Every
+ * colour is copied from that stylesheet or from the x1-brand-theme.css tokens, so
+ * the editor cannot drift from the console it opens inside.
  */
-.cp-site .ve-shell,
-.cp-site .ve-main {
-  height: 100vh;
-  min-height: 0;
-  overflow: hidden;
-}
-
-/* The console's content column, filled edge to edge instead of centred. */
-.cp-site .ve-content {
-  width: 100%;
-  max-width: none;
-  margin: 0;
-  padding: 14px clamp(14px, 2vw, 26px);
+.cp-site .ve-section {
   display: flex;
   flex-direction: column;
-  min-height: 0;
-  overflow: hidden;
+  gap: 13px;
+  height: calc(100vh - 228px);
+  min-height: 620px;
 }
 
-.cp-site .ve-footer {
+/* ── the shell's header band ────────────────────────────────────────────── */
+.cp-site .ve-band {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
-  padding: 12px clamp(20px, 3vw, 48px);
-  border-top: 1px solid rgba(91, 175, 230, .14);
-  color: #789bb2;
-  font-size: 9px;
-  letter-spacing: .13em;
-  font-weight: 730;
+  gap: 14px;
+  flex-wrap: wrap;
+  padding: 13px 18px;
+  border: 1px solid rgba(65, 166, 228, .24);
+  border-radius: 18px;
+  background: linear-gradient(138deg, rgba(13, 33, 54, .93), rgba(6, 17, 31, .96));
 }
 
-/* ── layout ─────────────────────────────────────────────────────────────── */
+.cp-site .ve-band h3 {
+  font-size: 18px;
+  letter-spacing: -.035em;
+  margin: 4px 0 0;
+}
+
+.cp-site .ve-band-controls {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  flex-wrap: wrap;
+}
+
+.cp-site .ve-pill-group {
+  display: flex;
+  gap: 5px;
+  padding: 4px;
+  border-radius: 100px;
+  border: 1px solid rgba(66, 168, 227, .24);
+  background: rgba(6, 17, 31, .6);
+}
+
+.cp-site .ve-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 12px;
+  border-radius: 100px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: #9eb6ca;
+  font-size: 9px;
+  font-weight: 830;
+  letter-spacing: .09em;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: color 180ms ease, border-color 180ms ease, background 180ms ease;
+}
+
+.cp-site .ve-pill:hover {
+  color: #d7fbff;
+  background: rgba(12, 81, 113, .24);
+}
+
+.cp-site .ve-pill.selected {
+  color: #d7fbff;
+  border-color: rgba(64, 192, 254, .45);
+  background: linear-gradient(95deg, rgba(6, 104, 152, .4), rgba(11, 56, 84, .25));
+}
+
+/* ── layout: chat column beside the canvas column ───────────────────────── */
 .cp-site .ve-grid {
   display: grid;
   grid-template-columns: minmax(320px, 372px) minmax(0, 1fr);
@@ -238,13 +277,16 @@
   min-height: 0;
   overflow: auto;
   display: flex;
-  align-items: flex-start;
+  align-items: stretch;
   justify-content: center;
   padding: 16px;
 }
 
 .cp-site .ve-frame {
+  display: flex;
+  flex-direction: column;
   width: 100%;
+  min-height: 0;
   border-radius: 14px;
   border: 1px solid rgba(65, 166, 228, .28);
   overflow: hidden;
@@ -261,12 +303,12 @@
 }
 
 .cp-site .ve-frame iframe {
+  flex: 1;
   display: block;
   width: 100%;
+  min-height: 360px;
   border: 0;
   background: #fff;
-  height: 66vh;
-  min-height: 400px;
 }
 
 .cp-site .ve-devices {
@@ -338,18 +380,24 @@
 
 /* ── responsive ─────────────────────────────────────────────────────────── */
 @media (max-width: 1080px) {
+  /* Stacked, with a fixed height per panel so each one still scrolls inside
+     itself instead of stretching the console page. */
+  .cp-site .ve-section {
+    height: auto;
+    min-height: 0;
+    gap: 11px;
+  }
   .cp-site .ve-grid {
     grid-template-columns: 1fr;
-    grid-template-rows: minmax(0, 48%) minmax(0, 52%);
+    grid-template-rows: 50vh 62vh;
   }
 }
 
 @media (max-width: 700px) {
-  .cp-site .ve-frame iframe {
-    height: 46vh;
-    min-height: 320px;
+  .cp-site .ve-grid {
+    grid-template-rows: 46vh 58vh;
   }
-  .cp-site .ve-content {
-    padding: 10px;
+  .cp-site .ve-band {
+    padding: 12px 14px;
   }
 }

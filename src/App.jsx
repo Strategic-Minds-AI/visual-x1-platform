@@ -11,7 +11,6 @@ import Dashboard from './pages/Dashboard';
 import JobBoard from './pages/JobBoard';
 import PromptStudio from './pages/PromptStudio';
 import VisualEditor from './pages/VisualEditor';
-import VisualEditorStudio from './pages/VisualEditorStudio';
 import VisualStudio from './pages/VisualStudio';
 import AgentActivity from './pages/AgentActivity';
 import PromptLab from './pages/PromptLab';
@@ -146,9 +145,9 @@ const AuthenticatedApp = () => {
         {/* The operator admin, at the standard path. It reads live records and its
             buttons call the Visual X pipelines. */}
         <Route path="/admin" element={<PortalAdmin />} />
-        {/* The Visual Editor, opened from the console. It is the builder shell
-            rendered in the console's own portal language. */}
-        <Route path="/visual-editor" element={<VisualEditorStudio />} />
+        {/* The Visual Editor is a console section, directly under Prompt System.
+            Its own path stays valid for the workspace's existing links. */}
+        <Route path="/visual-editor" element={<Navigate to="/admin?section=visualeditor" replace />} />
         {/* The console's earlier paths stay valid so existing links keep working. */}
         <Route path="/portal/demo" element={<Navigate to="/admin" replace />} />
         <Route path="/portal/workspace" element={<Navigate to="/portal" replace />} />
