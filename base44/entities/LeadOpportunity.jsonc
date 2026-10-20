@@ -1,0 +1,121 @@
+{
+  "name": "LeadOpportunity",
+  "type": "object",
+  "properties": {
+    "rank": {
+      "type": "number",
+      "description": "Monetization rank (1 = highest)"
+    },
+    "vertical": {
+      "type": "string",
+      "description": "Industry vertical (e.g., Home Emergency, Home Services)"
+    },
+    "service_intent": {
+      "type": "string",
+      "description": "The service or search intent (e.g., Emergency Plumber, Roof Replacement)"
+    },
+    "buyer_archetype": {
+      "type": "string",
+      "description": "Who buys the leads (e.g., Plumbing companies, Roofing contractors)"
+    },
+    "nearme_domain": {
+      "type": "string",
+      "description": "NearMe domain concept (e.g., emergencyplumbernearme.com)"
+    },
+    "nearyou_domain": {
+      "type": "string",
+      "description": "NearYou domain concept (e.g., emergencyplumbernearyou.com)"
+    },
+    "page_pattern": {
+      "type": "string",
+      "description": "Recommended URL pattern (e.g., /{country}/{region}/{city}/emergency-plumber/)"
+    },
+    "urgency": {
+      "type": "number",
+      "description": "Urgency score 1-10"
+    },
+    "buyer_value": {
+      "type": "number",
+      "description": "Buyer value score 1-10"
+    },
+    "repeat_demand": {
+      "type": "number",
+      "description": "Repeat demand score 1-10"
+    },
+    "buyer_density": {
+      "type": "number",
+      "description": "Buyer density score 1-10"
+    },
+    "compliance_ease": {
+      "type": "number",
+      "description": "Compliance ease score 1-10"
+    },
+    "benchmark_cpc": {
+      "type": "number",
+      "description": "Benchmark cost-per-click in USD"
+    },
+    "benchmark_cpl": {
+      "type": "number",
+      "description": "Benchmark cost-per-lead in USD"
+    },
+    "monetization_score": {
+      "type": "number",
+      "description": "Weighted monetization score"
+    },
+    "launch_tier": {
+      "type": "number",
+      "description": "Launch tier (1 = highest priority)"
+    },
+    "deployment_recommendation": {
+      "type": "string",
+      "description": "How to deploy (hub subfolder first, standalone domain after proof)"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Additional context"
+    },
+    "evidence_url": {
+      "type": "string",
+      "description": "Source of CPC/CPL benchmark data"
+    },
+    "domain_status": {
+      "type": "string",
+      "enum": [
+        "unknown",
+        "available",
+        "taken",
+        "owned"
+      ],
+      "default": "unknown",
+      "description": "Domain availability status"
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true
+    }
+  },
+  "required": [
+    "service_intent",
+    "vertical",
+    "nearme_domain",
+    "nearyou_domain"
+  ],
+  "rls": {
+    "read": {},
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

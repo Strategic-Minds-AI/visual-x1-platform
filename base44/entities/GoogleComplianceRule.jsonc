@@ -1,0 +1,93 @@
+{
+  "name": "GoogleComplianceRule",
+  "type": "object",
+  "properties": {
+    "rule": {
+      "type": "string",
+      "description": "Rule name (e.g., People-first content, Doorway pages)"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "SAFE",
+        "AVOID",
+        "TEST",
+        "CONDITIONAL"
+      ],
+      "default": "SAFE",
+      "description": "Whether this pattern is safe, to avoid, or conditional"
+    },
+    "operational_requirement": {
+      "type": "string",
+      "description": "What the system must do to comply"
+    },
+    "priority": {
+      "type": "string",
+      "enum": [
+        "Critical",
+        "High",
+        "Medium",
+        "Low"
+      ],
+      "default": "High"
+    },
+    "source_url": {
+      "type": "string",
+      "description": "Official Google documentation URL"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "spam_policy",
+        "content",
+        "technical",
+        "structured_data",
+        "local",
+        "programmatic_seo"
+      ],
+      "description": "Rule category"
+    },
+    "gate_action": {
+      "type": "string",
+      "enum": [
+        "block_generation",
+        "require_differentiation",
+        "require_proof",
+        "require_unique_content",
+        "warn",
+        "pass"
+      ],
+      "default": "pass",
+      "description": "What the orchestrator does when this rule applies"
+    },
+    "display_order": {
+      "type": "number",
+      "default": 0
+    }
+  },
+  "required": [
+    "rule",
+    "status",
+    "operational_requirement",
+    "priority",
+    "category"
+  ],
+  "rls": {
+    "read": {},
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

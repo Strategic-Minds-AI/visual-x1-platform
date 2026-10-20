@@ -1,0 +1,69 @@
+{
+  "name": "LaunchLocation",
+  "type": "object",
+  "properties": {
+    "rank": {
+      "type": "number",
+      "description": "Priority rank (1 = highest)"
+    },
+    "metro": {
+      "type": "string",
+      "description": "Metro area name (e.g., Miami-Fort Lauderdale-West Palm Beach, FL)"
+    },
+    "priority": {
+      "type": "string",
+      "enum": [
+        "High",
+        "Medium",
+        "Low"
+      ],
+      "default": "High"
+    },
+    "rationale": {
+      "type": "string",
+      "description": "Why this metro was selected"
+    },
+    "validation_rule": {
+      "type": "string",
+      "description": "How to validate before scaling"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "backlog",
+        "researching",
+        "piloting",
+        "validated",
+        "scaling",
+        "paused"
+      ],
+      "default": "backlog"
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true
+    }
+  },
+  "required": [
+    "metro",
+    "priority"
+  ],
+  "rls": {
+    "read": {},
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

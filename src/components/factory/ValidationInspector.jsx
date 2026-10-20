@@ -99,6 +99,25 @@ export default function ValidationInspector({ result }) {
         </Card>
       )}
 
+      {/* Google Compliance Findings */}
+      {validation?.compliance_findings?.length > 0 && (
+        <Card className="border-2 border-red-500/30">
+          <CardHeader className="pb-2">
+            <CardTitle className="flex items-center gap-2 text-sm text-red-600">
+              <Shield className="w-4 h-4" /> Google Compliance Violations
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-1.5 pt-0">
+            {validation.compliance_findings.map((finding, i) => (
+              <div key={i} className="flex gap-1.5 text-xs">
+                <XCircle className="w-3.5 h-3.5 text-red-600 mt-0.5 shrink-0" />
+                <span className="text-red-700">{finding}</span>
+              </div>
+            ))}
+          </CardContent>
+        </Card>
+      )}
+
       {/* Repair Suggestions */}
       {refinement && (
         <Card className="border-2 border-blue-500/30">

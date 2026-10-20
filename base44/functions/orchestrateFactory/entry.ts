@@ -44,6 +44,10 @@ MANDATORY REQUIREMENTS:
 
 7. ACCESSIBILITY — semantic HTML5, ARIA labels on interactive elements, keyboard-navigable, sufficient color contrast (WCAG 2.1 AA).
 
+8. GOOGLE COMPLIANCE — this is a programmatic SEO page. It must be people-first and useful even without search traffic. Do NOT use keyword stuffing, fake testimonials, fake locations, or doorway-page patterns. Each page must have unique, genuine content with real service specifics. Include proper meta tags, canonical URL, and semantic heading hierarchy. Include LocalBusiness or Service structured data when relevant.
+
+9. NEARME/NEARYOU DOMAIN — the site should be designed for deployment on a nearme.com or nearyou.com domain pattern. Include clear service+location intent in the title, H1, and content. Use natural "near me" / "near you" intent language without keyword stuffing.
+
 Return ONLY raw HTML starting with <!DOCTYPE html>. No markdown fences, no explanation.`;
 
 export default async function(req) {
@@ -93,14 +97,50 @@ export default async function(req) {
         `- ${b.name} (${b.url}) UX:${b.ux_score || 'N/A'}/100 — ${(b.key_patterns || b.description || '').substring(0, 300)}`
       ).join('\n');
 
+      // STEP 1b: Fetch Google compliance rules and matching lead opportunity
+      const { items: complianceRules } = await base44.asServiceRole.entities.GoogleComplianceRule.filter(
+        { status: { $in: ['AVOID', 'SAFE'] } },
+        { sort: 'display_order', limit: 15, fields: ['rule', 'status', 'operational_requirement', 'gate_action'] }
+      );
+
+      const complianceCtx = complianceRules.map(r =>
+        `${r.status === 'AVOID' ? '🚫 AVOID' : '✅ SAFE'}: ${r.rule} — ${r.operational_requirement}`
+      ).join('\n');
+
+      // Look up matching lead opportunity for NearMe/NearYou domain strategy
+      const { items: opportunities } = await base44.asServiceRole.entities.LeadOpportunity.filter(
+        { is_active: true },
+        { sort: 'rank', limit: 100, fields: ['service_intent', 'vertical', 'nearme_domain', 'nearyou_domain', 'page_pattern', 'benchmark_cpc', 'benchmark_cpl', 'urgency', 'buyer_value', 'buyer_density', 'deployment_recommendation'] }
+      );
+
+      const sentenceLower = sentence.toLowerCase();
+      const matchedOpp = opportunities.find(o =>
+        sentenceLower.includes(o.service_intent?.toLowerCase().split(' ')[0]) ||
+        sentenceLower.includes(o.vertical?.toLowerCase())
+      );
+
+      const domainStrategy = matchedOpp
+        ? `DOMAIN STRATEGY: nearme.com (${matchedOpp.nearme_domain}) / nearyou.com (${matchedOpp.nearyou_domain})
+URL PATTERN: ${matchedOpp.page_pattern}
+DEPLOYMENT: ${matchedOpp.deployment_recommendation}
+MONETIZATION: CPC $${matchedOpp.benchmark_cpc} / CPL $${matchedOpp.benchmark_cpl} | Urgency ${matchedOpp.urgency}/10 | Buyer Value ${matchedOpp.buyer_value}/10 | Buyer Density ${matchedOpp.buyer_density}/10`
+        : `DOMAIN STRATEGY: Use nearme.com/nearyou.com pattern — {service}nearme.com and {service}nearyou.com
+URL PATTERN: /{country}/{region}/{city}/{service-slug}/
+DEPLOYMENT: Hub subfolder first; standalone domain only after proof`;
+
       // STEP 2: Convert sentence into production-grade prompt
       await base44.entities.FactoryBatch.update(batch.id, { current_step: 'converting_prompt' });
 
       const promptResult = await base44.asServiceRole.integrations.Core.InvokeLLM({
-        prompt: `You are the Visual X Autonomous Orchestrator. Convert this one sentence into a production-grade website creation prompt.
+        prompt: `You are the Visual X Autonomous Orchestrator. Convert this one sentence into a production-grade website creation prompt that is 100% compliant with Google programmatic SEO methods.
 
 BENCHMARK REFERENCES (the generated site MUST match or exceed these):
 ${benchmarkCtx}
+
+GOOGLE COMPLIANCE RULES (MUST enforce all):
+${complianceCtx}
+
+${domainStrategy}
 
 INPUT SENTENCE: ${sentence}
 TARGET INDUSTRY: ${industry || 'General'}
@@ -108,14 +148,16 @@ TARGET INDUSTRY: ${industry || 'General'}
 Generate a comprehensive website creation prompt that includes:
 1. Complete site architecture (pages, navigation, sections)
 2. Conversion-optimized UX patterns derived from the benchmarks
-3. SEO-optimized content structure with target keywords
+3. SEO-optimized content structure with target keywords — each page MUST have unique title, H1, meta description, and intro (no token swaps)
 4. Lead generation funnel integration (contact forms, click-to-call, quote requests)
 5. Responsive design specs (mobile, tablet, desktop)
-6. Trust signals and social proof elements
+6. Trust signals and social proof — ONLY genuine, attributable proof (no fabricated reviews or testimonials)
 7. Performance targets (Core Web Vitals, load time)
 8. Accessibility requirements (WCAG 2.1 AA)
+9. Content differentiation: each page must add meaningful value beyond service/city token swaps — real service specifics, real local specifics, interactive utility, or expert insight
+10. NearMe/NearYou domain strategy integration
 
-The prompt must target a 95+/100 quality score across visual, functional, accessibility, performance, and security dimensions.
+CRITICAL: The generated site must NOT be a doorway page, must NOT use keyword stuffing, must NOT mass-generate unoriginal content, and must NOT use fake locations or reviews. Every page must be people-first and useful even without search traffic.
 
 Return JSON.`,
         response_json_schema: {
@@ -250,16 +292,25 @@ Evaluate the actual HTML for these dimensions (score 0 to max):
 - content_trust_seo (0-5): Is the content realistic and industry-specific? Are there proper meta tags, semantic structure, trust signals?
 - reliability (0-5): Does the JS have error handling? Are there fallback states? Is the code well-structured?
 
+GOOGLE COMPLIANCE CHECKS (any failure = decision "block"):
+- Keyword stuffing (unnatural repetition of keywords)
+- Fake testimonials or fabricated reviews
+- Doorway page pattern (little unique value, just token-swapped content)
+- Fake locations or invented service areas
+- Missing unique title, meta description, or H1
+- No people-first value (content not useful without search traffic)
+
 HARD GATES (any failure = decision "block"):
 - Missing required section (nav, hero, features, testimonials, FAQ, CTA, footer)
 - External dependencies (CDN, external scripts, external images)
 - No JavaScript interactivity at all
 - Inaccessible (no semantic HTML, no ARIA)
+- Any Google compliance violation above
 
 DECISION RULES:
-- "pass": total >= 95 AND no hard gate failure
+- "pass": total >= 95 AND no hard gate failure AND no Google compliance violation
 - "repair": total 70-94 OR minor issues that can be fixed
-- "block": total < 70 OR any hard gate failure
+- "block": total < 70 OR any hard gate failure OR any Google compliance violation
 
 Return JSON with each score, total_score, decision, findings (array of specific defects with evidence from the HTML), and evidence_summary.`,
         response_json_schema: {
@@ -276,6 +327,7 @@ Return JSON with each score, total_score, decision, findings (array of specific 
             total_score: { type: "number" },
             decision: { type: "string" },
             findings: { type: "array", items: { type: "string" } },
+            compliance_findings: { type: "array", items: { type: "string" } },
             evidence_summary: { type: "string" }
           }
         }
