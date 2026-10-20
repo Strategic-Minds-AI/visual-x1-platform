@@ -1,0 +1,83 @@
+{
+  "name": "Deployment",
+  "type": "object",
+  "properties": {
+    "project_id": {
+      "type": "string",
+      "description": "ID of the project this deployment belongs to"
+    },
+    "version": {
+      "type": "number",
+      "default": 1
+    },
+    "url": {
+      "type": "string",
+      "description": "Deployment URL"
+    },
+    "environment": {
+      "type": "string",
+      "enum": [
+        "preview",
+        "staging",
+        "production"
+      ],
+      "default": "preview"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "deploying",
+        "live",
+        "failed",
+        "rolled_back"
+      ],
+      "default": "pending"
+    },
+    "deployed_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "rollback_url": {
+      "type": "string",
+      "description": "URL of the previous version for rollback"
+    },
+    "provider": {
+      "type": "string",
+      "description": "Deployment provider (vercel, etc.)"
+    },
+    "receipt": {
+      "type": "string",
+      "description": "Deployment receipt or verification evidence"
+    }
+  },
+  "required": [
+    "project_id",
+    "environment"
+  ],
+  "rls": {
+    "read": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "create": {},
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

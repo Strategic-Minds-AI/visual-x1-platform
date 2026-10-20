@@ -1,0 +1,72 @@
+{
+  "name": "ValidationReceipt",
+  "type": "object",
+  "properties": {
+    "project_id": {
+      "type": "string",
+      "description": "ID of the project this validation belongs to"
+    },
+    "version": {
+      "type": "number",
+      "default": 1
+    },
+    "validator_id": {
+      "type": "string",
+      "description": "ID of the validating agent or system"
+    },
+    "decision": {
+      "type": "string",
+      "enum": [
+        "pass",
+        "block",
+        "conditional_pass"
+      ],
+      "default": "block",
+      "description": "Validation decision"
+    },
+    "findings": {
+      "type": "string",
+      "description": "JSON array of findings"
+    },
+    "evidence_hash": {
+      "type": "string",
+      "description": "Hash of the validated source/artifacts"
+    },
+    "checked_items": {
+      "type": "string",
+      "description": "JSON array of items checked"
+    },
+    "notes": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "project_id",
+    "decision"
+  ],
+  "rls": {
+    "read": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "create": {},
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

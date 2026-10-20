@@ -1,0 +1,76 @@
+{
+  "name": "ProductSpec",
+  "type": "object",
+  "properties": {
+    "project_id": {
+      "type": "string",
+      "description": "ID of the project this spec belongs to"
+    },
+    "version": {
+      "type": "number",
+      "default": 1
+    },
+    "specification": {
+      "type": "string",
+      "description": "Full structured product specification"
+    },
+    "data_contracts": {
+      "type": "string",
+      "description": "JSON array of data contracts"
+    },
+    "acceptance_criteria": {
+      "type": "string",
+      "description": "JSON array of acceptance criteria"
+    },
+    "components": {
+      "type": "string",
+      "description": "JSON array of components"
+    },
+    "integrations": {
+      "type": "string",
+      "description": "JSON array of integrations"
+    },
+    "risks": {
+      "type": "string",
+      "description": "JSON array of identified risks"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "active",
+        "archived"
+      ],
+      "default": "draft"
+    }
+  },
+  "required": [
+    "project_id",
+    "specification"
+  ],
+  "rls": {
+    "read": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "create": {},
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

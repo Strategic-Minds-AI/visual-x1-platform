@@ -1,0 +1,83 @@
+{
+  "name": "TestResult",
+  "type": "object",
+  "properties": {
+    "project_id": {
+      "type": "string",
+      "description": "ID of the project this test result belongs to"
+    },
+    "version": {
+      "type": "number",
+      "default": 1
+    },
+    "test_type": {
+      "type": "string",
+      "enum": [
+        "unit",
+        "e2e",
+        "security",
+        "accessibility",
+        "performance",
+        "visual",
+        "browser"
+      ],
+      "default": "unit",
+      "description": "Type of test"
+    },
+    "results": {
+      "type": "string",
+      "description": "JSON of test results"
+    },
+    "pass_count": {
+      "type": "number",
+      "default": 0
+    },
+    "fail_count": {
+      "type": "number",
+      "default": 0
+    },
+    "failures": {
+      "type": "string",
+      "description": "JSON array of failures"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "running",
+        "passed",
+        "failed"
+      ],
+      "default": "pending"
+    }
+  },
+  "required": [
+    "project_id",
+    "test_type"
+  ],
+  "rls": {
+    "read": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "create": {},
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

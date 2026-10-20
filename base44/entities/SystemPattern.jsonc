@@ -1,0 +1,89 @@
+{
+  "name": "SystemPattern",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Pattern name"
+    },
+    "category": {
+      "type": "string",
+      "description": "Pattern category"
+    },
+    "slug": {
+      "type": "string",
+      "description": "Unique pattern identifier"
+    },
+    "description": {
+      "type": "string",
+      "description": "Short description of the pattern"
+    },
+    "use_cases": {
+      "type": "string",
+      "description": "JSON array of use cases"
+    },
+    "components": {
+      "type": "string",
+      "description": "JSON array of supported components"
+    },
+    "data_requirements": {
+      "type": "string",
+      "description": "JSON array of data requirements"
+    },
+    "integrations": {
+      "type": "string",
+      "description": "JSON array of required integrations"
+    },
+    "security_risks": {
+      "type": "string",
+      "description": "JSON array of known security risks"
+    },
+    "visual_conventions": {
+      "type": "string",
+      "description": "JSON array of visual conventions"
+    },
+    "tests": {
+      "type": "string",
+      "description": "JSON array of recommended tests"
+    },
+    "compatible_patterns": {
+      "type": "string",
+      "description": "JSON array of compatible pattern slugs"
+    },
+    "prompt_template": {
+      "type": "string",
+      "description": "Base prompt template for this pattern"
+    },
+    "tags": {
+      "type": "string",
+      "description": "Comma-separated tags"
+    },
+    "display_order": {
+      "type": "number",
+      "default": 0
+    }
+  },
+  "required": [
+    "name",
+    "category",
+    "slug"
+  ],
+  "rls": {
+    "read": {},
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

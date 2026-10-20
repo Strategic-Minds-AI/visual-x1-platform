@@ -1,0 +1,71 @@
+{
+  "name": "SimulationResult",
+  "type": "object",
+  "properties": {
+    "project_id": {
+      "type": "string",
+      "description": "ID of the project this simulation belongs to"
+    },
+    "spec_version": {
+      "type": "number",
+      "default": 1
+    },
+    "scenario_results": {
+      "type": "string",
+      "description": "JSON of scenario outcomes"
+    },
+    "risk_register": {
+      "type": "string",
+      "description": "JSON array of identified risks"
+    },
+    "economics": {
+      "type": "string",
+      "description": "JSON of business economics simulation"
+    },
+    "unresolved_questions": {
+      "type": "string",
+      "description": "JSON array of open questions"
+    },
+    "qa_score": {
+      "type": "number",
+      "description": "Quality assessment score 0-100"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "complete",
+        "failed"
+      ],
+      "default": "complete"
+    }
+  },
+  "required": [
+    "project_id"
+  ],
+  "rls": {
+    "read": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "create": {},
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

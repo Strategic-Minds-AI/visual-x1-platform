@@ -1,0 +1,101 @@
+{
+  "name": "Project",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Project name"
+    },
+    "idea": {
+      "type": "string",
+      "description": "One-sentence idea describing the desired outcome"
+    },
+    "assumptions": {
+      "type": "string",
+      "description": "JSON array of normalized assumptions extracted from the idea"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "idea",
+        "pattern_selected",
+        "refined",
+        "simulated",
+        "designed",
+        "generated",
+        "tested",
+        "validated",
+        "deployed",
+        "live",
+        "improving"
+      ],
+      "default": "idea",
+      "description": "Current pipeline phase status"
+    },
+    "current_phase": {
+      "type": "number",
+      "default": 1,
+      "description": "Current pipeline phase 1-11"
+    },
+    "pattern_id": {
+      "type": "string",
+      "description": "Selected system pattern slug"
+    },
+    "pattern_name": {
+      "type": "string",
+      "description": "Human-readable pattern name"
+    },
+    "description": {
+      "type": "string",
+      "description": "Detailed project description"
+    },
+    "tags": {
+      "type": "string",
+      "description": "Comma-separated tags"
+    }
+  },
+  "required": [
+    "name",
+    "idea",
+    "status"
+  ],
+  "rls": {
+    "read": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "create": {},
+    "update": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "delete": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    }
+  }
+}
