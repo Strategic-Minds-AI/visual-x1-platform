@@ -1,6 +1,6 @@
-import React, {useMemo,useState} from 'react';
+import React, {useState} from 'react';
 import {Link,useSearchParams} from 'react-router-dom';
-import {Activity,ArrowRight,ArrowUpRight,BarChart3,Bell,BookOpen,CalendarDays,Check,CheckCircle2,ChevronDown,ChevronRight,ClipboardCheck,Clock3,Download,ExternalLink,FileCheck,FileText,FolderOpen,Globe2,Headphones,LayoutDashboard,LockKeyhole,Menu,MessageCircle,Phone,Plus,Search,Settings2,ShieldCheck,Sparkles,Wallet,Workflow,X} from 'lucide-react';
+import {Activity,ArrowRight,ArrowUpRight,BarChart3,Check,CheckCircle2,ChevronDown,ChevronRight,ClipboardCheck,Clock3,Download,ExternalLink,FileCheck,FolderOpen,LayoutDashboard,LockKeyhole,Menu,MessageCircle,Phone,Search,ShieldCheck,Sparkles,Wallet,Workflow,X} from 'lucide-react';
 import "../../vendor/x1/CommercePortal.css";
 import '@/styles/x1-brand-theme.css';
 // Byte-exact port of X1's apps/strategic-minds-v2/src/ClientPortalExperience.jsx at
