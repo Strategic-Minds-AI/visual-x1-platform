@@ -21,6 +21,7 @@ import WebsiteFactory from './pages/WebsiteFactory';
 import OpportunityMatrix from './pages/OpportunityMatrix';
 import VisualApproval from './pages/VisualApproval';
 import TemplateEngine from './pages/TemplateEngine';
+import AcademyTemplates from './pages/AcademyTemplates';
 import BacklinkHealth from './pages/BacklinkHealth';
 import VariationTracker from './pages/VariationTracker';
 import SeoSimulator from './pages/SeoSimulator';
@@ -100,6 +101,7 @@ const AuthenticatedApp = () => {
         <Route path="/opportunities" element={<OpportunityMatrix />} />
         <Route path="/visual-approval" element={<VisualApproval />} />
         <Route path="/template-engine" element={<TemplateEngine />} />
+        <Route path="/academy-templates" element={<AcademyTemplates />} />
         <Route path="/backlink-health" element={<BacklinkHealth />} />
         <Route path="/variations" element={<VariationTracker />} />
         <Route path="/seo-simulator" element={<SeoSimulator />} />
