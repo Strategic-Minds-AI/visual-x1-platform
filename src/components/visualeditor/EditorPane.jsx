@@ -17,6 +17,8 @@ import useEditorTools from "@/hooks/useEditorTools";
 import useVercelEditor from "@/hooks/useVercelEditor";
 import useGithubEditor from "@/hooks/useGithubEditor";
 import ProjectDashboard from "@/components/visualeditor/dashboard/ProjectDashboard";
+import RouteNavigator from "@/components/visualeditor/RouteNavigator";
+import useArtifactRoutes from "@/hooks/useArtifactRoutes";
 import useProjectSettings, { useAutoVerify, useDeviceSetting } from "@/hooks/useProjectSettings";
 import { MOBILE_TABS } from "@/components/visualeditor/editorNav";
 
@@ -71,6 +73,70 @@ export default function EditorPane({
   const settings = useProjectSettings(projectName);
   useDeviceSetting(settings, setDevice, !initial?.device);
   useAutoVerify(engine.previewHtml, settings.settings.autoVerify, tools.runTest);
+
+  // The site's own route map, read from the artifact, and the trail of pages walked.
+  const [route, setRoute] = useState("/");
+  const [trail, setTrail] = useState(["/"]);
+  const [trailIndex, setTrailIndex] = useState(0);
+  const [routeBusy, setRouteBusy] = useState(false);
+  const { origin, routes } = useArtifactRoutes(engine.previewHtml, route);
+
+  // Walking the site's pages: the page is read from the site's own address and put on
+  // the canvas, so what the navigator shows is the real document, not a re-render.
+  const goTo = async (path) => {
+    if (!origin) {
+      tools.say("Editor", "This artifact carries no live address, so its other pages cannot be read from here.", "error");
+      return false;
+    }
+    setRouteBusy(true);
+    try {
+      const res = await base44.functions.invoke("fetchWebPage", { url: `${origin}${path}` });
+      const data = res.data || {};
+      if (data.error) {
+        tools.say("Editor", data.error, "error");
+        return false;
+      }
+      if (!data.html) {
+        tools.say("Editor", `${path} returned no document to render (HTTP ${data.status || "unknown"}).`, "error");
+        return false;
+      }
+      engine.setPreviewHtml(data.html);
+      setRoute(path);
+      tools.say(
+        "Editor",
+        `${path} is on the canvas — ${data.title ? `“${data.title}”, ` : ""}HTTP ${data.status || 200}, ${Number(
+          data.html_length || data.html.length
+        ).toLocaleString()} characters read.`
+      );
+      return true;
+    } catch (e) {
+      tools.say("Editor", e?.response?.data?.error || e.message || "That page could not be read.", "error");
+      return false;
+    } finally {
+      setRouteBusy(false);
+    }
+  };
+
+  const openRoute = async (path) => {
+    if (path === route || routeBusy) return;
+    if (await goTo(path)) {
+      const next = [...trail.slice(0, trailIndex + 1), path];
+      setTrail(next);
+      setTrailIndex(next.length - 1);
+    }
+  };
+
+  const stepBack = async () => {
+    if (trailIndex === 0) return;
+    const i = trailIndex - 1;
+    if (await goTo(trail[i])) setTrailIndex(i);
+  };
+
+  const stepForward = async () => {
+    if (trailIndex >= trail.length - 1) return;
+    const i = trailIndex + 1;
+    if (await goTo(trail[i])) setTrailIndex(i);
+  };
 
   const busy =
     sending || engine.loading.render || engine.loading.convert || engine.loading.simulate || engine.loading.chain;
@@ -247,6 +313,23 @@ export default function EditorPane({
         )}
 
         <div className="ve-canvascol">
+          {/* The pages of the site being worked on, directly above the canvas they are
+              read into. It appears once there is an artifact carrying pages. */}
+          {!dashboardOpen && canvasView === "preview" && (
+            <RouteNavigator
+              routes={routes}
+              origin={origin}
+              current={route}
+              busy={routeBusy}
+              canBack={trailIndex > 0}
+              canForward={trailIndex < trail.length - 1}
+              onOpen={openRoute}
+              onBack={stepBack}
+              onForward={stepForward}
+              onReload={() => goTo(route)}
+            />
+          )}
+
           {/* Every editor tool sits directly over the editor screen, in one bar. */}
           <EditorToolbar {...toolbar} />
 

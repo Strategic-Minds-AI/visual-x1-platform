@@ -22,8 +22,10 @@
     --card-foreground: 207 100% 98%;
     --popover: 208 73% 9%;
     --popover-foreground: 207 100% 98%;
-    --primary: 191 100% 50%;
-    --primary-foreground: 157 100% 4%;
+    /* The primary is the home page's vert electric green, so the app's own
+       Tailwind surfaces read as the same system as the console and /v2. */
+    --primary: 150 100% 63%;
+    --primary-foreground: 155 100% 5%;
     --secondary: 219 74% 6%;
     --secondary-foreground: 207 100% 98%;
     --muted: 208 73% 9%;
@@ -34,8 +36,8 @@
     --destructive-foreground: 0 0% 100%;
     --border: 203 58% 16%;
     --input: 200 60% 25%;
-    --ring: 191 100% 50%;
-    --electric: 191 100% 50%;
+    --ring: 150 100% 63%;
+    --electric: 150 100% 63%;
     --action: 141 100% 70%;
     --x1-blue: 209 100% 54%;
     --focus: 144 100% 76%;
@@ -51,12 +53,12 @@
     --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
     --sidebar-background: 219 74% 4%;
     --sidebar-foreground: 207 100% 98%;
-    --sidebar-primary: 191 100% 50%;
+    --sidebar-primary: 150 100% 63%;
     --sidebar-primary-foreground: 157 100% 4%;
     --sidebar-accent: 206 55% 14%;
     --sidebar-accent-foreground: 207 100% 98%;
     --sidebar-border: 203 58% 16%;
-    --sidebar-ring: 191 100% 50%;
+    --sidebar-ring: 150 100% 63%;
   }
 
   * {
@@ -74,6 +76,7 @@
   /* X1 canvas: the star field and the cyan glow behind everything, in every state. */
   body {
     background-image:
+      radial-gradient(ellipse 55% 45% at 76% -4%, rgba(106, 255, 174, 0.12), transparent 62%),
       radial-gradient(circle at 70% 28%, rgba(18, 140, 255, 0.16), transparent 55%),
       radial-gradient(circle at 12% 18%, rgba(167, 220, 255, 0.7) 0 1px, transparent 1.5px),
       radial-gradient(circle at 80% 47%, rgba(55, 177, 250, 0.65) 0 0.8px, transparent 1.5px),

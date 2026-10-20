@@ -131,8 +131,10 @@
 
 .cp-site .ve-pill.selected {
   color: #d7fbff;
-  border-color: rgba(64, 192, 254, .45);
-  background: linear-gradient(95deg, rgba(6, 104, 152, .4), rgba(11, 56, 84, .25));
+  /* The editor's active state is the console's own primary: vert electric green. */
+  border-color: var(--x1-electric, #6affae);
+  box-shadow: 0 0 18px rgba(106, 255, 174, .22);
+  background: linear-gradient(95deg, rgba(31, 209, 138, .32), rgba(11, 56, 84, .28));
 }
 
 /* ── split pane: composer left, canvas right ────────────────────────────── */
@@ -295,9 +297,10 @@
 }
 
 .cp-site .ve-devices button.selected {
-  border-color: rgba(64, 192, 254, .55);
-  background: rgba(6, 104, 152, .3);
+  border-color: var(--x1-electric, #6affae);
+  background: rgba(31, 209, 138, .24);
   color: #d7fbff;
+  box-shadow: 0 0 14px rgba(106, 255, 174, .2);
 }
 
 .cp-site .ve-status {
@@ -456,8 +459,8 @@
 }
 
 .cp-site .ve-tab.selected {
-  background: linear-gradient(180deg, rgba(6, 104, 152, .4), rgba(6, 23, 38, .7));
-  border-color: rgba(64, 192, 254, .42);
+  background: linear-gradient(180deg, rgba(31, 209, 138, .3), rgba(6, 23, 38, .72));
+  border-color: var(--x1-electric, #6affae);
   border-bottom-color: transparent;
   color: #d7fbff;
 }
@@ -663,6 +666,96 @@
   }
   .cp-site .ve-toolbar .ve-pill {
     padding: 6px 8px;
+  }
+}
+
+/* ── the page navigator, directly above the canvas ───────────────────────────
+   The site's own route map, read from the artifact on the canvas: the pages sit as
+   pills, the one on screen is lit, and the address it was read from sits at the
+   right. It only appears once there is an artifact with pages to walk. */
+.cp-site .ve-routes {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 38px;
+  padding: 5px 10px;
+  border-bottom: 1px solid rgba(91, 175, 230, .16);
+  background: linear-gradient(180deg, rgba(8, 32, 40, .5), rgba(3, 11, 22, .34));
+  flex-shrink: 0;
+}
+
+.cp-site .ve-routes-nav {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.cp-site .ve-routes-track {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  flex: 1;
+  min-width: 0;
+  overflow-x: auto;
+}
+
+.cp-site .ve-route {
+  flex-shrink: 0;
+  padding: 5px 10px;
+  border-radius: 100px;
+  border: 1px solid rgba(66, 168, 227, .28);
+  background: rgba(6, 17, 31, .55);
+  color: #9eb6ca;
+  font: inherit;
+  font-size: 8.5px;
+  font-weight: 850;
+  letter-spacing: .12em;
+  cursor: pointer;
+  transition: color 180ms ease, border-color 180ms ease, background 180ms ease;
+}
+
+.cp-site .ve-route:hover:not(:disabled) {
+  color: #d7fbff;
+}
+
+.cp-site .ve-route.selected {
+  border-color: rgba(141, 255, 196, .6);
+  background-image: linear-gradient(115deg, var(--x1-electric, #6affae), rgba(18, 140, 255, .85));
+  color: #04140d;
+}
+
+.cp-site .ve-route:disabled {
+  opacity: .5;
+  cursor: not-allowed;
+}
+
+.cp-site .ve-route-busy {
+  color: #8dffc4;
+  flex-shrink: 0;
+}
+
+.cp-site .ve-routes .ve-icon-btn:disabled {
+  opacity: .4;
+  cursor: not-allowed;
+}
+
+.cp-site .ve-route-url {
+  display: none;
+  font-size: 10px;
+  color: #7fa5b1;
+}
+
+@media (min-width: 1100px) {
+  .cp-site .ve-route-url {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    max-width: 300px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    flex-shrink: 0;
   }
 }
 

@@ -45,6 +45,9 @@ export default async function(req) {
       stylesheets: signature.stylesheets,
       scripts: signature.scripts,
       html_length: signature.html_length,
+      // The document itself, so a caller can put the page it read onto a canvas — the
+      // editor's own page navigator loads each route of a site from here.
+      html: page.html.slice(0, 400000),
       text,
       note: page.status >= 400
         ? `The page answered HTTP ${page.status}; the content below may be an error page.`

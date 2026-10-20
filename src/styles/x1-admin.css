@@ -404,3 +404,111 @@
   height: 0;
   display: none;
 }
+
+/* ══════════════════════════════════════════════════════════════════════════
+   ELECTRIC ADMIN — THE CONSOLE'S PALETTE, ALIGNED TO THE HOME PAGE
+
+   The public home page is chrome and electric blue with a vert electric (green)
+   accent. The console keeps that blue for its hairlines, gradients and ink, and
+   takes the electric green as its primary: pills, active states, meters, rules,
+   focus and the neon hover outline all light green, over surfaces that carry a
+   green-to-blue gradient. Everything below is a token remap or an added gradient,
+   so no markup changes and nothing else about the console moves.
+   ══════════════════════════════════════════════════════════════════════════ */
+.cp-site {
+  --x1-electric: #6affae;
+  --x1-electric-bright: #8dffc4;
+  --x1-electric-deep: #1fd18a;
+  --smai-cyan: #6affae;
+  --smai-green: #8dffc4;
+  --smai-border: rgba(106, 255, 174, .5);
+  --smai-border-soft: rgba(106, 255, 174, .22);
+  --smai-focus: #8dffc4;
+}
+
+/* ── gradient surfaces ─────────────────────────────────────────────────── */
+.cp-site .cp-portal-shell {
+  background-image:
+    radial-gradient(ellipse 60% 40% at 78% -6%, rgba(106, 255, 174, .1), transparent 62%),
+    radial-gradient(ellipse 50% 40% at 8% 4%, rgba(18, 140, 255, .12), transparent 60%);
+}
+
+.cp-site .cp-sidebar {
+  background-image: linear-gradient(180deg, rgba(9, 44, 47, .5), rgba(6, 17, 31, .94));
+}
+
+.cp-site .cp-sidebar-head,
+.cp-site .cp-portal-top {
+  background-image: linear-gradient(100deg, rgba(8, 52, 48, .5), rgba(6, 17, 31, .8) 58%, rgba(10, 44, 74, .45));
+}
+
+/* Everything that acts takes the green-to-blue gradient. */
+.cp-site .cp-green-button,
+.cp-site .cp-portal-light-button,
+.cp-site .x1-pill-primary,
+.cp-site .ve-dash-btn,
+.cp-site .ve-send,
+.cp-site .ve-new-project,
+.cp-site .ve-flow.is-go {
+  background-image: linear-gradient(115deg, var(--x1-electric), var(--smai-blue));
+  border-color: rgba(141, 255, 196, .55);
+  color: #04140d;
+}
+
+/* Rules and dividers light green. */
+.cp-site .x1-rule,
+.cp-site .ve-toolbar-rule,
+.cp-site .ve-flow-sep {
+  background-image: linear-gradient(90deg, transparent, var(--x1-electric), transparent);
+}
+
+/* Active states carry the green. */
+.cp-site .x1-active-glow,
+.cp-site .ve-pill.selected,
+.cp-site .ve-devices button.selected,
+.cp-site .ve-tab.selected,
+.cp-site .cp-state-pill {
+  border-color: rgba(106, 255, 174, .5) !important;
+  box-shadow: 0 0 18px rgba(106, 255, 174, .2);
+}
+
+/* ── the neon hover: an electric green outline and a soft glow ─────────────
+   One treatment for every control, card, tile, row, tab, pill and menu item, in
+   the console and in the editor it hosts. */
+.cp-site button:not(:disabled),
+.cp-site a[class],
+.cp-site [class*="cp-card"],
+.cp-site [class*="cp-panel"],
+.cp-site [class*="ve-row"],
+.cp-site [class*="ve-metric"],
+.cp-site [class*="ve-pop-item"],
+.cp-site [class*="ve-report-stat"],
+.cp-site [class*="cp-journey-step"] {
+  transition: border-color 180ms ease, box-shadow 180ms ease, background-color 180ms ease, color 180ms ease;
+}
+
+.cp-site button:not(:disabled):hover,
+.cp-site a[class]:hover,
+.cp-site [class*="cp-card"]:hover,
+.cp-site [class*="cp-panel"]:hover,
+.cp-site [class*="ve-row"]:hover,
+.cp-site [class*="ve-metric"]:hover,
+.cp-site [class*="ve-pop-item"]:hover,
+.cp-site [class*="ve-report-stat"]:hover,
+.cp-site [class*="cp-journey-step"]:hover {
+  border-color: var(--x1-electric) !important;
+  box-shadow: 0 0 0 1px rgba(106, 255, 174, .5), 0 0 22px rgba(106, 255, 174, .26) !important;
+}
+
+/* A whole page is a surface, not a hover target: it takes the outline softly so
+   hovering it never strobes. */
+.cp-site .cp-portal-panel:hover {
+  border-color: rgba(106, 255, 174, .34) !important;
+  box-shadow: 0 0 26px rgba(106, 255, 174, .1) !important;
+}
+
+/* Focus, for everyone. */
+.cp-site :focus-visible {
+  outline: 2px solid var(--x1-electric-bright) !important;
+  outline-offset: 2px;
+}
