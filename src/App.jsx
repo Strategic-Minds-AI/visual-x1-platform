@@ -11,6 +11,7 @@ import Dashboard from './pages/Dashboard';
 import JobBoard from './pages/JobBoard';
 import PromptStudio from './pages/PromptStudio';
 import VisualEditor from './pages/VisualEditor';
+import VisualStudio from './pages/VisualStudio';
 import AgentActivity from './pages/AgentActivity';
 import PromptLab from './pages/PromptLab';
 import SystemControl from './pages/SystemControl';
@@ -121,8 +122,9 @@ const AuthenticatedApp = () => {
         <Route path="/prompt-system" element={<PromptSystem />} />
         {/* X1 administrative workspaces, at X1's own route paths. */}
         <Route path="/admin" element={<Navigate to="/v2/b" replace />} />
-        <Route path="/admin/studio" element={<VisualEditor />} />
-        <Route path="/admin/visual-editor" element={<VisualEditor />} />
+        {/* X1 source route contract: /admin/studio and /admin/visual-editor both render X1's Visual Studio. */}
+        <Route path="/admin/studio" element={<VisualStudio />} />
+        <Route path="/admin/visual-editor" element={<VisualStudio />} />
         <Route path="/admin/coding-kanban" element={<KanbanBoard />} />
         <Route path="/admin/prompt-lab" element={<PromptLab />} />
         <Route path="/admin/intelligence" element={<AnalyticsDashboard />} />
@@ -139,8 +141,9 @@ const AuthenticatedApp = () => {
         <Route path="/x1-home" element={<X1Home />} />
         <Route path="/v2/:variant" element={<V2Experience />} />
         <Route path="/pricing" element={<PricingExperience />} />
-        <Route path="/portal" element={<ClientPortalExperience gateway />} />
-        <Route path="/portal/workspace" element={<ClientPortalExperience />} />
+        <Route path="/portal" element={<ClientPortalExperience />} />
+        <Route path="/portal/demo" element={<ClientPortalExperience demo />} />
+        <Route path="/portal/workspace" element={<ClientPortalExperience demo />} />
       </Route>
       <Route element={<ProtectedRoute unauthenticatedElement={<Navigate to="/login?returnTo=/x1-module" replace />} />}>
         <Route path="/x1-module" element={<X1Module />} />
