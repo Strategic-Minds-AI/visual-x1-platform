@@ -1,22 +1,5 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.54';
-
-const MAX_PER_RUN = 200;
-
-const SITE_TYPES = ['directory', 'blog_post', 'local_page', 'review_site', 'comparison_page', 'landing_page'];
-
-const TARGET_DA = {
-  review_site: 70,
-  directory: 60,
-  comparison_page: 45,
-  blog_post: 40,
-  local_page: 35,
-  landing_page: 30,
-};
-
-const toList = (value) => {
-  const raw = Array.isArray(value) ? value : String(value || '').split(',');
-  return raw.map((item) => String(item).trim()).filter(Boolean);
-};
+import { buildBacklinkPlan, toList } from '../../shared/backlinks.ts';
 
 export default async function (req) {
   try {
@@ -32,34 +15,13 @@ export default async function (req) {
     if (!industry) return Response.json({ error: 'An industry is required' }, { status: 400 });
     if (!keywords.length) return Response.json({ error: 'At least one keyword is required' }, { status: 400 });
 
-    const backlinkUrl = String(body.backlink_url || '').trim();
-    const batchId = String(body.batch_id || '');
-    const places = locations.length ? locations : [''];
-
-    const records = [];
-    let capped = false;
-    for (const keyword of keywords) {
-      for (const location of places) {
-        if (records.length >= MAX_PER_RUN) {
-          capped = true;
-          break;
-        }
-        const siteType = SITE_TYPES[records.length % SITE_TYPES.length];
-        records.push({
-          batch_id: batchId,
-          industry,
-          site_type: siteType,
-          target_keyword: keyword,
-          target_location: location,
-          status: 'pending',
-          domain_authority: TARGET_DA[siteType] || 40,
-          backlink_url: backlinkUrl,
-          content: `${siteType.replace(/_/g, ' ')} targeting "${keyword}" in ${location || 'the national market'}.`,
-          health_status: 'unknown',
-        });
-      }
-      if (capped) break;
-    }
+    const { records, capped } = buildBacklinkPlan({
+      industry,
+      keywords,
+      locations,
+      backlinkUrl: String(body.backlink_url || '').trim(),
+      batchId: String(body.batch_id || ''),
+    });
 
     await base44.entities.BacklinkSite.bulkCreate(records);
 

@@ -228,6 +228,17 @@ async function monitor(base44) {
   };
 }
 
+// A structure carries either one page on the client's own site (the GEO leg) or the paired
+// near-me / near-you domain pages. Both become the same kind of page record.
+const pageRows = (structure) => {
+  const own = String(structure.site_url || '').trim();
+  if (own) return [{ url: own, content: structure.title }];
+  return [
+    { url: structure.nearme_url, content: structure.title },
+    { url: structure.nearyou_url, content: structure.h1 },
+  ].filter((row) => row.url);
+};
+
 async function createWave(base44, { template, structures, note, deploy, winningKeywords, waveSize }) {
   const trimmed = structures.slice(0, Math.min(MAX_WAVE, waveSize || MAX_WAVE));
   if (!trimmed.length) return { ok: false, reason: 'No structure was produced, so no wave was created.' };
@@ -242,11 +253,7 @@ async function createWave(base44, { template, structures, note, deploy, winningK
 
   const records = [];
   trimmed.forEach((structure, index) => {
-    const rows = [
-      { url: structure.nearme_url, content: structure.title },
-      { url: structure.nearyou_url, content: structure.h1 },
-    ].filter((row) => row.url);
-    rows.forEach((row) => {
+    pageRows(structure).forEach((row) => {
       records.push({
         batch_id: batch.id,
         variant_number: index + 1,
@@ -323,7 +330,8 @@ async function createWave(base44, { template, structures, note, deploy, winningK
     deployment,
     deploy_error: deployError,
     deploy_note: deployNote,
-    sample_urls: trimmed.slice(0, 5).map((s) => s.nearme_url || s.nearyou_url),
+    site: trimmed.find((s) => s.site_url)?.site_url || null,
+    sample_urls: trimmed.slice(0, 5).map((s) => s.site_url || s.nearme_url || s.nearyou_url),
     method: 'Pages are recorded and one deployment is dispatched for the project that serves them. Nothing here claims a page is live until the deployment and the pages are verified.',
   };
 }
@@ -382,10 +390,12 @@ export default async function (req) {
       const keywords = (Array.isArray(body.keywords) ? body.keywords : String(body.keywords || template.keywords || '').split(','))
         .map((k) => String(k).trim())
         .filter(Boolean);
+      const siteUrl = String(body.site_url || '').trim();
       const { structures } = await buildStructures(base44, {
         template,
         keywords,
         locations,
+        siteUrl,
         pattern: template.url_pattern,
         strategy: template.domain_strategy,
         funnel: template.funnel_type,
@@ -395,7 +405,9 @@ export default async function (req) {
       const wave = await createWave(base44, {
         template,
         structures,
-        note: `Launched the first wave for ${template.name}`,
+        note: siteUrl
+          ? `Launched the first GEO wave for ${template.name} on ${siteUrl}`
+          : `Launched the first wave for ${template.name}`,
         deploy,
         winningKeywords: [],
         waveSize,
@@ -446,6 +458,7 @@ export default async function (req) {
         template,
         keywords,
         locations,
+        siteUrl: String(body.site_url || '').trim(),
         pattern: template.url_pattern,
         strategy: template.domain_strategy,
         funnel: template.funnel_type,

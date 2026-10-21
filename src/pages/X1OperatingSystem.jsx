@@ -5,6 +5,7 @@ import X1StatusStrip from "@/components/x1/X1StatusStrip";
 import X1DataPlane from "@/components/x1/X1DataPlane";
 import X1ParityLedger from "@/components/x1/X1ParityLedger";
 import X1EmbedPanel from "@/components/x1/X1EmbedPanel";
+import CampaignCommand from "@/components/campaign/CampaignCommand";
 
 export default function X1OperatingSystem() {
   return (
@@ -18,6 +19,10 @@ export default function X1OperatingSystem() {
           The X1 operating system, inside Visual X. Visual X carries X1's identity and reads X1's real state; X1 stays
           the authority for its own queue, workers and sessions. Nothing on this page claims a state that X1 did not answer.
         </p>
+
+        {/* The one execution control on this page: it runs Visual X's own pipelines for the
+            client, while everything below stays a read-only surface of X1's state. */}
+        <CampaignCommand />
 
         <X1BrandHeader />
         <X1StatusStrip />

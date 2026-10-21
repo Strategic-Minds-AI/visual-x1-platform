@@ -139,6 +139,9 @@ export async function loadLayout(base44, template) {
 
 export async function buildStructures(base44, options) {
   const { template, pattern, strategy, funnel, scoped = true } = options;
+  // A campaign can map its pages onto the client's own site (the GEO leg) instead of the
+  // paired lead-generation domains.
+  const siteUrl = String(options.siteUrl || '').trim().replace(/\/+$/, '');
 
   const rawKeywords = Array.isArray(options.keywords)
     ? options.keywords
@@ -202,8 +205,10 @@ export async function buildStructures(base44, options) {
         h1: `Find a Trusted ${titleCase(keyword)} in ${place}`,
         nearme_domain: nearmeDomain,
         nearyou_domain: nearyouDomain,
-        nearme_url: domainStrategy === 'nearyou' ? '' : `https://${nearmeDomain}${path}`,
-        nearyou_url: domainStrategy === 'nearme' ? '' : `https://${nearyouDomain}${path}`,
+        site_url: siteUrl ? `${siteUrl}${path}` : '',
+        site_path: siteUrl ? path : '',
+        nearme_url: siteUrl || domainStrategy === 'nearyou' ? '' : `https://${nearmeDomain}${path}`,
+        nearyou_url: siteUrl || domainStrategy === 'nearme' ? '' : `https://${nearyouDomain}${path}`,
         funnel_type: funnelType,
         layout_source: layout.source,
         layout_sections: layout.sections.map((s) => s.section),
