@@ -6,6 +6,7 @@ import X1DataPlane from "@/components/x1/X1DataPlane";
 import X1ParityLedger from "@/components/x1/X1ParityLedger";
 import X1EmbedPanel from "@/components/x1/X1EmbedPanel";
 import CampaignCommand from "@/components/campaign/CampaignCommand";
+import ConvergenceMatrix from "@/components/convergence/ConvergenceMatrix";
 
 export default function X1OperatingSystem() {
   return (
@@ -23,6 +24,9 @@ export default function X1OperatingSystem() {
         {/* The one execution control on this page: it runs Visual X's own pipelines for the
             client, while everything below stays a read-only surface of X1's state. */}
         <CampaignCommand />
+
+        {/* What the convergence audit actually verified against X1 and the donors. */}
+        <ConvergenceMatrix />
 
         <X1BrandHeader />
         <X1StatusStrip />
