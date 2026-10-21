@@ -76,3 +76,20 @@ First run CI and independent review on these exact branches; repair any failures
 
 ### Branch reconciliation — 2026-10-20
 Original PR #1 became conflicted because upstream main changed VisualEditorWorkspace to use EditorTabStrip and EditorPane. New branch feat/x1-visual-sandbox-integrated-20261020 is based on main b382c2e212948de56b5712fcf4329534ace6c100. Migrate the sandbox drawer and mount on the tabbed shell, not the former monolithic editor. Previous PR remains historical and must not be merged.
+
+## Verified follow-up — 2026-10-20
+
+- Current main baseline was rehydrated at `b382c2e212948de56b5712fcf4329534ace6c100`. The prior PR #1 was superseded by clean integration PR #3 (source `0433d753a22a5f926ca9281e91dbc954dd3a3448`), keeping existing `EditorTabStrip`, `EditorPane` and `useEditorTabs`.
+- GitHub Actions run [39496116916](https://github.com/Strategic-Minds-AI/visual-x1-platform/actions/runs/39496116916): **CI PASS**, exact SHA `0433d753a22a5f926ca9281e91dbc954dd3a3448`. Sandbox static checks, npm build, and full lint completed. This is build evidence only, **not browser or operational end-to-end QA**.
+- Paired Launch Engine PR #18 source `aed31a5960a539fe2d504bf4ba5d9dc79ec2ea12` GitHub Actions run [39490165497](https://github.com/Strategic-Minds-AI/x1-launch-engine/actions/runs/39490165497): **CI PASS**, runtime authentication and redaction unit contracts. No live Supabase identity E2E.
+- Independent `VISION_CORTEX.message_validator` returned **APPROVED_WITH_NOTES** for public Launch Engine PR #18, **UNKNOWN/INACCESSIBLE** for private Visual X1 PR #3, and **REJECTED** the combined release gate. External agent could not read private repository; no Guardian exact-source attestation produced.
+- `CLOUD_BROWSER.query_session` returned zero session records; no browser execution verified.
+- Local canonical P0 matrix read back. P0-01 signed auth, P0-02 integrated cycle, P0-03 Guardian private access, P0-04 Cloud Browser authentication remain unresolved in that source. Local Docker/Ollama inference was not demonstrated. Prior remote command transport timed out; read-only file access worked.
+- **Release disposition: BLOCKED**. Maintain draft PRs. Do not merge, deploy production, unlock RLS, create a second queue/scheduler, or expose a local service.
+
+### Next agent handoff
+1. Re-read `main` and PR #3 SHA before edits, as Visual X1 main is actively changing.
+2. Independently review PR #3 through an actually authenticated GitHub app or a secure signed redacted source package. Do not assume public web 404 disproves a private repo.
+3. Run authenticated staging browser tests and confirm preview sandbox iframe CSP/allow-scripts/origin isolation; retain current uncertainty until verified.
+4. Resolve signed runtime auth missing project ID/source SHA and Cloud Browser 401 through existing P0 work; run one staging queue+lease+Guardian receipt canary only after gates pass.
+5. Probe Docker/Ollama using existing JARVIS bridge: model tags, inference, restarts, ports, memory, and resources. Do not enable a public Ollama listener.
