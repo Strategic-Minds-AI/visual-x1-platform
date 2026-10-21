@@ -95,6 +95,17 @@ export default async function (req) {
 
     const body = await req.json();
     const action = String(body.action || 'status');
+
+    // Reading is open to any operator; changing where a project deploys from, or
+    // which environment a variable belongs to, is an admin action.
+    const WRITE_ACTIONS = ['link_repo', 'env_set', 'env_remove'];
+    if (WRITE_ACTIONS.includes(action) && user.role !== 'admin') {
+      return Response.json(
+        { ok: false, error: 'Only an admin can change a project’s repository link or its environment variables.' },
+        { status: 403 }
+      );
+    }
+
     const team = String(body.team || '').trim();
     const projectRef = String(body.project || '').trim();
 
@@ -226,6 +237,114 @@ export default async function (req) {
         domains,
         method: 'Read from Vercel for the selected project.'
       });
+    }
+
+    // Where this project deploys from and what it holds per environment: the linked
+    // repository and its production branch, the domains attached to it, and the names
+    // of the variables set for production, preview and development. Variable values are
+    // deliberately never read back or returned.
+    if (action === 'routing') {
+      if (!projectRef) return Response.json({ ok: false, error: 'Which project?' }, { status: 400 });
+      const p = await call(`/v9/projects/${encodeURIComponent(projectRef)}`, { team });
+      const d = await call(`/v9/projects/${encodeURIComponent(p.id)}/domains`, { team, query: { limit: 50 } });
+      let envs = [];
+      let env_error = null;
+      try {
+        const e = await call(`/v10/projects/${encodeURIComponent(p.id)}/env`, { team });
+        envs = (e.envs || []).map((x) => ({
+          id: x.id,
+          key: x.key,
+          target: Array.isArray(x.target) ? x.target : [x.target].filter(Boolean),
+          type: x.type || '',
+          has_value: x.value !== undefined && x.value !== null && x.value !== ''
+        }));
+      } catch (error) {
+        env_error = error.message;
+      }
+      return Response.json({
+        ok: true,
+        project: projectSummary(p),
+        domains: (d.domains || []).map((x) => ({
+          name: x.name || '',
+          verified: Boolean(x.verified),
+          redirect: x.redirect || '',
+          git_branch: x.gitBranch || null
+        })),
+        envs,
+        env_error,
+        method: 'Read from Vercel for this project. Variable names and targets only; values are never read back.'
+      });
+    }
+
+    // Point the project at a different repository. It reuses the Git connection the
+    // project already has, so it can only move between repositories that same account
+    // can see, and Vercel answers with what it actually linked.
+    if (action === 'link_repo') {
+      if (!projectRef) return Response.json({ ok: false, error: 'Which project?' }, { status: 400 });
+      const repo = String(body.repo || '').trim();
+      if (!/^[\w.-]+\/[\w.-]+$/.test(repo)) {
+        return Response.json({ ok: false, error: 'Which repository? It is expected as owner/name.' }, { status: 400 });
+      }
+      const p = await call(`/v9/projects/${encodeURIComponent(projectRef)}`, { team });
+      const credential = p.link?.gitCredentialId || String(body.git_credential_id || '').trim();
+      if (!credential) {
+        return Response.json({
+          ok: false,
+          error:
+            'This project holds no Git connection to reuse, so Vercel cannot be told which account holds that repository. Connect the repository to this project in Vercel once, then it can be changed from here.'
+        }, { status: 200 });
+      }
+      const linked = await call(`/v9/projects/${encodeURIComponent(p.id)}/link`, {
+        method: 'POST',
+        team,
+        body: { type: 'github', repo, gitCredentialId: credential }
+      });
+      return Response.json({
+        ok: true,
+        project: projectSummary(linked),
+        linked_repo: repo,
+        production_branch: linked?.link?.productionBranch || 'main',
+        previous_repo: p.link ? `${p.link.org}/${p.link.repo}` : null,
+        method: 'Vercel answered with the repository it is now linked to.'
+      });
+    }
+
+    if (action === 'env_set') {
+      if (!projectRef) return Response.json({ ok: false, error: 'Which project?' }, { status: 400 });
+      const key = String(body.key || '').trim();
+      const value = String(body.value ?? '');
+      const targets = (Array.isArray(body.targets) ? body.targets : [])
+        .map((t) => String(t))
+        .filter((t) => ['production', 'preview', 'development'].includes(t));
+      if (!/^[A-Za-z_][A-Za-z0-9_]*$/.test(key)) {
+        return Response.json({ ok: false, error: 'A variable name can hold letters, numbers and underscores, and cannot start with a number.' }, { status: 400 });
+      }
+      if (!value) return Response.json({ ok: false, error: 'A value is required.' }, { status: 400 });
+      if (!targets.length) {
+        return Response.json({ ok: false, error: 'Choose at least one environment: production, preview or development.' }, { status: 400 });
+      }
+      const p = await call(`/v9/projects/${encodeURIComponent(projectRef)}`, { team });
+      const written = await call(`/v10/projects/${encodeURIComponent(p.id)}/env`, {
+        method: 'POST',
+        team,
+        body: { key, value, type: 'encrypted', target: targets }
+      });
+      return Response.json({
+        ok: true,
+        key,
+        targets,
+        created: written?.created || null,
+        method: 'Written to Vercel for the environments named. This app does not store the value.'
+      });
+    }
+
+    if (action === 'env_remove') {
+      if (!projectRef) return Response.json({ ok: false, error: 'Which project?' }, { status: 400 });
+      const envId = String(body.env_id || '').trim();
+      if (!envId) return Response.json({ ok: false, error: 'Which variable? Its id from the routing read is expected.' }, { status: 400 });
+      const p = await call(`/v9/projects/${encodeURIComponent(projectRef)}`, { team });
+      await call(`/v9/projects/${encodeURIComponent(p.id)}/env/${encodeURIComponent(envId)}`, { method: 'DELETE', team });
+      return Response.json({ ok: true, removed: envId, method: 'Vercel accepted the deletion.' });
     }
 
     return Response.json({ ok: false, error: `Unknown action: ${action}` }, { status: 400 });

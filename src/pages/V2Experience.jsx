@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { ArrowRight, ArrowUpRight, Bot, BrainCircuit, ChartNoAxesCombined, CheckCircle2, DatabaseZap, Globe2, Headphones, Menu, Phone, Search, ShieldCheck, Sparkles, Workflow, X } from 'lucide-react';
+import { base44 } from '@/api/base44Client';
 import '@/styles/x1-v2-experience.css';
 import '@/styles/x1-motion.css';
 // Byte-exact port of X1's apps/strategic-minds-v2/src/V2Experience.jsx at commit
@@ -152,11 +153,25 @@ function LongPage({variant}) {
  </>;
 }
 function Onboarding({variant}) {
- const [step,setStep]=useState(0),[data,setData]=useState({business:'',goal:'',market:'',notes:''}),[done,setDone]=useState(false);
+ const BLANK={business:'',goal:'',market:'',notes:'',name:'',email:''};
+ const [step,setStep]=useState(0),[data,setData]=useState(BLANK),[done,setDone]=useState(false);
+ const [sending,setSending]=useState(false),[sent,setSent]=useState(false),[sendError,setSendError]=useState('');
  const q=STEPS[step],value=data[q.field]||'',ok=q.optional||value.trim().length>0;
+ const emailOk=/^[^\s@]+@[^\s@]+\.[a-z]{2,}$/i.test(data.email.trim());
  const body=['Strategic Minds AI - voluntary discovery request','','Business or industry: '+data.business,
   'AI priority: '+data.goal,'Target market: '+data.market,'Notes: '+(data.notes||'No additional notes')].join('\n');
  const mailto='mailto:'+EMAIL+'?subject='+encodeURIComponent('Strategic Minds AI | New discovery request')+'&body='+encodeURIComponent(body);
+ const send=async()=>{
+  if(!emailOk||sending)return;
+  setSending(true);setSendError('');
+  try{
+   const res=await base44.functions.invoke('edenIntake',{full_name:data.name.trim(),email:data.email.trim(),
+    business:data.business,goal:data.goal,market:data.market,notes:data.notes,source:window.location.href});
+   const d=res.data||{};
+   if(d.ok)setSent(true);else setSendError(d.error||'Your brief could not be sent.');
+  }catch(e){setSendError(e?.response?.data?.error||e?.message||'Your brief could not be sent.');}
+  setSending(false);
+ };
  return <section className="v2-section v2-onboarding" id="onboarding"><div className="v2-wrap">
   <div className="v2-onboarding-panel"><div className="v2-heading"><p className="v2-eyebrow">START WITH EDEN</p>
    <h2>Your AI discovery journey.</h2><p>Four simple questions. No overwhelming forms.</p></div>
@@ -173,13 +188,23 @@ function Onboarding({variant}) {
        maxLength={180} placeholder={q.placeholder} onChange={e=>setData({...data,[q.field]:e.target.value})}/>}
     <div className="v2-form-actions">{step>0&&<button type="button" className="v2-quiet" onClick={()=>setStep(s=>s-1)}>BACK</button>}
      <button type="submit" className="v2-alt-cta" disabled={!ok}>{step===3?'REVIEW MY ANSWERS':'CONTINUE'} <ArrowRight size={17}/></button></div>
-   </form>:<div className="v2-finished" role="status"><CheckCircle2 size={34}/><h3>Your discovery brief is ready.</h3>
-      <p><strong>Business:</strong> {data.business}</p><p><strong>Goal:</strong> {data.goal}</p><p><strong>Market:</strong> {data.market}</p>
-      <p>No details have been sent to any server. You can choose to open a prefilled email draft.</p>
-      <div className="v2-form-actions"><button type="button" className="v2-quiet" onClick={()=>{setStep(0);setDone(false)}}>EDIT</button>
-       <a href={mailto} className="v2-alt-cta" onClick={()=>eventV2('open_discovery_email',variant)}>OPEN EMAIL DRAFT <ArrowUpRight size={18}/></a></div>
+   </form>
+   :sent?<div className="v2-finished" role="status"><CheckCircle2 size={34}/><h3>Your brief is with our team.</h3>
+     <p>Thank you{data.name?', '+data.name:''}. Eden passed your answers to Strategic Minds AI, and we will reply to {data.email}.</p>
+     <div className="v2-form-actions"><button type="button" className="v2-quiet" onClick={()=>{setData(BLANK);setStep(0);setDone(false);setSent(false)}}>START AGAIN</button></div>
+    </div>
+   :<div className="v2-finished" role="status"><CheckCircle2 size={34}/><h3>Your discovery brief is ready.</h3>
+     <p><strong>Business:</strong> {data.business}</p><p><strong>Goal:</strong> {data.goal}</p><p><strong>Market:</strong> {data.market}</p>
+     <label htmlFor="v2-field-name">Your name</label>
+     <input id="v2-field-name" value={data.name} type="text" maxLength={120} autoComplete="name" placeholder="Your name" onChange={e=>setData({...data,name:e.target.value})}/>
+     <label htmlFor="v2-field-email">Email for our reply</label>
+     <input id="v2-field-email" value={data.email} type="email" maxLength={180} autoComplete="email" placeholder="you@company.com" onChange={e=>setData({...data,email:e.target.value})}/>
+     {sendError?<p className="v2-send-error" role="alert">{sendError}</p>:null}
+     <div className="v2-form-actions"><button type="button" className="v2-quiet" onClick={()=>{setStep(0);setDone(false)}}>EDIT</button>
+      <button type="button" className="v2-alt-cta" disabled={!emailOk||sending} onClick={send}>{sending?'SENDING…':'SEND MY BRIEF'} <ArrowRight size={17}/></button></div>
+     <p className="v2-send-fallback">Prefer email? <a href={mailto} onClick={()=>eventV2('open_discovery_email',variant)}>Open a draft instead</a>.</p>
     </div>}
-   <p className="v2-privacy"><ShieldCheck size={15}/> Answers remain in this browser until you choose to share them.</p>
+   <p className="v2-privacy"><ShieldCheck size={15}/> Your answers are sent to our team only when you press send.</p>
   </div>
  </div></section>;
 }

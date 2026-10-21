@@ -240,3 +240,8 @@
 .v2-header-s img{height:40px;width:35px;object-fit:contain;filter:drop-shadow(0 0 7px rgba(60,173,238,.3))}
 @media(max-width:1100px){.v2-header-grid{grid-template-columns:39px 128px minmax(0,1fr) 126px;gap:6px}.v2-header-s{width:39px;height:42px}}
 @media(max-width:820px){.v2-header-grid{grid-template-columns:34px 104px minmax(74px,1fr) 104px;gap:4px}.v2-header-s{width:34px;height:38px}.v2-header-s img{width:29px;height:34px}}
+/* Eden's final step: the two contact fields, the refusal message and the email
+   fallback, in the panel's own language. */
+.v2-send-error{margin:14px 0 0;color:#ffb3a7;font-size:12.5px;line-height:1.55}
+.v2-send-fallback{margin:16px 0 0;color:#8fa7b8;font-size:11.5px}
+.v2-send-fallback a{color:#7dffc6;text-decoration:underline}

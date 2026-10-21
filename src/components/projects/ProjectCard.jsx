@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { ExternalLink, Pencil, Trash2 } from "lucide-react";
 import ProjectIndicators from "@/components/projects/ProjectIndicators";
 import ProjectDelivery from "@/components/projects/ProjectDelivery";
+import ProjectRouting from "@/components/projects/ProjectRouting";
 import { indicatorsFor } from "@/lib/projectIndicators";
 
 export default function ProjectCard({ project, live, onEdit, onDelete }) {
@@ -40,7 +41,10 @@ export default function ProjectCard({ project, live, onEdit, onDelete }) {
 
       <ProjectIndicators indicators={indicators} />
 
-      <ProjectDelivery key={project.id} project={project} />
+      <div className="flex flex-wrap items-start gap-3">
+        <ProjectDelivery key={project.id} project={project} />
+        <ProjectRouting key={`${project.id}-routing`} project={project} />
+      </div>
 
       {url ? (
         <a

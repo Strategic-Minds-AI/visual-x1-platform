@@ -138,11 +138,14 @@ const AuthenticatedApp = () => {
         </Route>
         </Route>
       {/* The X1 site is the front door; the Visual X console sits behind /workspace. */}
+      {/* The public site is open to visitors: this is the page the published domain
+          lands on, and where Eden's discovery brief is filled in. The portal and the
+          operator console below stay behind the login wall. */}
+      <Route path="/" element={<V2Experience forceVariant="b" />} />
+      <Route path="/v2/:variant" element={<V2Experience />} />
+      <Route path="/pricing" element={<PricingExperience />} />
       <Route element={<ProtectedRoute unauthenticatedElement={<Navigate to="/login?returnTo=/" replace />} />}>
-        <Route path="/" element={<V2Experience forceVariant="b" />} />
         <Route path="/x1-home" element={<X1Home />} />
-        <Route path="/v2/:variant" element={<V2Experience />} />
-        <Route path="/pricing" element={<PricingExperience />} />
         <Route path="/portal" element={<ClientPortalExperience />} />
         {/* The operator admin, at the standard path. It reads live records and its
             buttons call the Visual X pipelines. */}
