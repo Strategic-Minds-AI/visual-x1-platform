@@ -80,6 +80,34 @@
       "default": false,
       "description": "Whether this is the best performing variation in its batch"
     },
+    "gsc_site": {
+      "type": "string",
+      "description": "Search Console property this variation's search performance was measured against"
+    },
+    "impressions": {
+      "type": "number",
+      "default": 0,
+      "description": "Search impressions in the last reporting window"
+    },
+    "clicks": {
+      "type": "number",
+      "default": 0,
+      "description": "Search clicks in the last reporting window"
+    },
+    "avg_position": {
+      "type": "number",
+      "default": 0,
+      "description": "Impression-weighted average search position. 0 means not measured yet."
+    },
+    "top_query": {
+      "type": "string",
+      "description": "The search query sending this variation the most impressions"
+    },
+    "last_gsc_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When Search Console performance was last pulled for this variation"
+    },
     "last_synced_at": {
       "type": "string",
       "format": "date-time",

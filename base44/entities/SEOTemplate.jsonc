@@ -49,6 +49,14 @@
       "default": "quote_request",
       "description": "Lead funnel these structures use"
     },
+    "vercel_project": {
+      "type": "string",
+      "description": "Vercel project this template's launched pages ship to. The mass-launch orchestrator deploys here."
+    },
+    "deploy_branch": {
+      "type": "string",
+      "description": "Branch to deploy from, when the Vercel project is linked to a repository. Empty deploys the existing build again."
+    },
     "notes": {
       "type": "string",
       "description": "Notes about the layout or its mapping rules"

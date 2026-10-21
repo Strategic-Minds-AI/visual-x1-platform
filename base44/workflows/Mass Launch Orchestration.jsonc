@@ -1,0 +1,82 @@
+{
+  "trigger": {
+    "condition": null,
+    "config": {
+      "trigger_type": "scheduled",
+      "events": [],
+      "schedule_mode": "recurring",
+      "cron_expression": "0 6 * * *",
+      "one_time_date": null,
+      "timezone": "America/New_York",
+      "interval_value": null,
+      "interval_unit": null,
+      "interval_anchor": null,
+      "ends_type": "never",
+      "ends_on_date": null,
+      "ends_after_count": null
+    }
+  },
+  "description": "Every morning, reads Google Search Console performance for every launched page, then deploys the next wave of programmatic variations built from the keywords already ranking.",
+  "definition": {
+    "document": {
+      "dsl": "1.0.0",
+      "name": "mass_launch_orchestration",
+      "version": "1.0",
+      "namespace": "base44"
+    },
+    "do": [
+      {
+        "pull_performance": {
+          "call": "invoke_backend_function",
+          "with": {
+            "function_name": "massLaunch",
+            "args": {
+              "action": "monitor"
+            }
+          },
+          "then": "check_ranking_signal",
+          "x-base44": {
+            "title": "Pull Search Console performance",
+            "description": "One read per property"
+          }
+        }
+      },
+      {
+        "check_ranking_signal": {
+          "switch": [
+            {
+              "when": "${ (.pull_performance.pages_updated // 0) > 0 }",
+              "then": "expand_wave"
+            },
+            {
+              "when": "${ true }",
+              "then": "end"
+            }
+          ],
+          "x-base44": {
+            "title": "Any page measured?",
+            "description": "Needs real search data to expand"
+          }
+        }
+      },
+      {
+        "expand_wave": {
+          "call": "invoke_backend_function",
+          "with": {
+            "function_name": "massLaunch",
+            "args": {
+              "action": "expand",
+              "deploy": true
+            }
+          },
+          "then": "end",
+          "x-base44": {
+            "title": "Deploy the next wave",
+            "description": "From the keywords ranking today"
+          }
+        }
+      }
+    ]
+  },
+  "name": "Mass Launch Orchestration"
+}

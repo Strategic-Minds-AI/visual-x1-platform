@@ -7,10 +7,12 @@ import { Button } from "@/components/ui/button";
 import { base44 } from "@/api/base44Client";
 import TemplateForm from "@/components/templates/TemplateForm";
 import StructureMapper from "@/components/templates/StructureMapper";
+import MassLaunchPanel from "@/components/templates/MassLaunchPanel";
 
 const TABS = [
   { id: "templates", label: "Industry Layouts" },
   { id: "mapping", label: "Keyword Mapping" },
+  { id: "launch", label: "Mass Launch" },
 ];
 
 export default function TemplateEngine() {
@@ -110,6 +112,8 @@ export default function TemplateEngine() {
         )}
 
         {tab === "mapping" && <StructureMapper templates={templates} />}
+
+        {tab === "launch" && <MassLaunchPanel templates={templates} />}
       </div>
     </div>
   );

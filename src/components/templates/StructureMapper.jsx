@@ -34,7 +34,7 @@ export default function StructureMapper({ templates }) {
       const res = await base44.functions.invoke("buildProgrammaticStructure", {
         template_id: selected.id,
         keywords: kws,
-        locations: locations.split(",").map((s) => s.trim()).filter(Boolean),
+        locations: locations.split(";").map((s) => s.trim()).filter(Boolean),
         domain_strategy: selected.domain_strategy,
       });
       setStructures(res.data.structures || []);
@@ -114,7 +114,7 @@ export default function StructureMapper({ templates }) {
           </div>
           <div className="space-y-1.5">
             <Label className="text-xs">Locations (optional)</Label>
-            <Input value={locations} onChange={(e) => setLocations(e.target.value)} placeholder="Miami, FL, Tampa, FL" />
+            <Input value={locations} onChange={(e) => setLocations(e.target.value)} placeholder="Miami, FL; Tampa, FL — separate with semicolons" />
           </div>
         </div>
 

@@ -4,7 +4,7 @@
   "properties": {
     "batch_id": {
       "type": "string",
-      "description": "ID of the parent factory batch"
+      "description": "ID of the parent factory batch (a mass-launch wave is one batch)"
     },
     "variant_number": {
       "type": "number",
@@ -45,6 +45,39 @@
     "funnel_type": {
       "type": "string",
       "description": "Lead funnel type used on this variant"
+    },
+    "gsc_site": {
+      "type": "string",
+      "description": "Search Console property this page's performance was measured against"
+    },
+    "impressions": {
+      "type": "number",
+      "default": 0,
+      "description": "Search impressions in the last reporting window"
+    },
+    "clicks": {
+      "type": "number",
+      "default": 0,
+      "description": "Search clicks in the last reporting window"
+    },
+    "ctr": {
+      "type": "number",
+      "default": 0,
+      "description": "Click-through rate as a percentage"
+    },
+    "avg_position": {
+      "type": "number",
+      "default": 0,
+      "description": "Impression-weighted average search position. 0 means not measured yet."
+    },
+    "top_query": {
+      "type": "string",
+      "description": "The search query sending this page the most impressions"
+    },
+    "last_gsc_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When Search Console performance was last pulled for this page"
     }
   },
   "required": [
