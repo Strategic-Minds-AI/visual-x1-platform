@@ -4,10 +4,10 @@ import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 
 const GATE_STYLES = {
-  passed: "bg-emerald-100 text-emerald-700 border-emerald-200",
-  failed: "bg-rose-100 text-rose-700 border-rose-200",
-  pending: "bg-amber-100 text-amber-700 border-amber-200",
-  not_run: "bg-slate-100 text-slate-600 border-slate-200"
+  passed: "bg-emerald-500/15 text-emerald-400 border-emerald-500/40",
+  failed: "bg-rose-500/15 text-rose-400 border-rose-500/40",
+  pending: "bg-amber-500/15 text-amber-400 border-amber-500/40",
+  not_run: "bg-muted/40 text-muted-foreground border-border"
 };
 
 export default function CloneList({ projects, selectedId, onSelect }) {

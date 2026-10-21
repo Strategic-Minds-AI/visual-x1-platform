@@ -109,9 +109,9 @@ export default function ContentJudgePanel({ industry, targetKeyword, onApplyHook
                       <p className="text-xs font-medium">{h.hook}</p>
                       <p className="text-[11px] text-muted-foreground mt-0.5">{h.rationale}</p>
                       <div className="flex items-center gap-2 mt-1.5 flex-wrap">
-                        <Badge className="bg-sky-500/15 text-sky-700 border-sky-500/30 text-[10px]">SEO {h.seo_delta >= 0 ? "+" : ""}{h.seo_delta}</Badge>
-                        <Badge className="bg-violet-500/15 text-violet-700 border-violet-500/30 text-[10px]">GEO {h.geo_delta >= 0 ? "+" : ""}{h.geo_delta}</Badge>
-                        <Badge className="bg-amber-500/15 text-amber-700 border-amber-500/30 text-[10px]">AEO {h.aeo_delta >= 0 ? "+" : ""}{h.aeo_delta}</Badge>
+                        <Badge className="bg-sky-500/15 text-sky-300 border-sky-500/30 text-[10px]">SEO {h.seo_delta >= 0 ? "+" : ""}{h.seo_delta}</Badge>
+                        <Badge className="bg-violet-500/15 text-violet-300 border-violet-500/30 text-[10px]">GEO {h.geo_delta >= 0 ? "+" : ""}{h.geo_delta}</Badge>
+                        <Badge className="bg-amber-500/15 text-amber-300 border-amber-500/30 text-[10px]">AEO {h.aeo_delta >= 0 ? "+" : ""}{h.aeo_delta}</Badge>
                         <Button
                           size="sm"
                           variant="outline"

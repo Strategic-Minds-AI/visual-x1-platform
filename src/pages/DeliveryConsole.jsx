@@ -147,7 +147,7 @@ export default function DeliveryConsole() {
           />
 
           {error && status ? (
-            <p className="text-sm text-rose-600 rounded-lg border border-rose-200 bg-rose-50 px-3 py-2">{error}</p>
+            <p className="text-sm text-rose-300 rounded-lg border border-rose-500/30 bg-rose-500/10 px-3 py-2">{error}</p>
           ) : null}
 
           {status ? (

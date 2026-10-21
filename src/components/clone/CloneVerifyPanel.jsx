@@ -10,7 +10,7 @@ import { cn } from "@/lib/utils";
 const RESULT_STYLES = {
   PASS: "bg-emerald-100 text-emerald-700 border-emerald-200",
   FAIL: "bg-rose-100 text-rose-700 border-rose-200",
-  "NOT RUN": "bg-slate-100 text-slate-600 border-slate-200"
+  "NOT RUN": "bg-muted/40 text-muted-foreground border-border"
 };
 
 const parse = (v, fallback) => {

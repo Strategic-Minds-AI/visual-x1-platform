@@ -7,10 +7,10 @@ import { BUILDER_SURFACES, STATUS_LABELS } from "@/data/builderSurfaces";
 import { cn } from "@/lib/utils";
 
 const TONE = {
-  covered: "border-emerald-200 bg-emerald-50 text-emerald-700",
-  partial: "border-amber-200 bg-amber-50 text-amber-700",
-  dashboard_only: "border-slate-200 bg-slate-50 text-slate-600",
-  gap: "border-rose-200 bg-rose-50 text-rose-700"
+  covered: "border-emerald-500/40 bg-emerald-500/15 text-emerald-300",
+  partial: "border-amber-500/40 bg-amber-500/15 text-amber-300",
+  dashboard_only: "border-border bg-muted/40 text-muted-foreground",
+  gap: "border-rose-500/40 bg-rose-500/15 text-rose-300"
 };
 
 const ICONS = {

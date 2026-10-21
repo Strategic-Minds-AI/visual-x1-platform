@@ -203,7 +203,7 @@ export default function PromptLab() {
 
         <div className="flex-1 overflow-y-auto">
           {error && (
-            <div className="mx-6 mt-4 p-3 rounded-lg bg-rose-50 border border-rose-200 flex items-start gap-2 text-sm text-rose-700">
+            <div className="mx-6 mt-4 p-3 rounded-lg bg-rose-500/10 border border-rose-500/30 flex items-start gap-2 text-sm text-rose-300">
               <AlertCircle className="w-4 h-4 mt-0.5 shrink-0" /> {error}
             </div>
           )}
@@ -370,7 +370,7 @@ export default function PromptLab() {
 
                   {simulateResult.negative_flags?.length > 0 && (
                     <div className="p-4 rounded-lg border border-rose-200 bg-rose-50">
-                      <div className="text-sm font-semibold text-rose-700 mb-2">Risk Flags</div>
+                      <div className="text-sm font-semibold text-rose-300 mb-2">Risk Flags</div>
                       {simulateResult.negative_flags.map((flag, i) => (
                         <div key={i} className="text-sm text-rose-600 flex items-start gap-2 mb-1">
                           <AlertCircle className="w-3.5 h-3.5 mt-0.5 shrink-0" /> {flag}

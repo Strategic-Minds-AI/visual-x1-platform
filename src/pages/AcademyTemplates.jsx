@@ -44,9 +44,9 @@ export default function AcademyTemplates(){
    </div>
    <span className="text-xs text-muted-foreground flex items-center gap-1.5"><ShieldCheck size={14}/> Source controlled · Preview builds have no production publication rights</span>
   </div>
-  <div className="flex-1 min-h-0 overflow-auto bg-slate-950/95 p-3 md:p-6">
+  <div className="flex-1 min-h-0 overflow-auto bg-background/95 p-3 md:p-6">
    <div className="mx-auto rounded-xl overflow-hidden shadow-xl border border-slate-700 bg-white" style={{width:WIDTHS.find(v=>v.id===size)?.width,maxWidth:"none",minWidth:WIDTHS.find(v=>v.id===size)?.width}}>
-    <div className="h-8 px-3 flex items-center justify-between bg-slate-900 text-slate-300 text-xs">
+    <div className="h-8 px-3 flex items-center justify-between bg-card text-muted-foreground text-xs">
      <span>● ● ●</span><span>X1 · {mode.name} · {size}</span><span>↗</span>
     </div>
     <iframe title={"X1 Academy Template Designer · "+mode.name} key={key} src={url} style={{height:820,width:"100%",border:0,display:"block"}} sandbox="allow-scripts allow-same-origin allow-forms allow-downloads allow-popups" referrerPolicy="strict-origin-when-cross-origin"/>

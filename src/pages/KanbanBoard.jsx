@@ -7,20 +7,20 @@ import { Zap, ChevronLeft, Layout } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const COLUMNS = [
-  { id: "open", label: "Open", color: "bg-sky-50", accent: "text-sky-700", border: "border-sky-200" },
-  { id: "assigned", label: "Assigned", color: "bg-violet-50", accent: "text-violet-700", border: "border-violet-200" },
-  { id: "in_progress", label: "In Progress", color: "bg-amber-50", accent: "text-amber-700", border: "border-amber-200" },
+  { id: "open", label: "Open", color: "bg-sky-500/15", accent: "text-sky-300", border: "border-sky-500/40" },
+  { id: "assigned", label: "Assigned", color: "bg-violet-500/15", accent: "text-violet-300", border: "border-violet-500/40" },
+  { id: "in_progress", label: "In Progress", color: "bg-amber-500/15", accent: "text-amber-300", border: "border-amber-500/40" },
   { id: "review", label: "Review", color: "bg-cyan-50", accent: "text-cyan-700", border: "border-cyan-200" },
-  { id: "completed", label: "Completed", color: "bg-emerald-50", accent: "text-emerald-700", border: "border-emerald-200" },
-  { id: "failed", label: "Failed", color: "bg-rose-50", accent: "text-rose-700", border: "border-rose-200" },
-  { id: "cancelled", label: "Cancelled", color: "bg-slate-50", accent: "text-slate-500", border: "border-slate-200" }
+  { id: "completed", label: "Completed", color: "bg-emerald-500/15", accent: "text-emerald-300", border: "border-emerald-500/40" },
+  { id: "failed", label: "Failed", color: "bg-rose-500/15", accent: "text-rose-300", border: "border-rose-500/40" },
+  { id: "cancelled", label: "Cancelled", color: "bg-muted/40", accent: "text-muted-foreground", border: "border-border" }
 ];
 
 const PRIORITY_STYLES = {
   urgent: "bg-rose-500 text-white",
   high: "bg-orange-500 text-white",
   medium: "bg-sky-500 text-white",
-  low: "bg-slate-400 text-white"
+  low: "bg-muted text-foreground"
 };
 
 export default function KanbanBoard() {
@@ -114,7 +114,7 @@ export default function KanbanBoard() {
                       className={`w-72 shrink-0 rounded-xl border ${col.border} ${col.color} flex flex-col ${snapshot.isDraggingOver ? "ring-2 ring-primary/30" : ""}`}>
                       <div className={`px-4 py-3 border-b ${col.border} flex items-center justify-between`}>
                         <span className={`font-medium text-sm ${col.accent}`}>{col.label}</span>
-                        <span className={`text-xs font-medium ${col.accent} bg-white/60 rounded-full px-2 py-0.5`}>{colJobs.length}</span>
+                        <span className={`text-xs font-medium ${col.accent} bg-card/60 rounded-full px-2 py-0.5`}>{colJobs.length}</span>
                       </div>
                       <div className="flex-1 p-2 space-y-2 overflow-y-auto min-h-[200px]">
                         {colJobs.map((job, index) => (

@@ -14,19 +14,19 @@ import { Link } from "react-router-dom";
 const CONNECTOR_ID = "69db201897e4e8f9ae073be7";
 
 const STATUS_STYLES = {
-  open: "bg-sky-100 text-sky-700 border-sky-200",
-  assigned: "bg-violet-100 text-violet-700 border-violet-200",
-  in_progress: "bg-amber-100 text-amber-700 border-amber-200",
-  completed: "bg-emerald-100 text-emerald-700 border-emerald-200",
-  failed: "bg-rose-100 text-rose-700 border-rose-200",
-  cancelled: "bg-slate-100 text-slate-500 border-slate-200"
+  open: "bg-sky-500/15 text-sky-300 border-sky-500/40",
+  assigned: "bg-violet-500/15 text-violet-300 border-violet-500/40",
+  in_progress: "bg-amber-500/15 text-amber-300 border-amber-500/40",
+  completed: "bg-emerald-500/15 text-emerald-300 border-emerald-500/40",
+  failed: "bg-rose-500/15 text-rose-300 border-rose-500/40",
+  cancelled: "bg-muted/40 text-muted-foreground border-border"
 };
 
 const PRIORITY_STYLES = {
   urgent: "bg-rose-500 text-white",
   high: "bg-orange-500 text-white",
   medium: "bg-sky-500 text-white",
-  low: "bg-slate-400 text-white"
+  low: "bg-muted text-foreground"
 };
 
 const ROLE_COLORS = {
@@ -341,7 +341,7 @@ export default function Dashboard() {
                           </span>
                         )}
                       </div>
-                      {job.result && <p className="text-xs text-emerald-600 bg-emerald-50 rounded p-2 mt-1">{job.result}</p>}
+                      {job.result && <p className="text-xs text-emerald-300 bg-emerald-500/10 rounded p-2 mt-1">{job.result}</p>}
                     </CardContent>
                   </Card>
                 );
@@ -371,7 +371,7 @@ export default function Dashboard() {
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center justify-between gap-2">
                             <h3 className="font-medium text-sm truncate">{agent.name}</h3>
-                            <span className={`w-2 h-2 rounded-full shrink-0 ${agent.status === "idle" ? "bg-emerald-400" : agent.status === "busy" ? "bg-amber-400" : "bg-slate-300"}`} />
+                            <span className={`w-2 h-2 rounded-full shrink-0 ${agent.status === "idle" ? "bg-emerald-400" : agent.status === "busy" ? "bg-amber-400" : "bg-muted-foreground/40"}`} />
                           </div>
                           <p className="text-xs text-muted-foreground capitalize">{agent.role}{agent.specialization ? ` · ${agent.specialization}` : ""}</p>
                           <div className="flex items-center gap-2 mt-2">
@@ -440,7 +440,7 @@ export default function Dashboard() {
                 ) : (
                   todos.map(todo => (
                     <div key={todo.id} className="flex items-center gap-3 py-2 border-b border-border last:border-0">
-                      <span className={`w-2 h-2 rounded-full ${todo.google_task_id ? "bg-emerald-400" : "bg-slate-300"}`} />
+                      <span className={`w-2 h-2 rounded-full ${todo.google_task_id ? "bg-emerald-400" : "bg-muted-foreground/40"}`} />
                       <span className="text-sm flex-1">{todo.title}</span>
                       {todo.google_task_id && <Badge variant="outline" className="text-xs">Google</Badge>}
                     </div>

@@ -12,20 +12,20 @@ import { Briefcase, Plus, Zap, ChevronLeft, TrendingUp } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const STATUS_STYLES = {
-  open: "bg-sky-100 text-sky-700 border-sky-200",
-  assigned: "bg-violet-100 text-violet-700 border-violet-200",
-  in_progress: "bg-amber-100 text-amber-700 border-amber-200",
-  review: "bg-cyan-100 text-cyan-700 border-cyan-200",
-  completed: "bg-emerald-100 text-emerald-700 border-emerald-200",
-  failed: "bg-rose-100 text-rose-700 border-rose-200",
-  cancelled: "bg-slate-100 text-slate-500 border-slate-200"
+  open: "bg-sky-500/15 text-sky-300 border-sky-500/40",
+  assigned: "bg-violet-500/15 text-violet-300 border-violet-500/40",
+  in_progress: "bg-amber-500/15 text-amber-300 border-amber-500/40",
+  review: "bg-cyan-500/15 text-cyan-300 border-cyan-500/40",
+  completed: "bg-emerald-500/15 text-emerald-300 border-emerald-500/40",
+  failed: "bg-rose-500/15 text-rose-300 border-rose-500/40",
+  cancelled: "bg-muted/40 text-muted-foreground border-border"
 };
 
 const PRIORITY_STYLES = {
   urgent: "bg-rose-500 text-white",
   high: "bg-orange-500 text-white",
   medium: "bg-sky-500 text-white",
-  low: "bg-slate-400 text-white"
+  low: "bg-muted text-foreground"
 };
 
 const ROLE_COLORS = {
@@ -326,7 +326,7 @@ function JobCard({ job, agentName, agentRole, onUpdate }) {
           </div>
         )}
 
-        {job.result && <p className="text-xs text-emerald-600 bg-emerald-50 rounded p-2">{job.result}</p>}
+        {job.result && <p className="text-xs text-emerald-300 bg-emerald-500/10 rounded p-2">{job.result}</p>}
       </CardContent>
     </Card>
   );

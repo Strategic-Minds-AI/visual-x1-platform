@@ -28,7 +28,7 @@ const detail = (body) => {
   }
 };
 
-const tone = (entry) => { let verified = false; try { const parsed = JSON.parse(entry.body || "{}"); verified = entry.status === 200 && typeof parsed.status === "string" && (parsed.status === "LIVE_DATA_VERIFIED" || parsed.status.endsWith("_READ_VERIFIED") || parsed.status === "WORKER_STATUS_VERIFIED"); } catch {} return verified ? "border-emerald-200 bg-emerald-50 text-emerald-700" : "border-amber-200 bg-amber-50 text-amber-700"; };
+const tone = (entry) => { let verified = false; try { const parsed = JSON.parse(entry.body || "{}"); verified = entry.status === 200 && typeof parsed.status === "string" && (parsed.status === "LIVE_DATA_VERIFIED" || parsed.status.endsWith("_READ_VERIFIED") || parsed.status === "WORKER_STATUS_VERIFIED"); } catch {} return verified ? "border-emerald-500/40 bg-emerald-500/15 text-emerald-300" : "border-amber-500/40 bg-amber-500/15 text-amber-300"; };
 
 export default function X1StatusStrip() {
   const [reading, setReading] = useState(true);

@@ -43,7 +43,7 @@ export default function X1EmbedPanel(){
      Open directly <ExternalLink className="ml-1 w-3.5 h-3.5"/>
     </a>
    </div>
-   <div className="w-full overflow-auto rounded-lg border border-border bg-slate-950 p-2">
+   <div className="w-full overflow-auto rounded-lg border border-border bg-background p-2">
     <iframe key={path} title={"X1 hosted "+path} src={target} style={{width,minWidth:width,maxWidth:"none",height:650,margin:"0 auto",display:"block",background:"#02050d"}}
      loading="lazy" referrerPolicy="strict-origin-when-cross-origin"
      sandbox="allow-forms allow-scripts allow-same-origin allow-popups"/>

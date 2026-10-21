@@ -20,7 +20,7 @@ export default function VercelStatus({ status, checking, error, team, onTeam, on
         {checking && <p className="text-sm text-muted-foreground">Asking Vercel who this token is…</p>}
 
         {!checking && error && (
-          <div className="rounded-lg border border-amber-200 bg-amber-50 p-3 space-y-2">
+          <div className="rounded-lg border border-amber-500/30 bg-amber-500/10 p-3 space-y-2">
             <p className="text-sm font-medium flex items-center gap-2 text-amber-900">
               <ShieldAlert className="w-4 h-4" /> {error}
             </p>

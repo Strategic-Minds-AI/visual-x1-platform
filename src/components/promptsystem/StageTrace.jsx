@@ -47,7 +47,7 @@ export default function StageTrace({ nodes = [], run }) {
                   {state?.duration_ms ? <span className="text-[10px] text-muted-foreground font-mono">{state.duration_ms}ms</span> : null}
                 </div>
                 {state?.evidence && <p className="text-xs text-muted-foreground mt-1">{state.evidence}</p>}
-                {state?.limitation && <p className="text-xs text-amber-700 mt-1">Limitation: {state.limitation}</p>}
+                {state?.limitation && <p className="text-xs text-amber-300 mt-1">Limitation: {state.limitation}</p>}
                 {state?.error && <p className="text-xs text-rose-600 mt-1">{state.error}</p>}
                 <p className="text-[10px] text-muted-foreground/80 mt-1">
                   in: {(node.inputs || []).join(", ")} → out: {(node.outputs || []).join(", ")}

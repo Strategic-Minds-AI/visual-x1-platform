@@ -38,7 +38,7 @@ export default function VisualEditor() {
                     msg.role === "user"
                       ? "bg-primary text-primary-foreground"
                       : msg.type === "error"
-                      ? "bg-rose-50 text-rose-700 border border-rose-200"
+                      ? "bg-rose-500/10 text-rose-300 border border-rose-500/30"
                       : msg.type === "prompt"
                       ? "bg-muted/50 border border-border"
                       : "bg-muted"

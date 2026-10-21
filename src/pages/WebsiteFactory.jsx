@@ -199,7 +199,7 @@ export default function WebsiteFactory() {
           {/* Release Approved Banner */}
           {result && result.quality_score >= 95 && !isRunning && (
             <div className="border-t border-green-500/30 bg-green-50/50 px-4 py-2 flex items-center gap-2 shrink-0">
-              <span className="text-green-700 font-medium text-sm">Release Gate Passed</span>
+              <span className="text-emerald-300 font-medium text-sm">Release Gate Passed</span>
               <span className="text-green-600 text-xs">Score {result.quality_score}/100 — independently validated, ready for deployment</span>
             </div>
           )}

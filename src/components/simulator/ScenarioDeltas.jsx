@@ -30,7 +30,7 @@ export default function ScenarioDeltas({ result }) {
                   <p className="text-[11px] text-muted-foreground leading-snug mt-0.5">{d.detail}</p>
                 </div>
                 {d.days_saved > 0 && (
-                  <Badge className="bg-emerald-500/15 text-emerald-700 border-emerald-500/30 text-[10px] shrink-0">
+                  <Badge className="bg-emerald-500/15 text-emerald-300 border-emerald-500/30 text-[10px] shrink-0">
                     −{fmt(d.days_saved)} days
                   </Badge>
                 )}

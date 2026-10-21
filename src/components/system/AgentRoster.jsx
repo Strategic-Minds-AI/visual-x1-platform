@@ -59,7 +59,7 @@ export default function AgentRoster() {
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-1.5">
                     <span className="text-sm font-medium truncate">{a.name}</span>
-                    <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${a.status === 'idle' ? 'bg-emerald-400' : a.status === 'busy' ? 'bg-amber-400' : 'bg-slate-300'}`} />
+                    <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${a.status === 'idle' ? 'bg-emerald-400' : a.status === 'busy' ? 'bg-amber-400' : 'bg-muted-foreground/40'}`} />
                   </div>
                   <p className="text-xs text-muted-foreground capitalize">{a.role}{a.specialization ? ` · ${a.specialization}` : ''}</p>
                 </div>

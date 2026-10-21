@@ -125,7 +125,7 @@ export default function DecisionPanel({ run }) {
         )}
 
         {blockers.length > 0 && (
-          <div className="border border-amber-200 bg-amber-50 rounded-md p-2.5">
+          <div className="border border-amber-500/30 bg-amber-500/10 rounded-md p-2.5">
             <p className="text-xs font-semibold mb-1 flex items-center gap-1.5"><ShieldAlert className="w-3.5 h-3.5" /> What still stops release</p>
             {blockers.map((b, i) => (
               <p key={i} className="text-xs text-amber-900">

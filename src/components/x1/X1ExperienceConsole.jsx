@@ -100,7 +100,7 @@ export default function X1ExperienceConsole() {
         </div>
       </header>
 
-      <div className="flex-1 min-h-0 bg-slate-950">
+      <div className="flex-1 min-h-0 bg-background">
         {error ? (
           <div className="h-full flex items-center justify-center px-6 text-center text-sm text-muted-foreground">{error}</div>
         ) : selected && selected.frames_visualx ? (

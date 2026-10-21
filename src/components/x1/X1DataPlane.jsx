@@ -75,7 +75,7 @@ export default function X1DataPlane() {
             <div className="flex flex-wrap items-center gap-2 text-xs">
               <span className="font-medium">{current.name}</span>
               <Badge variant="outline" className="font-mono text-[10px]">{current.ref}</Badge>
-              <Badge variant="outline" className="text-[10px] border-emerald-200 bg-emerald-50 text-emerald-700">
+              <Badge variant="outline" className="text-[10px] border-emerald-500/40 bg-emerald-500/15 text-emerald-300">
                 {current.table_count} tables
               </Badge>
               <Badge variant="outline" className="text-[10px]">

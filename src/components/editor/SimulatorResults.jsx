@@ -92,7 +92,7 @@ export default function SimulatorResults({ result, onUseEnhanced }) {
                   <code className="text-xs bg-black/5 px-1.5 py-0.5 rounded">{flag.pattern}</code>
                 </div>
                 <p className="text-xs mb-1.5">{flag.suggestion}</p>
-                <div className="text-xs bg-white/50 rounded p-2 border border-white/40">
+                <div className="text-xs bg-muted/40 rounded p-2 border border-border">
                   <span className="font-medium">Replacement: </span>{flag.replacement}
                 </div>
               </div>

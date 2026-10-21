@@ -23,9 +23,9 @@ const CATEGORY_LABELS = {
 };
 
 const TIER_STYLES = {
-  proven: "bg-emerald-500/15 text-emerald-700 border-emerald-500/30",
-  advanced: "bg-sky-500/15 text-sky-700 border-sky-500/30",
-  ai_native: "bg-violet-500/15 text-violet-700 border-violet-500/30",
+  proven: "bg-emerald-500/15 text-emerald-300 border-emerald-500/30",
+  advanced: "bg-sky-500/15 text-sky-300 border-sky-500/30",
+  ai_native: "bg-violet-500/15 text-violet-300 border-violet-500/30",
 };
 
 const TIER_LABELS = { proven: "Proven", advanced: "Advanced", ai_native: "AI-native" };

@@ -132,7 +132,7 @@ export default function PromptStudio() {
               </div>
 
               {error && (
-                <div className="flex items-start gap-2 rounded-lg border border-rose-200 bg-rose-50 p-3 text-sm text-rose-700">
+                <div className="flex items-start gap-2 rounded-lg border border-rose-500/30 bg-rose-500/10 p-3 text-sm text-rose-300">
                   <AlertTriangle className="w-4 h-4 shrink-0 mt-0.5" />
                   <div>
                     <p className="font-medium">Blocked by safety validator</p>

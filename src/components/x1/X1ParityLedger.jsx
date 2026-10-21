@@ -6,9 +6,9 @@ import { X1_EXPERIENCES, X1_API_PLANE, X1_BLOCKERS, PARITY_LABELS } from "@/data
 import { cn } from "@/lib/utils";
 
 const TONE = {
-  live: "border-emerald-200 bg-emerald-50 text-emerald-700",
-  pending: "border-slate-200 bg-slate-50 text-slate-600",
-  blocked: "border-amber-200 bg-amber-50 text-amber-700"
+  live: "border-emerald-500/40 bg-emerald-500/15 text-emerald-300",
+  pending: "border-border bg-muted/40 text-muted-foreground",
+  blocked: "border-amber-500/40 bg-amber-500/15 text-amber-300"
 };
 
 export default function X1ParityLedger() {
