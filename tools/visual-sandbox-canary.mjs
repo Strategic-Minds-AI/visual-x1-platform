@@ -13,8 +13,8 @@ export function loopbackOrigin(input, port) {
 }
 
 export async function runCanary({
-  controlOrigin = process.env.X1_CONTROL_PLANE_URL || 'http://127.0.0.1:4311',
-  ollamaOrigin = process.env.OLLAMA_BASE_URL || 'http://127.0.0.1:11434',
+  controlOrigin = 'http://127.0.0.1:4311',
+  ollamaOrigin = 'http://127.0.0.1:11434',
   sourceSha,
   model = 'phi3:latest',
   fetchImpl = fetch,
