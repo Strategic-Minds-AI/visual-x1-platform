@@ -1,0 +1,96 @@
+{
+  "name": "BridgeJob",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "description": "What this local job is, in the operator's words"
+    },
+    "kind": {
+      "type": "string",
+      "enum": [
+        "ollama",
+        "docker",
+        "http"
+      ],
+      "default": "ollama",
+      "description": "Which local executor runs it: a local model, a Docker container, or a URL on the local network"
+    },
+    "payload_json": {
+      "type": "string",
+      "description": "JSON of exactly what the local worker needs: for ollama {model, prompt}, for docker {image, args}, for http {url, method, body}"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "queued",
+        "claimed",
+        "done",
+        "failed"
+      ],
+      "default": "queued",
+      "description": "Queued is waiting for a worker; claimed means a worker is running it now"
+    },
+    "worker_id": {
+      "type": "string",
+      "description": "Machine that claimed this job, so work is attributable"
+    },
+    "result_json": {
+      "type": "string",
+      "description": "JSON of what the local run actually returned"
+    },
+    "error": {
+      "type": "string",
+      "description": "Why the local run failed, when it failed"
+    },
+    "claimed_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When a worker picked this job up"
+    },
+    "completed_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "duration_ms": {
+      "type": "number",
+      "default": 0,
+      "description": "How long the local run took"
+    },
+    "requested_by": {
+      "type": "string",
+      "description": "Who queued it: an operator's email, the loop, or the worker itself"
+    },
+    "change_key": {
+      "type": "string",
+      "description": "ChangeLedger change_key this local work serves, when it serves one, so the local run lands on the change record"
+    }
+  },
+  "required": [
+    "title",
+    "kind",
+    "status"
+  ],
+  "rls": {
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}
