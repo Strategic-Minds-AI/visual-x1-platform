@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { base44 } from "@/api/base44Client";
+import { takeEditorHandoff } from "@/lib/editorHandoff";
 
 /**
  * One engine, shared by the standalone Visual Editor page and the workspace.
@@ -10,10 +11,28 @@ import { base44 } from "@/api/base44Client";
  * the work it produced rather than a half-typed request.
  */
 export default function useEditorEngine(initial) {
+  // An artifact handed over from the prompt system arrives once, as this page mounts:
+  // it takes the canvas, and the prompt that produced it seeds the composer, so the
+  // work carries on here instead of starting over.
+  const [handoff] = useState(() => takeEditorHandoff());
   // The thread starts empty: nothing is put in front of the operator's first request.
-  const [messages, setMessages] = useState(() => (initial?.messages?.length ? initial.messages : []));
-  const [input, setInput] = useState("");
-  const [previewHtml, setPreviewHtml] = useState(initial?.previewHtml || "");
+  const [messages, setMessages] = useState(() => {
+    if (initial?.messages?.length) return initial.messages;
+    if (!handoff) return [];
+    return [
+      {
+        role: "assistant",
+        name: "Editor",
+        type: "text",
+        content:
+          handoff.mode === "chat"
+            ? "The prompt system sent this artifact and its prompt. Ask for the next change and it builds from here."
+            : "The prompt system sent this artifact and its prompt. It is on the canvas, and the composer holds the prompt it came from.",
+      },
+    ];
+  });
+  const [input, setInput] = useState(() => handoff?.prompt || "");
+  const [previewHtml, setPreviewHtml] = useState(() => handoff?.html || initial?.previewHtml || "");
   const [simulatorResult, setSimulatorResult] = useState(initial?.simulatorResult || null);
   const [chain, setChain] = useState(initial?.chain || []);
   const [chainResult, setChainResult] = useState(initial?.chainResult || null);
@@ -108,7 +127,7 @@ export default function useEditorEngine(initial) {
   };
 
   return {
-    messages, addMessage, input, setInput, loading,
+    messages, addMessage, input, setInput, loading, handoff,
     previewHtml, setPreviewHtml, simulatorResult, chain, setChain, chainResult,
     handleConvert, handleSimulate, handleRender, handleAddToChain, handleExecuteChain, useEnhanced
   };

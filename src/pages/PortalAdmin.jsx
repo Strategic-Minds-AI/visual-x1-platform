@@ -3,7 +3,7 @@ import { useSearchParams } from "react-router-dom";
 import AdminOverview from "@/components/admin/AdminOverview";
 import AdminRail from "@/components/admin/AdminRail";
 import ConsoleHeader from "@/components/admin/ConsoleHeader";
-import PromptPipeline from "@/components/admin/PromptPipeline";
+import PromptWorkbench from "@/components/admin/PromptWorkbench";
 import VisualEditorWorkspace from "@/components/visualeditor/VisualEditorWorkspace";
 import ClonePipeline from "@/components/admin/ClonePipeline";
 import FactoryPipeline from "@/components/admin/FactoryPipeline";
@@ -89,7 +89,7 @@ export default function PortalAdmin() {
               own three-band layout is the page (the package's layout exactly). */}
           <div className={"cp-portal-content" + (isEditor ? " cp-ve-host" : "")}>
             {section === "overview" && <AdminOverview onNavigate={go} />}
-            {section === "prompt" && <PromptPipeline />}
+            {section === "prompt" && <PromptWorkbench />}
             {isEditor && <VisualEditorWorkspace rail={<AdminRail {...railProps} collapsible />} railOpen={railOpen} />}
             {section === "clone" && <ClonePipeline />}
             {section === "factory" && <FactoryPipeline />}

@@ -1,5 +1,6 @@
 export const PROMPT_CATEGORIES = [
   "Website Building",
+  "Website Self-Edit",
   "System Architecture",
   "Funnel Systems",
   "Reverse Engineering",
@@ -368,5 +369,55 @@ export const TOP_PROMPTS = [
     title: "Full Launch: Build, Validate, Deploy, Track",
     tags: ["launch", "full", "deploy"],
     prompt: `ROLE: Launch engineer.\nOBJECTIVE: Execute a full production launch from build to analytics.\nINSTRUCTIONS:\n1. Run final build and all tests (unit, E2E, accessibility).\n2. Run security scan and fix all criticals.\n3. Verify Lighthouse 95+ on all pages.\n4. Deploy to Vercel with production env vars.\n5. Configure custom domain and SSL.\n6. Set up Google Cloud Console services.\n7. Install GA4 with consent mode.\n8. Set up error monitoring and alerts.\n9. Verify all integrations (auth, payments, email).\n10. Run smoke tests on production.\n11. Enable analytics dashboards.\n12. Document rollback plan.\nCONSTRAINTS: No downtime. Atomic deploy. Instant rollback capability.\nVALIDATION: All tests pass. Production smoke test green. Analytics firing.\nOUTPUT: Deployment, monitoring, analytics, and rollback documentation.`
+  },
+
+  // ── Website Self-Edit (51) ──
+  {
+    id: 51,
+    category: "Website Self-Edit",
+    title: "Edit This Website Itself — Capabilities, Palette, Agents and Gates",
+    tags: ["self-edit", "pages", "palette", "agents", "workflows", "seo"],
+    prompt: `ROLE: You are the senior product engineer who maintains THIS website — the site you are running on, not a new one.
+OBJECTIVE: Make the change described here, in place, on this site.
+CONTEXT: Prompt system, simulator, preview, QA agent, validation agent, suggestion agent and test agent are available and may be run without limit. Work the loop until the validator passes with no hard-gate failure.
+STEP-BY-STEP INSTRUCTIONS:
+1. Read the target page and its neighbours first; treat their structure, spacing and copy as the baseline to improve on.
+2. Apply only the capabilities requested. Every capability named below must be implemented, not summarised.
+   PAGES & ROUTES: add, remove, rename, re-route, duplicate, reorder, metadata, navigation, footer links, breadcrumbs, redirects, 404, deep links preserved.
+   CONTENT: copy, headlines, calls to action, testimonials (verified only), FAQ, pricing, articles, case studies, gallery, form copy, microcopy, legal pages, localisation.
+   STRUCTURE: hero, section order, grids, spacing, containers, sticky header, sidebar, footer, responsive behaviour at 390/768/1024/1440.
+   DESIGN SYSTEM: fonts, pairing, colour system, colour effects, dark mode, radius, shadows, borders, icons, gradients, motion, logo, tokens.
+   COMPONENTS: add, edit and remove components; buttons, cards, modals, tabs, accordions, tables, charts, carousels, form validation, loading/empty/error states, tooltips.
+   MEDIA: images at the right sizes with real alt text, video with captions, SVG art, favicon, social cards, private uploads with signed access.
+   NAVIGATION: information architecture, mega menu, mobile nav, site search, server-side filters, pagination, sitemap page, internal linking, related content.
+   FORMS & FUNNELS: lead capture, quote request, booking, checkout, upsell, multi-step, survey, thank-you, gated content, CRM handoff, abandonment recovery.
+   TOOLS: analytics, tag manager, chat widget, calendar, payments, email, CRM, maps, embeds, API endpoints, webhooks, connected services over new credentials.
+   TEMPLATES: add and edit templates, theme presets, section library, industry layout, cloned sections, template bindings.
+   AGENTS: add an agent with role, least-privilege tools, channels, memory, schedule, permissions and an in-app surface.
+   WORKFLOWS: triggers, conditions, delays, retries, automations, self-operating systems, autonomy level, guardrails.
+   DATA: entities, fields, relationships, seed data, import/export, reversible migrations, permissions on every record type, audit trail, backups.
+   SEO/AEO/GEO: unique titles and descriptions, structured data, sitemap, robots, canonicals, Open Graph, quotable answers, citable specifics, local signals, programmatic location pages, hreflang, index gates, Core Web Vitals, content depth.
+   LOCATIONS: locations, location pages, service areas, maps, LocalBusiness schema, near-me pages, geo targets, accurate hours and contact.
+   SOCIAL: connected accounts, scheduling, links, sharing, feed embeds, cross-posting, message routing.
+   GROWTH: digital domination playbook, authority, backlinks, competitor parity, benchmark parity, offer engineering, lead magnets, retargeting, referral, variants, A/B testing, funnel math, monetisation.
+   PERFORMANCE: budget, code splitting, caching, lazy loading, resource hints, error monitoring, uptime, load testing.
+   ACCESSIBILITY & COMPLIANCE: WCAG 2.1 AA, keyboard operation, ARIA, contrast, reduced motion, cookie consent, privacy, CCPA, terms, honest claims.
+   COMMERCE: products, tiers, cart, checkout, subscriptions, discounts, tax and shipping, invoices.
+   SECURITY & GOVERNANCE: security headers, input validation, rate limiting, secrets server-side, auth flows, sessions, release gates, rollback, approvals, environments.
+   PLATFORM: deploy, domains, SSL, GitHub sync, staging, infrastructure, backup and restore.
+   ANALYTICS: event taxonomy, Search Console, conversion tracking, dashboards, attribution, funnel analytics.
+3. Apply the colour system exactly: main, accent, third, font and background colour as given, with the chosen colour effect applied consistently across every surface, state and component.
+4. Benchmark the result against the chosen benchmark page or URL, region by region, and match or exceed it. Where nothing was measured, say so rather than implying a comparison.
+5. Run the agents: simulate the prompt, preview the artifact, validate it independently, test the document probe by probe, and judge the copy for SEO, GEO and AEO. Iterate until the validator passes.
+CONSTRAINTS:
+- Do not break working functionality; change only what was asked.
+- Keep every existing route resolving; redirect anything that moves.
+- Keep the existing brand identity, logo and established palette unless the palette is what was changed.
+- No new dependencies, no external assets, no placeholder or filler copy, no invented testimonials, logos, awards or statistics.
+- No inline event handlers, no client-side secrets, no dark patterns, no automatic deploy, no production writes.
+- Destructive operations stay admin-only and reversible; a tested way back exists before anything lands.
+VALIDATION CRITERIA: mobile-first at 390/768/1024/1440 with no horizontal overflow; WCAG 2.1 AA; every control works; loading, empty and error states present; metadata and structured data valid; Lighthouse 95+; independent validation 95+ with no hard-gate failure.
+EDGE CASES: empty data, offline, slow network, long strings, deep links, a page with no content, a form submitted twice, an expired session.
+OUTPUT FORMAT: the implementation in full, then a page-by-page change list with what was deliberately left alone, then the agent readouts, then anything that could not be evidenced, stated as unverified.`
   }
 ];

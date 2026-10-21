@@ -58,7 +58,11 @@ export default function EditorPane({
   const tools = useEditorTools({ engine, projectName });
   const vercel = useVercelEditor({ say: tools.say, openSource: tools.openSource });
   const github = useGithubEditor({ say: tools.say, openSource: tools.openSource });
-  const [leftMode, setLeftMode] = useState(initial?.leftMode || "chat");
+  // A handoff from the prompt system decides which column opens: the prompt system
+  // itself for a continued iteration, or the chat for a continued conversation.
+  const [leftMode, setLeftMode] = useState(
+    initial?.leftMode || (engine.handoff ? (engine.handoff.mode === "chat" ? "chat" : "prompt") : "chat")
+  );
   const [canvasView, setCanvasView] = useState(initial?.canvasView || "preview");
   const [device, setDevice] = useState(initial?.device || "desktop");
   const [panelCollapsed, setPanelCollapsed] = useState(false);
