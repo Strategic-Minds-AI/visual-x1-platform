@@ -151,6 +151,62 @@ async function stagingAudit(base44) {
   };
 }
 
+// The authorizer already exists in staging. This probes it and states the worker contract it
+// serves, so the console shows what is deployed instead of what was assumed. Read-only: a GET
+// health surface plus two deliberately unauthenticated POSTs, which must fail closed.
+const AUTHORIZE_URL = `https://${STAGING_REF}.supabase.co/functions/v1/project-zero-authorize`;
+const DB_GATEWAY_URL = `https://${STAGING_REF}.supabase.co/functions/v1/project-zero-db-gateway`;
+
+async function authorizerAudit() {
+  const post = (token) =>
+    fetch(AUTHORIZE_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', ...(token ? { Authorization: 'Bearer ' + token } : {}) },
+      body: JSON.stringify({
+        taskId: 'audit-probe',
+        agentId: 'audit-probe',
+        tenantId: 'audit-probe',
+        requestedAction: 'READ_ONLY',
+        requiredCapabilities: [{ id: 'connector:supabase' }],
+      }),
+      signal: AbortSignal.timeout(20000),
+    });
+
+  const out = {
+    function_slug: 'project-zero-authorize',
+    url: AUTHORIZE_URL,
+    queue_transport: { slug: 'project-zero-db-gateway', url: DB_GATEWAY_URL },
+    contract: 'POST with taskId, agentId, tenantId, requestedAction and requiredCapabilities; answers a signed authorization whose signature the worker verifies with HMAC-SHA256 over the canonical unsigned body.',
+    reachable: false,
+    fail_closed_without_credential: false,
+    fail_closed_with_unknown_credential: false,
+    authorized_path_proven: false,
+    worker_contract: {
+      entry: 'dist/worker-main-gateway.js',
+      required_env: ['X1_SYSTEM_TENANT_ID', 'X1_CONTROL_PLANE_URL', 'X1_DB_GATEWAY_URL', 'X1_INTERNAL_SERVICE_TOKEN'],
+      optional_env: ['X1_WORKER_ID (defaulted to the identity that held the leases)', 'X1_RUNTIME_ENV', 'X1_WORKER_POLL_MS', 'PORT', 'RAILWAY_GIT_COMMIT_SHA'],
+      hosting_evidence: 'railway.json plus Dockerfile with healthcheck /healthz: a long-running Docker service. The signing key is derived in-process from the internal service token, so no separate signing secret is needed.',
+      action_class_limit: 'The shipped preview handler executes READ_ONLY only and refuses mutations.',
+    },
+    blockers: [],
+  };
+
+  try {
+    const health = await fetch(AUTHORIZE_URL, { method: 'GET', signal: AbortSignal.timeout(20000) });
+    const healthBody = await health.text();
+    out.reachable = health.status === 200 && healthBody.includes('project-zero-authorize');
+
+    const noCred = await post(null);
+    out.fail_closed_without_credential = noCred.status === 401;
+
+    const badCred = await post('not-a-registered-service-token');
+    out.fail_closed_with_unknown_credential = badCred.status === 401;
+  } catch (e) {
+    out.blockers.push('The authorizer could not be probed: ' + e.message);
+  }
+  return out;
+}
+
 const ACCEPTANCE = [
   { id: 'A01', label: 'Verified repo, project and domain identity with fresh SHA', state: 'PASS', evidence: 'Live GitHub reads of six repositories and PR #32; production URL untouched.' },
   { id: 'A02', label: 'Every old feature mapped to route, function and entity', state: 'UNKNOWN', evidence: 'Route inventory not yet enumerated; no page was removed or merged.' },
@@ -182,7 +238,7 @@ export default async function (req) {
       return Response.json({ error: 'Only an administrator can read the convergence audit.' }, { status: 403 });
     }
 
-    const [source, staging] = await Promise.all([sourceAudit(base44), stagingAudit(base44)]);
+    const [source, staging, authorizer] = await Promise.all([sourceAudit(base44), stagingAudit(base44), authorizerAudit()]);
 
     const blocked = [];
     if (!source.ok) blocked.push(source.reason || 'GitHub source states could not be read.');
@@ -192,6 +248,9 @@ export default async function (req) {
     if (staging.ok && !leaseCapable) {
       blocked.push('No worker is requesting leases, so no job can be dispatched or proven end to end.');
     }
+    if (authorizer.reachable && !authorizer.authorized_path_proven) {
+      blocked.push('The staging authorizer already exists, is reachable and fails closed; what is missing is a deployed lease-capable worker to use it. No second authorize endpoint is needed.');
+    }
     if (staging.ok && (staging.capabilities.required_missing || []).length) {
       blocked.push('Capabilities required by dead-lettered jobs are absent: ' + staging.capabilities.required_missing.join(', ') + '.');
     }
@@ -199,7 +258,7 @@ export default async function (req) {
     return Response.json({
       ok: true,
       generated_at: new Date().toISOString(),
-      sources: { github: source, staging },
+      sources: { github: source, staging, authorizer },
       acceptance: ACCEPTANCE.map((row) =>
         row.id === 'A01' && !source.ok ? { ...row, state: 'UNKNOWN' } : row.id === 'A05' && leaseCapable ? { ...row, state: 'UNKNOWN' } : row
       ),

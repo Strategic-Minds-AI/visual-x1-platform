@@ -124,6 +124,27 @@ export default function ConvergenceMatrix() {
               </Section>
             )}
 
+            {data.sources?.authorizer && (
+              <Section icon={ShieldCheck} title="Authorization path and worker contract">
+                <Row
+                  label="Authorize function"
+                  value={`${data.sources.authorizer.function_slug} · ${data.sources.authorizer.reachable ? "reachable" : "UNREACHABLE"}`}
+                />
+                <Row label="URL the worker needs" value={data.sources.authorizer.url} />
+                <Row
+                  label="Refuses unregistered callers"
+                  value={
+                    data.sources.authorizer.fail_closed_without_credential && data.sources.authorizer.fail_closed_with_unknown_credential
+                      ? "yes, without and with an unknown credential"
+                      : "NOT CONFIRMED"
+                  }
+                />
+                <Row label="Worker entry" value={data.sources.authorizer.worker_contract.entry} />
+                <Row label="Required worker config" value={data.sources.authorizer.worker_contract.required_env.join(", ")} />
+                <Row label="Hosting" value={data.sources.authorizer.worker_contract.hosting_evidence} />
+              </Section>
+            )}
+
             <div className="grid md:grid-cols-2 gap-2">
               {(data.acceptance || []).map((row) => (
                 <div key={row.id} className="flex items-start gap-2 rounded-lg p-2 bg-card/40">
