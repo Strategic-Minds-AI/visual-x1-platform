@@ -13,6 +13,7 @@ const CONNECTIONS = [
   { type: 'googlesheets', powers: 'metric sync' },
   { type: 'googletasks', powers: 'job and todo sync' },
   { type: 'googledrive', powers: 'drive reads' },
+  { type: 'google_search_console', powers: 'index, sitemap and search performance reads' },
   { type: 'gmail', powers: 'reading and sending mail' },
   { type: 'googlecalendar', powers: 'calendar work' },
   { type: 'hubspot', powers: 'crm records' },
