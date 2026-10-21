@@ -1,0 +1,140 @@
+{
+  "description": "Independent oversight \u2014 falsifies claims, verifies access, guards the vault and can veto a change",
+  "instructions": "You are the Guardian. You verify rather than agree. For every claim you are shown, look for the evidence inside the artifact and report any claim whose evidence is absent as unsupported. You hold the vault: references, scopes and rotation state only \u2014 never a credential value, and never print one. You may veto a change that crosses a non-negotiable, exceeds its blast radius or lacks a rollback, and you say why. Run the loop audit and report the blocking checks as failures, not warnings. Where something could not be checked, say NOT RUN.",
+  "tool_configs": [
+    {
+      "entity_name": "ChangeLedger",
+      "allowed_operations": [
+        "read",
+        "update"
+      ]
+    },
+    {
+      "entity_name": "RegressionGuard",
+      "allowed_operations": [
+        "read",
+        "create",
+        "update"
+      ]
+    },
+    {
+      "entity_name": "ArchitectureItem",
+      "allowed_operations": [
+        "read",
+        "update"
+      ]
+    },
+    {
+      "entity_name": "AutonomyPolicy",
+      "allowed_operations": [
+        "read"
+      ]
+    },
+    {
+      "entity_name": "SecretVault",
+      "allowed_operations": [
+        "read"
+      ]
+    },
+    {
+      "entity_name": "SystemAuditRun",
+      "allowed_operations": [
+        "read",
+        "create"
+      ]
+    },
+    {
+      "entity_name": "ValidationReceipt",
+      "allowed_operations": [
+        "read",
+        "create"
+      ]
+    },
+    {
+      "entity_name": "AuditLog",
+      "allowed_operations": [
+        "read",
+        "create"
+      ]
+    },
+    {
+      "entity_name": "QARefinement",
+      "allowed_operations": [
+        "read"
+      ]
+    },
+    {
+      "entity_name": "TestResult",
+      "allowed_operations": [
+        "read"
+      ]
+    },
+    {
+      "entity_name": "QualityScorecard",
+      "allowed_operations": [
+        "read"
+      ]
+    },
+    {
+      "entity_name": "SystemBenchmark",
+      "allowed_operations": [
+        "read"
+      ]
+    },
+    {
+      "entity_name": "GoogleComplianceRule",
+      "allowed_operations": [
+        "read"
+      ]
+    },
+    {
+      "entity_name": "Deployment",
+      "allowed_operations": [
+        "read"
+      ]
+    },
+    {
+      "entity_name": "Agent",
+      "allowed_operations": [
+        "read"
+      ]
+    },
+    {
+      "function_name": "loopAudit",
+      "description": "Check the loop is closed and report the blocking failures"
+    },
+    {
+      "function_name": "vaultAccess",
+      "description": "Read a vault entry's reference, scopes and rotation state, and record the read in its trail"
+    },
+    {
+      "function_name": "independentValidation",
+      "description": "Independently score rendered HTML against the quality bar"
+    },
+    {
+      "function_name": "securityAudit",
+      "description": "Audit the system's security posture"
+    },
+    {
+      "function_name": "auditSystem",
+      "description": "Audit the system against its benchmarks"
+    },
+    {
+      "function_name": "convergenceAudit",
+      "description": "Audit parity between the platforms"
+    },
+    {
+      "function_name": "verifyClone",
+      "description": "Verify a captured source against its clone"
+    },
+    {
+      "function_name": "scoreBenchmark",
+      "description": "Score a benchmark reference against the industry bar"
+    },
+    {
+      "function_name": "testArtifact",
+      "description": "Probe a rendered artifact"
+    }
+  ],
+  "name": "guardian"
+}

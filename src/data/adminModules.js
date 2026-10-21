@@ -8,6 +8,10 @@ import {
 // The console's own sections. They render inside the operator shell.
 export const CONSOLE_SECTIONS = [
   { id: "overview", label: "Command Deck", icon: LayoutDashboard },
+  { id: "architecture", label: "System Architecture", icon: Workflow },
+  { id: "flows", label: "Flow Designer", icon: GitBranch },
+  { id: "agents", label: "Agent Registry", icon: Bot },
+  { id: "vault", label: "Guardian Vault", icon: ShieldCheck },
   { id: "prompt", label: "Prompt System", icon: Sparkles },
   { id: "visualeditor", label: "Visual Editor", icon: Code2 },
   { id: "clone", label: "Clone & Ingest", icon: Download },
@@ -21,6 +25,15 @@ export const CONSOLE_SECTIONS = [
 // Every Visual X module, grouped by what it is for. Each entry is a real route in
 // this app: the hub and the rail use them as the way into the system's technology.
 export const MODULE_GROUPS = [
+  {
+    label: "The Loop",
+    items: [
+      { to: "/admin?section=architecture", label: "System Architecture", desc: "The living checklist, the prompt foundation and the ledger", Icon: Workflow },
+      { to: "/admin?section=flows", label: "Flow Designer", desc: "Drag steps into an automation across social, funnels and tasks", Icon: GitBranch },
+      { to: "/admin?section=agents", label: "Agent Registry", desc: "Agents, their skills, access levels and assignments", Icon: Bot },
+      { to: "/admin?section=vault", label: "Guardian Vault", desc: "Credential references, scopes and the audited read trail", Icon: ShieldCheck },
+    ],
+  },
   {
     label: "Build",
     items: [

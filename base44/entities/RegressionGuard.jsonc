@@ -1,0 +1,133 @@
+{
+  "name": "RegressionGuard",
+  "type": "object",
+  "properties": {
+    "guard_key": {
+      "type": "string",
+      "description": "Stable key, e.g. mobile-nav-tap-target"
+    },
+    "title": {
+      "type": "string",
+      "description": "What must never break again"
+    },
+    "detail": {
+      "type": "string",
+      "description": "The defect this guard came from and what passing looks like"
+    },
+    "source_ref": {
+      "type": "string",
+      "description": "QARefinement, TestResult or defect record this guard was raised from"
+    },
+    "check_kind": {
+      "type": "string",
+      "enum": [
+        "probe",
+        "rule",
+        "assertion",
+        "measurement"
+      ],
+      "default": "assertion",
+      "description": "How the guard is checked"
+    },
+    "check_spec": {
+      "type": "string",
+      "description": "The deterministic check: what is measured, against what value"
+    },
+    "routes": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Routes this guard covers; empty means every route"
+    },
+    "severity": {
+      "type": "string",
+      "enum": [
+        "blocking",
+        "high",
+        "medium",
+        "low"
+      ],
+      "default": "high",
+      "description": "Blocking guards must pass before a change is accepted"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "armed",
+        "retired"
+      ],
+      "default": "armed",
+      "description": "Armed guards run on every change"
+    },
+    "last_result": {
+      "type": "string",
+      "enum": [
+        "pass",
+        "fail",
+        "not_run"
+      ],
+      "default": "not_run"
+    },
+    "last_checked_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "failure_count": {
+      "type": "number",
+      "default": 0,
+      "description": "How many times this guard has caught a regression"
+    },
+    "owner_agent": {
+      "type": "string",
+      "description": "Agent accountable for keeping this guard green"
+    },
+    "notes": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "guard_key",
+    "title",
+    "check_kind",
+    "status"
+  ],
+  "rls": {
+    "read": {
+      "$or": [
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "user"
+          }
+        }
+      ]
+    },
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

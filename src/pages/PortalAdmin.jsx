@@ -12,6 +12,11 @@ import LiveRecords from "@/components/admin/LiveRecords";
 import "../../vendor/x1/CommercePortal.css";
 import "@/styles/x1-brand-theme.css";
 import "@/styles/x1-admin.css";
+import LoopWorkspace from "@/components/loop/LoopWorkspace";
+import FlowDesignerWorkspace from "@/components/flow/FlowDesignerWorkspace";
+import AgentRegistryWorkspace from "@/components/agents/AgentRegistryWorkspace";
+import GuardianVaultWorkspace from "@/components/agents/GuardianVaultWorkspace";
+import RightChatDock from "@/components/chat/RightChatDock";
 import { CONSOLE_SECTIONS } from "@/data/adminModules";
 import { countRecords } from "@/lib/adminPipelines";
 
@@ -94,6 +99,10 @@ export default function PortalAdmin() {
             {section === "clone" && <ClonePipeline />}
             {section === "factory" && <FactoryPipeline />}
             {section === "approvals" && <ApprovalQueue />}
+            {section === "architecture" && <LoopWorkspace />}
+            {section === "flows" && <FlowDesignerWorkspace />}
+            {section === "agents" && <AgentRegistryWorkspace />}
+            {section === "vault" && <GuardianVaultWorkspace />}
             {section === "clients" && (
               <LiveRecords
                 title="CLIENT INTAKE SUBMISSIONS"
@@ -161,6 +170,10 @@ export default function PortalAdmin() {
           )}
         </div>
       </div>
+
+      {/* The agent rail: a tab at the edge of every console section that slides the
+          orchestrator's conversation in and out, without displacing the section. */}
+      <RightChatDock />
     </div>
   );
 }

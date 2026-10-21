@@ -1,0 +1,169 @@
+{
+  "name": "AutomationFlow",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "What this automation is called"
+    },
+    "purpose": {
+      "type": "string",
+      "description": "The outcome this flow exists to produce"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "site",
+        "social",
+        "funnel",
+        "tasks",
+        "growth",
+        "operations",
+        "custom"
+      ],
+      "default": "custom",
+      "description": "Which system family this flow belongs to"
+    },
+    "trigger_kind": {
+      "type": "string",
+      "enum": [
+        "manual",
+        "schedule",
+        "entity_event",
+        "site_event"
+      ],
+      "default": "manual",
+      "description": "What starts the flow"
+    },
+    "schedule_cron": {
+      "type": "string",
+      "description": "Cron expression when the trigger is a schedule, e.g. 0 9 * * 1"
+    },
+    "trigger_entity": {
+      "type": "string",
+      "description": "Entity whose change starts the flow when the trigger is an entity event"
+    },
+    "trigger_event": {
+      "type": "string",
+      "enum": [
+        "create",
+        "update",
+        "delete"
+      ],
+      "description": "Entity operation that starts the flow"
+    },
+    "steps_json": {
+      "type": "string",
+      "description": "JSON array of steps in order: each {id, type, label, config, on_fail}"
+    },
+    "step_count": {
+      "type": "number",
+      "default": 0,
+      "description": "Number of steps in the flow"
+    },
+    "linked_targets": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "What this flow drives: social accounts, funnel names, agent names, entity names"
+    },
+    "owner_agent": {
+      "type": "string",
+      "description": "Agent that runs this flow"
+    },
+    "requires_approval": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether a human releases the flow's work before it takes effect"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "active",
+        "paused"
+      ],
+      "default": "draft"
+    },
+    "last_run_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "last_run_status": {
+      "type": "string",
+      "enum": [
+        "never",
+        "running",
+        "completed",
+        "failed"
+      ],
+      "default": "never"
+    },
+    "run_count": {
+      "type": "number",
+      "default": 0
+    },
+    "last_run_log_json": {
+      "type": "string",
+      "description": "JSON of the last run: per-step result, what was created, what failed"
+    },
+    "notes": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "name",
+    "category",
+    "trigger_kind",
+    "steps_json",
+    "status"
+  ],
+  "rls": {
+    "read": {
+      "$or": [
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "user"
+          }
+        }
+      ]
+    },
+    "create": {
+      "$or": [
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "user"
+          }
+        }
+      ]
+    },
+    "update": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

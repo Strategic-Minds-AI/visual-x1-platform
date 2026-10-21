@@ -1,0 +1,212 @@
+{
+  "name": "ChangeLedger",
+  "type": "object",
+  "properties": {
+    "change_key": {
+      "type": "string",
+      "description": "Short stable label for this change, e.g. pricing-hero-rewrite"
+    },
+    "objective": {
+      "type": "string",
+      "description": "What this change is meant to achieve"
+    },
+    "site_url": {
+      "type": "string",
+      "description": "Site the change applies to"
+    },
+    "routes": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Routes this change touches (the blast radius)"
+    },
+    "capability_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Capability ids ticked in the self-edit studio for this change"
+    },
+    "prompt_type": {
+      "type": "string",
+      "description": "Prompt system that produced the brief"
+    },
+    "benchmark_ref": {
+      "type": "string",
+      "description": "Benchmark used: a route, a URL, or a library reference"
+    },
+    "agent_names": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Agents required to pass before this change is accepted"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "proposed",
+        "simulating",
+        "rendered",
+        "validated",
+        "applied",
+        "reverted",
+        "failed"
+      ],
+      "default": "proposed",
+      "description": "Where the change sits in its own lifecycle"
+    },
+    "autonomy_level": {
+      "type": "string",
+      "description": "Autonomy level this change ran under"
+    },
+    "version_before": {
+      "type": "string",
+      "description": "Snapshot or commit the change started from"
+    },
+    "version_after": {
+      "type": "string",
+      "description": "Snapshot or commit the change produced"
+    },
+    "snapshot_ref": {
+      "type": "string",
+      "description": "Immutable copy taken before applying, used for rollback"
+    },
+    "rollback_plan": {
+      "type": "string",
+      "description": "Exactly how this change is reverted"
+    },
+    "predicted_metric": {
+      "type": "string",
+      "description": "The metric this change is predicted to move"
+    },
+    "predicted_delta": {
+      "type": "number",
+      "description": "Predicted size of the move; 0 with low confidence when unpredictable"
+    },
+    "prediction_confidence": {
+      "type": "number",
+      "default": 0,
+      "description": "Confidence 0-100 the prediction holds"
+    },
+    "falsification": {
+      "type": "string",
+      "description": "The evidence that would prove this change wrong"
+    },
+    "validation_score": {
+      "type": "number",
+      "default": 0,
+      "description": "Independent validator score 0-100"
+    },
+    "validation_decision": {
+      "type": "string",
+      "description": "Validator decision, e.g. PASS / FAIL / NOT RUN"
+    },
+    "qa_score": {
+      "type": "number",
+      "default": 0
+    },
+    "content_score": {
+      "type": "number",
+      "default": 0,
+      "description": "Content judge SEO / GEO / AEO score"
+    },
+    "regression_pass": {
+      "type": "boolean",
+      "description": "Whether every armed regression guard passed"
+    },
+    "regression_failures": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Guard keys that failed on this change"
+    },
+    "evidence_json": {
+      "type": "string",
+      "description": "JSON of the observations gathered before the change, and what could not be gathered"
+    },
+    "cost_credits": {
+      "type": "number",
+      "default": 0,
+      "description": "Integration credits this change consumed"
+    },
+    "window_start": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Start of the pre-change measurement window"
+    },
+    "window_end": {
+      "type": "string",
+      "format": "date-time",
+      "description": "End of the post-change measurement window"
+    },
+    "metric_before": {
+      "type": "number",
+      "description": "Objective metric measured before the change"
+    },
+    "metric_after": {
+      "type": "number",
+      "description": "Objective metric measured after the change"
+    },
+    "metric_delta": {
+      "type": "number",
+      "description": "metric_after minus metric_before"
+    },
+    "verdict": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "worked",
+        "no_effect",
+        "harmed",
+        "insufficient_evidence"
+      ],
+      "default": "pending",
+      "description": "Deterministic outcome of the change against the policy target"
+    },
+    "confounders": {
+      "type": "string",
+      "description": "What else moved in the same window, so the delta is not overclaimed"
+    },
+    "lesson": {
+      "type": "string",
+      "description": "The reusable lesson this change produced, injected into later briefs"
+    },
+    "receipt_id": {
+      "type": "string",
+      "description": "ValidationReceipt written for the last pass on this change"
+    },
+    "notes": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "change_key",
+    "objective",
+    "status"
+  ],
+  "rls": {
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

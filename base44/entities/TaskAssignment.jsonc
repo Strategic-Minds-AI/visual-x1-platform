@@ -1,0 +1,166 @@
+{
+  "name": "TaskAssignment",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "description": "What is being assigned"
+    },
+    "detail": {
+      "type": "string",
+      "description": "Everything the assigned agent needs to do the work"
+    },
+    "work_type": {
+      "type": "string",
+      "enum": [
+        "audit",
+        "repair",
+        "build",
+        "content",
+        "social",
+        "funnel",
+        "research",
+        "monitor"
+      ],
+      "default": "build",
+      "description": "The class of work, which decides which agent owns it"
+    },
+    "assigned_agent": {
+      "type": "string",
+      "description": "Agent name the work is assigned to"
+    },
+    "agent_id": {
+      "type": "string",
+      "description": "Agent registry record id, when the assignment came from the registry"
+    },
+    "priority": {
+      "type": "string",
+      "enum": [
+        "critical",
+        "high",
+        "medium",
+        "low"
+      ],
+      "default": "medium"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "open",
+        "scheduled",
+        "in_progress",
+        "done",
+        "blocked"
+      ],
+      "default": "open"
+    },
+    "due_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the work is due"
+    },
+    "channels": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Where this assignment was pushed: calendar, tasks, drive, gmail, whatsapp"
+    },
+    "calendar_event_id": {
+      "type": "string",
+      "description": "Google Calendar event created for this assignment"
+    },
+    "calendar_id": {
+      "type": "string",
+      "description": "Calendar the event was written to"
+    },
+    "google_task_id": {
+      "type": "string",
+      "description": "Google Tasks task created for this assignment"
+    },
+    "drive_ref": {
+      "type": "string",
+      "description": "Google Drive document or folder holding the brief for this assignment"
+    },
+    "notified_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the assignment notification went out"
+    },
+    "job_id": {
+      "type": "string",
+      "description": "Job record this assignment belongs to, when it came from the job board"
+    },
+    "todo_id": {
+      "type": "string",
+      "description": "Todo record this assignment is mirrored to"
+    },
+    "flow_id": {
+      "type": "string",
+      "description": "Automation flow that created this assignment, when it came from a flow"
+    },
+    "outcome_note": {
+      "type": "string",
+      "description": "What actually happened \u2014 filled in when the work closes"
+    },
+    "completed_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "external_result_json": {
+      "type": "string",
+      "description": "JSON of what each external push returned, so a failed push is visible rather than assumed"
+    }
+  },
+  "required": [
+    "title",
+    "work_type",
+    "assigned_agent",
+    "status"
+  ],
+  "rls": {
+    "read": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "create": {
+      "$or": [
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "user"
+          }
+        }
+      ]
+    },
+    "update": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

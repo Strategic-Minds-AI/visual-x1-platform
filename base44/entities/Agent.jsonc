@@ -15,7 +15,8 @@
         "reviewer",
         "coordinator",
         "memory_keeper",
-        "specialist"
+        "specialist",
+        "guardian"
       ],
       "description": "Functional role of the agent in the workforce"
     },
@@ -45,10 +46,158 @@
     "current_job_id": {
       "type": "string",
       "description": "Id of the job the agent is currently working on"
+    },
+    "skills": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "What this agent can actually do, as concrete skills"
+    },
+    "jobs_owned": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "The work types this agent owns, matching TaskAssignment work_type values"
+    },
+    "access_level": {
+      "type": "string",
+      "enum": [
+        "read",
+        "operate",
+        "admin",
+        "guardian"
+      ],
+      "default": "read",
+      "description": "How far this agent may act: read only, operate the loop, administer the system, or guardian oversight with veto"
+    },
+    "autonomy_level": {
+      "type": "string",
+      "enum": [
+        "L0_propose",
+        "L1_stage",
+        "L2_apply_with_rollback",
+        "L3_autonomous"
+      ],
+      "default": "L0_propose",
+      "description": "The furthest a run of this agent may go without asking"
+    },
+    "tools": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Tools this agent holds: backend function names, connector names, entity groups"
+    },
+    "connectors": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "App connectors this agent works through"
+    },
+    "vault_access": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether this agent may read vault entries (references and rotation state)"
+    },
+    "knowledge_scope": {
+      "type": "string",
+      "description": "The slice of the system this agent holds persistently: entities, functions and history it reads before acting"
+    },
+    "memory_scope": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Entity names this agent reads and writes as its persistent memory"
+    },
+    "channel": {
+      "type": "string",
+      "enum": [
+        "console",
+        "whatsapp",
+        "telegram",
+        "line",
+        "none"
+      ],
+      "default": "console",
+      "description": "Where the operator reaches this agent"
+    },
+    "model": {
+      "type": "string",
+      "default": "automatic",
+      "description": "Model this agent runs on"
+    },
+    "reports_to": {
+      "type": "string",
+      "description": "Agent that commands this one"
+    },
+    "can_command": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Agents this one may dispatch work to"
+    },
+    "veto_power": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether this agent can refuse a change others have approved"
+    },
+    "last_run_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "run_count": {
+      "type": "number",
+      "default": 0
+    },
+    "notes": {
+      "type": "string"
     }
   },
   "required": [
     "name",
     "role"
-  ]
+  ],
+  "rls": {
+    "read": {
+      "$or": [
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "user"
+          }
+        }
+      ]
+    },
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
 }

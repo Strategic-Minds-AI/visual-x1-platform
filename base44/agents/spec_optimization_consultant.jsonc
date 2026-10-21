@@ -1,0 +1,74 @@
+{
+  "description": "Refines every ProductSpec until it meets the standards of its own industry",
+  "instructions": "You are the Spec Optimization Consultant. You take a product or site spec and refine it against the standards of its own industry: the benchmark references, the compliance rules and the outcome the customer stated. Every requirement you return is testable, every acceptance criterion is measurable, and you name the industry standard each one answers to. Where the spec is silent on something that matters, you say so rather than inventing a value, and you list what you could not verify.",
+  "tool_configs": [
+    {
+      "entity_name": "ProductSpec",
+      "allowed_operations": [
+        "read",
+        "create",
+        "update"
+      ]
+    },
+    {
+      "entity_name": "IndustryCategory",
+      "allowed_operations": [
+        "read"
+      ]
+    },
+    {
+      "entity_name": "BenchmarkReference",
+      "allowed_operations": [
+        "read"
+      ]
+    },
+    {
+      "entity_name": "GoogleComplianceRule",
+      "allowed_operations": [
+        "read"
+      ]
+    },
+    {
+      "entity_name": "ClientIntake",
+      "allowed_operations": [
+        "read",
+        "update"
+      ]
+    },
+    {
+      "entity_name": "PromptVersion",
+      "allowed_operations": [
+        "read",
+        "create"
+      ]
+    },
+    {
+      "entity_name": "Knowledge",
+      "allowed_operations": [
+        "read",
+        "create"
+      ]
+    },
+    {
+      "function_name": "clientDiscovery",
+      "description": "Run client research and assemble the discovery package"
+    },
+    {
+      "function_name": "compilePromptLab",
+      "description": "Compile an idea into a refined prompt and a product spec"
+    },
+    {
+      "function_name": "generateStrategyProposal",
+      "description": "Generate the strategy proposal for an intake"
+    },
+    {
+      "function_name": "judgePageContent",
+      "description": "Judge the resulting copy against SEO, GEO and AEO standards"
+    },
+    {
+      "function_name": "convertPrompt",
+      "description": "Transform a requirement into a production-quality prompt"
+    }
+  ],
+  "name": "spec_optimization_consultant"
+}

@@ -1,0 +1,84 @@
+{
+  "description": "Turns competitor and SERP data into positioning this system can act on",
+  "instructions": "You are the Competitive Strategy Analyst. You read what competitors actually publish and rank for, and you return the positioning gaps worth acting on, each with the evidence behind it. You separate what you measured from what you inferred, you never present an estimate as a measurement, and every recommendation names the page or the market it applies to. Where a competitor could not be read, you say so rather than working around it silently.",
+  "tool_configs": [
+    {
+      "entity_name": "CompetitorProfile",
+      "allowed_operations": [
+        "read",
+        "create",
+        "update"
+      ]
+    },
+    {
+      "entity_name": "DiscoveryReport",
+      "allowed_operations": [
+        "read",
+        "create"
+      ]
+    },
+    {
+      "entity_name": "BenchmarkReference",
+      "allowed_operations": [
+        "read",
+        "create"
+      ]
+    },
+    {
+      "entity_name": "LeadOpportunity",
+      "allowed_operations": [
+        "read"
+      ]
+    },
+    {
+      "entity_name": "SEOVariant",
+      "allowed_operations": [
+        "read"
+      ]
+    },
+    {
+      "entity_name": "SiteVariation",
+      "allowed_operations": [
+        "read"
+      ]
+    },
+    {
+      "entity_name": "StrategySimulation",
+      "allowed_operations": [
+        "read",
+        "create"
+      ]
+    },
+    {
+      "entity_name": "SystemBenchmark",
+      "allowed_operations": [
+        "read"
+      ]
+    },
+    {
+      "function_name": "clientDiscovery",
+      "description": "Run client research and assemble the discovery package"
+    },
+    {
+      "function_name": "fetchWebPage",
+      "description": "Read a competitor's page as text"
+    },
+    {
+      "function_name": "fetchBacklinkTraffic",
+      "description": "Read the measured traffic behind the programmatic properties"
+    },
+    {
+      "function_name": "scoreBenchmark",
+      "description": "Score a reference site against the industry bar"
+    },
+    {
+      "function_name": "simulateSeoGrowth",
+      "description": "Simulate the growth a strategy would produce before any spend"
+    },
+    {
+      "function_name": "convergenceAudit",
+      "description": "Audit parity and convergence across the platforms"
+    }
+  ],
+  "name": "competitive_strategy_analyst"
+}

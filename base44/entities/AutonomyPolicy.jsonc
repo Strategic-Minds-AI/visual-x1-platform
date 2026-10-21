@@ -1,0 +1,150 @@
+{
+  "name": "AutonomyPolicy",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Policy name, e.g. Visual X operating policy"
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true,
+      "description": "The policy the loop reads. Only one should be active."
+    },
+    "objective_kind": {
+      "type": "string",
+      "enum": [
+        "leads",
+        "revenue",
+        "traffic",
+        "authority",
+        "automation",
+        "balanced"
+      ],
+      "default": "balanced",
+      "description": "The single objective the system optimizes for"
+    },
+    "objective_weights_json": {
+      "type": "string",
+      "description": "JSON object of metric to weight, e.g. {\"conversions\":0.5,\"sessions\":0.3,\"avg_position\":0.2}"
+    },
+    "non_negotiables": {
+      "type": "string",
+      "description": "Hard rules no run may cross, one per line"
+    },
+    "autonomy_level": {
+      "type": "string",
+      "enum": [
+        "L0_propose",
+        "L1_stage",
+        "L2_apply_with_rollback",
+        "L3_autonomous"
+      ],
+      "default": "L1_stage",
+      "description": "How far a run may go without asking: propose only, edit a staged copy, apply with rollback armed, or act autonomously inside the budget"
+    },
+    "daily_change_budget": {
+      "type": "number",
+      "default": 5,
+      "description": "Applied changes allowed per day before the loop pauses"
+    },
+    "max_routes_per_change": {
+      "type": "number",
+      "default": 3,
+      "description": "Blast radius: routes one change may touch"
+    },
+    "forbidden_paths": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Paths no run may modify, e.g. checkout, account, legal"
+    },
+    "metric_targets_json": {
+      "type": "string",
+      "description": "JSON array of targets: [{\"metric\":\"conversion_rate\",\"comparator\":\"gte\",\"target\":2.5,\"window_days\":28}]"
+    },
+    "stop_conditions": {
+      "type": "string",
+      "description": "When a cycle stops, one per line"
+    },
+    "budget_credits_per_cycle": {
+      "type": "number",
+      "default": 250,
+      "description": "Integration-credit ceiling for one cycle"
+    },
+    "budget_latency_ms": {
+      "type": "number",
+      "default": 600000,
+      "description": "Wall-clock ceiling for one cycle in milliseconds"
+    },
+    "anomaly_pause": {
+      "type": "boolean",
+      "default": true,
+      "description": "Auto-pause self-edits when a metric breaks its band"
+    },
+    "kill_switch": {
+      "type": "boolean",
+      "default": false,
+      "description": "When true the loop takes no action beyond proposing"
+    },
+    "mobile_number": {
+      "type": "string",
+      "description": "Operator mobile number the chat agent reaches, in E.164 form"
+    },
+    "channel": {
+      "type": "string",
+      "enum": [
+        "none",
+        "whatsapp",
+        "telegram",
+        "sms"
+      ],
+      "default": "none",
+      "description": "Channel the operator reaches the agent on from a phone"
+    },
+    "channel_agent": {
+      "type": "string",
+      "description": "Agent name that serves the channel"
+    },
+    "vault_mode": {
+      "type": "string",
+      "enum": [
+        "references_only"
+      ],
+      "default": "references_only",
+      "description": "The vault stores references and rotation state, never raw credentials"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Anything else the operator wants the loop to hold"
+    }
+  },
+  "required": [
+    "name",
+    "objective_kind",
+    "is_active"
+  ],
+  "rls": {
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

@@ -8,6 +8,7 @@ import {
   RESTRICTIONS,
   STUDIO_AGENTS,
 } from "@/data/websiteEditCatalog";
+import { buildLoopPrompt } from "@/lib/loopPrompt";
 
 // Assembles the Website Self-Edit prompt from what the operator chose. One place,
 // so the studio, the simulation and the preview all read the same text.
@@ -52,7 +53,11 @@ export function colorLines(state) {
   return lines;
 }
 
-export function buildWebsiteEditPrompt(state, { siteUrl, iterations } = {}) {
+// `loop` carries the policy, the armed guards, the ledger's measured outcomes and
+// the architecture checklist. When it is passed, the brief stops being a request and
+// becomes a self-evaluating instruction: targets, evidence to gather, lessons, guards,
+// prediction, falsification, blast radius, the outcome write-back and the stop rules.
+export function buildWebsiteEditPrompt(state, { siteUrl, iterations, loop } = {}) {
   const chosen = pick(ALL_EDIT_ITEMS, state.capabilities);
   const type = byId(PROMPT_SYSTEM_TYPES, state.promptType);
   const agents = pick(STUDIO_AGENTS, state.agents);
@@ -86,6 +91,8 @@ export function buildWebsiteEditPrompt(state, { siteUrl, iterations } = {}) {
       : "AGENTS: the operator has not required an agent pass on this run.",
 
     "DELIVERABLES:\n1. The changed code and content, in full.\n2. A short list of what changed, page by page, and what you deliberately left alone.\n3. The agent readouts: QA score, validator decision and score, test-agent probes and what could not be tested, and the content judge's SEO / GEO / AEO scores.\n4. Anything you could not evidence — stated as unverified, never implied as passing.",
+
+    ...(loop ? [buildLoopPrompt({ ...loop, change: { ...(loop.change || {}), capability_ids: state.capabilities, predicted_metric: loop.change?.predicted_metric || "" } })] : []),
 
     "OUTPUT FORMAT: implementation first, then the change list, then the readouts. No preamble, no restating this brief.",
   ];

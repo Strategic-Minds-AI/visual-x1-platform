@@ -1,0 +1,122 @@
+{
+  "name": "ArchitectureItem",
+  "type": "object",
+  "properties": {
+    "key": {
+      "type": "string",
+      "description": "Stable key, e.g. attribution_windows"
+    },
+    "title": {
+      "type": "string",
+      "description": "The capability this item establishes"
+    },
+    "layer": {
+      "type": "string",
+      "enum": [
+        "observation",
+        "evaluation",
+        "learning",
+        "enhancement",
+        "governance",
+        "platform"
+      ],
+      "description": "Which part of the loop this item belongs to"
+    },
+    "requirement": {
+      "type": "string",
+      "description": "What must exist for this item to count as done"
+    },
+    "prompt_block": {
+      "type": "string",
+      "description": "The prompt block this item contributes to the assembled brief"
+    },
+    "command_prompt": {
+      "type": "string",
+      "description": "The instruction the chat agent is given when the operator commands this item's implementation"
+    },
+    "owner_agent": {
+      "type": "string",
+      "description": "Agent that implements and maintains this item"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "planned",
+        "building",
+        "live",
+        "verified",
+        "blocked"
+      ],
+      "default": "planned"
+    },
+    "evidence": {
+      "type": "string",
+      "description": "What proves this item works, or why it is blocked"
+    },
+    "verified_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "last_command_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the operator last commanded this item from the checklist"
+    },
+    "dependencies": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Keys of items that must be live first"
+    },
+    "display_order": {
+      "type": "number",
+      "default": 0
+    }
+  },
+  "required": [
+    "key",
+    "title",
+    "layer",
+    "requirement",
+    "status"
+  ],
+  "rls": {
+    "read": {
+      "$or": [
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "user"
+          }
+        }
+      ]
+    },
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

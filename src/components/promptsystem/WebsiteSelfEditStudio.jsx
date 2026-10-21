@@ -4,6 +4,7 @@ import { base44 } from "@/api/base44Client";
 import { Panel, OutlineButton, LinkButton } from "@/components/admin/adminUi";
 import { pipelineError } from "@/lib/adminPipelines";
 import { stageEditorHandoff } from "@/lib/editorHandoff";
+import { readOne, readRecords } from "@/lib/loopApi";
 import { ALL_EDIT_ITEMS, STUDIO_AGENTS } from "@/data/websiteEditCatalog";
 import { artifactText, benchmarkLine, buildWebsiteEditPrompt, emptySelection, transformerBrief } from "@/lib/websiteEditPrompt";
 import EditCapabilityGrid from "@/components/promptsystem/website/EditCapabilityGrid";
@@ -23,6 +24,24 @@ import AgentReadout from "@/components/promptsystem/website/AgentReadout";
 // page of this site or any URL, and the loop — simulate, preview, validate, test,
 // judge — runs as many times as it takes. The artifact it produces goes onto the
 // Visual Editor canvas, where the prompt system page or the AI chat carries on.
+// The loop's records, read at the moment the brief is assembled: the active policy,
+// the armed guards, the measured outcomes of past changes and the checklist. A read
+// that fails returns undefined rather than throwing, so the brief is still assembled
+// — just without the loop's blocks — and the operator is told which of the two happened.
+async function readLoopContext(changeKey, routes) {
+  try {
+    const [policy, guards, ledger, items] = await Promise.all([
+      readOne("AutonomyPolicy", { is_active: true }),
+      readRecords("RegressionGuard", { limit: 60 }),
+      readRecords("ChangeLedger", { limit: 30, sort: "-updated_date" }),
+      readRecords("ArchitectureItem", { limit: 80, sort: "display_order" }),
+    ]);
+    return { policy, guards, ledger, items, change: { change_key: changeKey, routes } };
+  } catch {
+    return undefined;
+  }
+}
+
 export default function WebsiteSelfEditStudio() {
   const navigate = useNavigate();
   const [state, setState] = useState(emptySelection);
@@ -59,10 +78,17 @@ export default function WebsiteSelfEditStudio() {
     }
   };
 
-  const build = () => {
-    setAssembled(buildWebsiteEditPrompt(state, { siteUrl, iterations }));
-    setNote("Assembled from everything ticked. Transform it to put it through the prompt transformer.");
-  };
+  const build = () =>
+    run("build", async () => {
+      const key = state.brief.trim().slice(0, 60) || "self-edit";
+      const loop = await readLoopContext(key, [state.benchmark.route || "/"]);
+      setAssembled(buildWebsiteEditPrompt(state, { siteUrl, iterations, loop }));
+      setNote(
+        loop
+          ? "Assembled from everything ticked, with the loop's blocks — targets, evidence to gather, lessons, guards, prediction, falsification, blast radius, the outcome write-back and the stop conditions — read live from the policy, the armed guards and the ledger."
+          : "Assembled from everything ticked. The loop's records could not be read this time, so the brief carries the request alone."
+      );
+    });
 
   const transform = () =>
     run("transform", async () => {
