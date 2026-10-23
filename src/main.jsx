@@ -12,6 +12,8 @@ import '../vendor/x1/CommercePortal.css'
 // Resolves the stock palette utilities still named by the earlier workspaces
 // onto that portal palette. Last, so it settles after Tailwind's utilities.
 import '@/styles/x1-portal-bridge.css'
+// X1 Auto Builder approved chrome + lime interaction accents.
+import '@/styles/x1-silver-lime.css'
 import { applyStoredTheme } from '@/hooks/useTheme'
 
 applyStoredTheme()
